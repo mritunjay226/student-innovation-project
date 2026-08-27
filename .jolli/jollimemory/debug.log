@@ -1,0 +1,54 @@
+[2026-08-27T16:49:21.488Z] INFO  [SkillProjection] projectActiveSkills: 0 active (0 in registry)
+[2026-08-27T16:49:39.267Z] INFO  [Sync:VsCodeBootstrap] Memory Bank sync engine built (auto-sync off — manual only)
+[2026-08-27T16:49:39.733Z] INFO  [RepoProfile] manual-disable MIGRATE → manuallyDisabled=false (pid=4072, profile=c:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, fence=none, from=legacy-marker) ←  at EJ (c:\Users\mk\.antigravity-ide\extensions\jolli.jollimemory-vscode-0.99.15-universal\dist\Extension.js:98:909) | at c:\Users\mk\.antigravity-ide\extensions\jolli.jollimemory-vscode-0.99.15-universal\dist\Extension.js:99:953 | at df (c:\Users\mk\.antigravity-ide\extensions\jolli.jollimemory-vscode-0.99.15-universal\dist\Extension.js:3:5846) | at vJ (c:\Users\mk\.antigravity-ide\extensions\jolli.jollimemory-vscode-0.99.15-universal\dist\Extension.js:99:572) | at ho (c:\Users\mk\.antigravity-ide\extensions\jolli.jollimemory-vscode-0.99.15-universal\dist\Extension.js:99:475) | at t.refreshHookPathsIfStale (c:\Users\mk\.antigravity-ide\extensions\jolli.jollimemory-vscode-0.99.15-universal\dist\Extension.js:3841:17986)
+[2026-08-27T16:49:39.756Z] INFO  [RepoProfile] manual-disable read → false (by=migrate:legacy-marker, pid=4072, cwd=c:\Users\mk\Documents\hackathon_research, profile=c:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=undefined fence=none)
+[2026-08-27T16:49:40.631Z] INFO  [StorageFactory] StorageFactory.create: route=uncutover, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-27T16:49:41.095Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-27T16:49:41.095Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-27T16:49:42.631Z] INFO  [StorageFactory] StorageFactory.create: route=uncutover, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-27T16:49:44.312Z] INFO  [StorageFactory] StorageFactory.create: route=uncutover, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-27T16:49:46.600Z] INFO  [SchemaV5Migration] Storage backend not initialized yet — skipping schema v5 migration (no data to migrate)
+[2026-08-27T16:49:46.600Z] INFO  [activate] Schema v5 migration: alreadyDone=false fresh=true migrated=0 skipped=0
+[2026-08-27T16:50:02.424Z] INFO  [Installer] Status: enabled=false, claude=false, git=false, geminiHook=false, worktreeHooks=false, sessions=2, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=0, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-27T16:50:02.515Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-27T16:50:02.768Z] INFO  [Installer] Status: enabled=false, claude=false, git=false, geminiHook=false, worktreeHooks=false, sessions=2, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=0, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-27T16:50:02.771Z] INFO  [initialLoad] All panels loaded — updating status bar
+[2026-08-27T16:50:02.772Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-27T16:50:05.233Z] INFO  [Installer] Status: enabled=false, claude=false, git=false, geminiHook=false, worktreeHooks=false, sessions=2, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=0, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-27T16:50:05.266Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-27T16:50:06.474Z] INFO  [Installer] Status: enabled=false, claude=false, git=false, geminiHook=false, worktreeHooks=false, sessions=2, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=0, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-27T16:50:06.520Z] INFO  [StorageFactory] StorageFactory.create: route=uncutover, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-27T16:50:08.893Z] INFO  [Installer] Status: enabled=false, claude=false, git=false, geminiHook=false, worktreeHooks=false, sessions=2, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=0, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-27T16:50:08.895Z] INFO  [RepoProfile] manual-disable read → false (by=manuallyDisabled, pid=4072, cwd=c:\Users\mk\Documents\hackathon_research, profile=c:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=none)
+[2026-08-27T16:50:08.895Z] INFO  [activate] Auto-enabling Jolli Memory (no opt-out recorded)
+[2026-08-27T16:50:08.895Z] INFO  [bridge] enable() called
+[2026-08-27T16:50:08.897Z] INFO  [Installer] Installing Jolli Memory hooks
+[2026-08-27T16:50:09.191Z] INFO  [DispatchScripts] Wrote resolve-dist-path, run-hook, and run-cli scripts to C:\Users\mk\.jolli\jollimemory
+[2026-08-27T16:50:09.199Z] INFO  [DistPathWriter] Wrote dist-paths/antigravity-ide (version=0.99.15, distDir=c:\Users\mk\.antigravity-ide\extensions\jolli.jollimemory-vscode-0.99.15-universal\dist)
+[2026-08-27T16:50:09.230Z] INFO  [SkillInstaller] Wrote SKILL.md (revision 3) to C:\Users\mk\Documents\hackathon_research\.agents\skills\jolli-recall\SKILL.md
+[2026-08-27T16:50:09.233Z] INFO  [SkillInstaller] Wrote SKILL.md (revision 3) to C:\Users\mk\Documents\hackathon_research\.agents\skills\jolli-search\SKILL.md
+[2026-08-27T16:50:09.242Z] INFO  [SkillInstaller] Wrote SKILL.md (revision 6) to C:\Users\mk\Documents\hackathon_research\.agents\skills\jolli-local-run\SKILL.md
+[2026-08-27T16:50:09.246Z] INFO  [SkillInstaller] Wrote SKILL.md (revision 5) to C:\Users\mk\Documents\hackathon_research\.agents\skills\jolli-remote-run\SKILL.md
+[2026-08-27T16:50:09.250Z] INFO  [SkillInstaller] Wrote SKILL.md (revision 9) to C:\Users\mk\Documents\hackathon_research\.agents\skills\jolli\SKILL.md
+[2026-08-27T16:50:09.515Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-27T16:50:09.613Z] INFO  [GitExclude] Updated C:\Users\mk\Documents\hackathon_research\.git\info\exclude with 8 Jolli skill exclude paths
+[2026-08-27T16:50:09.617Z] INFO  [McpRegistration] Registered MCP server in C:\Users\mk\Documents\hackathon_research\.mcp.json
+[2026-08-27T16:50:09.624Z] INFO  [JsonMcpWriter] Registered MCP server in C:\Users\mk\Documents\hackathon_research\.cursor\mcp.json
+[2026-08-27T16:50:09.650Z] INFO  [JsonMcpWriter] MCP server already registered in C:\Users\mk\.gemini\settings.json — no write needed
+[2026-08-27T16:50:09.674Z] INFO  [CodexTomlWriter] Codex MCP server already registered in C:\Users\mk\.codex\config.toml — no write needed
+[2026-08-27T16:50:09.694Z] INFO  [JsonMcpWriter] MCP server already registered in C:\Users\mk\.config\opencode\opencode.json — no write needed
+[2026-08-27T16:50:09.713Z] INFO  [JsonMcpWriter] MCP server already registered in C:\Users\mk\AppData\Roaming\Code\User\mcp.json — no write needed
+[2026-08-27T16:50:09.715Z] INFO  [JsonMcpWriter] MCP server already registered in C:\Users\mk\.gemini\config\mcp_config.json — no write needed
+[2026-08-27T16:50:09.787Z] INFO  [GitHookInstaller] Git post-commit hook installed
+[2026-08-27T16:50:09.792Z] INFO  [GitHookInstaller] Git post-rewrite hook installed
+[2026-08-27T16:50:09.796Z] INFO  [GitHookInstaller] Git prepare-commit-msg hook installed
+[2026-08-27T16:50:09.800Z] INFO  [GitHookInstaller] Git post-merge hook installed
+[2026-08-27T16:50:09.806Z] INFO  [GitHookInstaller] Git pre-push hook installed
+[2026-08-27T16:50:09.810Z] INFO  [GeminiHookInstaller] Gemini AfterAgent hook installed
+[2026-08-27T16:50:09.811Z] INFO  [Installer] Skipping v5 migration on vscode-extension source — Extension.ts owns it with UI
+[2026-08-27T16:50:09.811Z] INFO  [Installer] Installation complete
+[2026-08-27T16:50:09.812Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-27T16:50:12.605Z] INFO  [Installer] Status: enabled=false, claude=false, git=false, geminiHook=true, worktreeHooks=false, sessions=2, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-27T16:50:13.237Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, worktreeHooks=true, sessions=2, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-27T16:50:13.242Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-27T16:50:15.437Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, worktreeHooks=true, sessions=2, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
