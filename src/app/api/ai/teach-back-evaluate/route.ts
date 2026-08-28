@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { getGeminiClient, generateWithGemini } from "@/lib/gemini";
 
 interface Message {
   role: "user" | "assistant";
@@ -16,6 +16,7 @@ interface RequestBody {
     toby: number;
     maya: number;
     leo: number;
+    sam?: number;
   };
   totalXpEarned?: number;
   maxComboStreak?: number;
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
       conceptDescription,
       messages,
       finalComprehension,
-      finalComprehensions = { toby: 85, maya: 75, leo: 90 },
+      finalComprehensions = { toby: 85, maya: 75, leo: 90, sam: 90 },
       totalXpEarned = 250,
       maxComboStreak = 3,
     } = body;
@@ -116,7 +117,7 @@ export async function POST(request: Request) {
             role: "Visual Learner",
             emoji: "🎨",
             score: finalComprehensions.toby,
-            verdict: `"The real-world analogies made it click instantly! I finally see how ${conceptTitle} works in 3D!"`,
+            verdict: `"The real-world analogies made it click instantly! I finally see how ${conceptTitle} works!"`,
           },
           maya: {
             name: "Maya",
@@ -132,20 +133,27 @@ export async function POST(request: Request) {
             score: finalComprehensions.leo,
             verdict: `"That was super fun! I'm ready to ace tomorrow's classroom diagnostic because of you!"`,
           },
+          sam: {
+            name: "Sam",
+            role: "Direct & Precise",
+            emoji: "🎯",
+            score: finalComprehensions.sam || 90,
+            verdict: `"Clear, accurate, and straight to the point. Exactly the facts needed for ${conceptTitle}."`,
+          },
         },
         tobyVerdict: `Toby says: "You're a lifesaver! Our study group finally gets ${conceptTitle}!" 🎓`,
       });
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const genAI = getGeminiClient();
+    if (!genAI) throw new Error("No Gemini API key available");
 
     const conversationTranscript = messages
       .map((m) => `${m.role === "user" ? "TUTOR (Student)" : `${m.speaker || "CLASSMATE"}`}: ${m.content}`)
       .join("\n\n");
 
     const prompt = `You are an expert pedagogical supervisor evaluating a gamified classroom peer-tutoring session.
-The student (TUTOR) taught a study pod consisting of 3 classmates: Toby (visual learner), Maya (skeptic), and Leo (quizzer).
+The student (TUTOR) taught a study pod consisting of 4 classmates: Toby (visual learner), Maya (skeptic), Leo (quizzer), and Sam (direct/straightforward).
 
 TARGET CONCEPT: "${conceptTitle}"
 CONCEPT SUMMARY: "${conceptDescription}"
@@ -153,6 +161,7 @@ CLASSROOM COMPREHENSIONS ACHIEVED:
 - Toby: ${finalComprehensions.toby}%
 - Maya: ${finalComprehensions.maya}%
 - Leo: ${finalComprehensions.leo}%
+- Sam: ${finalComprehensions.sam ?? 90}%
 
 FULL CONVERSATION TRANSCRIPT:
 ${conversationTranscript}
@@ -163,7 +172,7 @@ Evaluate the student on scores 0-100:
 3. Depth
 4. Overall Score
 
-Also provide personalized verdicts from each of the 3 classmates (Toby, Maya, Leo).
+Also provide personalized verdicts from each of the 4 classmates (Toby, Maya, Leo, Sam).
 
 Respond with ONLY valid JSON:
 {
@@ -171,16 +180,16 @@ Respond with ONLY valid JSON:
   "accuracy": <number 0-100>,
   "depth": <number 0-100>,
   "overallScore": <number 0-100>,
-  "feedback": "<detailed constructive feedback string>",
+  "feedback": "<detailed constructive feedback string in Markdown>",
   "misconceptionsFound": ["<misconception 1>"],
   "missingConcepts": ["<missing concept 1>"],
   "tobyQuote": "<Toby's enthusiastic in-character quote>",
   "mayaQuote": "<Maya's sharp in-character quote>",
-  "leoQuote": "<Leo's cheerful in-character quote>"
+  "leoQuote": "<Leo's cheerful in-character quote>",
+  "samQuote": "<Sam's concise, direct in-character quote>"
 }`;
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const text = await generateWithGemini(genAI, prompt);
     const jsonMatch = text.match(/\{[\s\S]*\}/);
 
     if (!jsonMatch) {
@@ -222,6 +231,13 @@ Respond with ONLY valid JSON:
           emoji: "⚡",
           score: finalComprehensions.leo,
           verdict: evaluation.leoQuote || `"Great pace and reciprocal practice!"`,
+        },
+        sam: {
+          name: "Sam",
+          role: "Direct & Precise",
+          emoji: "🎯",
+          score: finalComprehensions.sam || 90,
+          verdict: evaluation.samQuote || `"Accurate, direct, and factual. Great job on ${conceptTitle}."`,
         },
       },
       tobyVerdict: evaluation.tobyQuote || `Toby says: "Thanks for helping our study pod master ${conceptTitle}!" 🎓`,

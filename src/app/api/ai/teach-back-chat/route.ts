@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { getGeminiClient, generateWithGemini } from "@/lib/gemini";
 
-export type ClassmateSpeaker = "Toby" | "Maya" | "Leo";
+export type ClassmateSpeaker = "Toby" | "Maya" | "Leo" | "Sam";
 export type Mood = "confused" | "curious" | "skeptical" | "lightbulb" | "amazed" | "mastered";
 
 interface Message {
@@ -21,6 +21,7 @@ interface RequestBody {
     toby: number;
     maya: number;
     leo: number;
+    sam: number;
   };
   currentComprehension?: number;
   mode?: "teach" | "peer_explain" | "pop_quiz" | "hint";
@@ -36,6 +37,7 @@ interface ConceptDialogueData {
   mayaEdgeCase: string;
   tobyIntuition: string;
   leoSummary: string;
+  samDirectAnswer: string;
   blackboardFormula: string;
 }
 
@@ -43,236 +45,261 @@ const CONCEPT_DIALOGUES: Record<string, ConceptDialogueData> = {
   // Chemistry
   acid: {
     tobyPeerTeach:
-      "Okay let me try! 🧪 An acid has tons of loose H⁺ hydrogen ions (like a sour lemon with a pH under 7), while a base has OH⁻ hydroxide ions (like slippery soap with a pH over 7). When you mix them, the H⁺ and OH⁻ cancel out to form neutral H₂O water and salt! Did I get the core intuition right?",
+      "Here is my summary of **Acids, Bases & pH**: 🧪\n\n* **Acids**: High concentration of $[\\text{H}^+]$ ions (sour, $\\text{pH} < 7$).\n* **Bases**: High concentration of $[\\text{OH}^-]$ ions (bitter/slippery, $\\text{pH} > 7$).\n* **Neutralization**: Mixing acid and base produces neutral water and salt: $$\\text{HCl} + \\text{NaOH} \\rightarrow \\text{NaCl} + \\text{H}_2\\text{O}$$\n\nDid I get the core intuition right?",
     mayaClue:
-      "💡 Maya's Clue: Remember that pH is logarithmic! A solution with pH 3 is 10 times more acidic than pH 4, and 100 times more acidic than pH 5. Think about what happens to [H⁺] concentration!",
+      "💡 **Maya's Clue**: Remember that the $\\text{pH}$ scale is **logarithmic** ($-\\log_{10}[\\text{H}^+]$):\n\n* A change of **1 pH unit** represents a **10-fold change** in $[\\text{H}^+]$ concentration.\n* Example: $\\text{pH } 2$ is **100 times more acidic** than $\\text{pH } 4$.",
     leoPopQuiz:
-      "⚡ RAPID FIRE QUIZ! If you dilute an acid with a pH of 3 by adding 10x more pure water, what does the new pH become? And can dilution ever turn an acid into a base (pH > 7)?",
+      "⚡ **Leo's Rapid Quiz**:\n\n1. If a solution has a hydrogen ion concentration $[\\text{H}^+] = 10^{-4}\\text{ M}$, what is its exact $\\text{pH}$?\n2. Is this solution **acidic**, **neutral**, or **basic**?",
     mayaEdgeCase:
-      "Wait... 🧐 If pure water has pH 7 at 25°C, what happens if we heat it up? Doesn't the ionization constant Kw increase, making neutral water have a pH lower than 7?! How does temperature affect acidity?",
+      "**Analytical Question** 🧐:\n\nIf pure water has a $\\text{pH}$ of $7$ at $25^\\circ\\text{C}$, what happens when temperature increases? Since auto-ionization ($K_w$) is endothermic, $[\\text{H}^+]$ increases, so pure water's $\\text{pH}$ drops below 7—yet it remains **strictly neutral** because $[\\text{H}^+] = [\\text{OH}^-]$. How do you explain this distinction?",
     tobyIntuition:
-      "Wait! 💡 So is an acid basically just an atom holding a hot potato (H⁺ proton) that it desperately wants to donate to someone else?!",
+      "Aha! 💡 An acid is basically a **proton donor** (hands off an $\\text{H}^+$) and a base is a **proton acceptor** (takes the $\\text{H}^+$). When they meet, they form stable water!",
     leoSummary:
-      "Boom! So: Low pH = Proton Donors (Acids), High pH = Proton Acceptors (Bases), pH 7 = Pure Balance! 🎯",
-    blackboardFormula: "pH = -log10[H⁺] | [H⁺][OH⁻] = 10⁻¹⁴ at 25°C | Acid + Base → Salt + H₂O",
+      "**Classroom Takeaways** 🎯:\n* **Acid** $\\rightarrow [\\text{H}^+] > [\\text{OH}^-]$ (pH 0-6)\n* **Neutral** $\\rightarrow [\\text{H}^+] = [\\text{OH}^-]$ (pH 7)\n* **Base** $\\rightarrow [\\text{OH}^-] > [\\text{H}^+]$ (pH 8-14)",
+    samDirectAnswer:
+      "**Direct Definition** 🎯:\n\n* **Arrhenius Model**: Acids increase $[\\text{H}^+]$ in water; Bases increase $[\\text{OH}^-]$.\n* **Brønsted-Lowry Model**: Acids donate protons ($H^+$); Bases accept protons.\n* **Formula**: $$\\text{pH} = -\\log_{10}[\\text{H}^+], \\quad \\text{pOH} = -\\log_{10}[\\text{OH}^-], \\quad \\text{pH} + \\text{pOH} = 14$$\n* **Neutralization**: $\\text{H}^+ + \\text{OH}^- \\rightarrow \\text{H}_2\\text{O}$",
+    blackboardFormula: "pH = -log10[H⁺] | [H⁺][OH⁻] = 10⁻¹⁴ | Acid + Base → Salt + H₂O",
   },
   reaction: {
     tobyPeerTeach:
-      "Let me summarize chemical reactions! 💥 Atoms can't be created or destroyed (conservation of mass), so the number of atoms going into the reaction (reactants) MUST equal what comes out (products). We balance equations with big coefficients in front! Is that right?",
+      "Here is my summary of **Chemical Reactions** 💥:\n\n1. **Law of Conservation of Mass**: Atoms are neither created nor destroyed.\n2. **Balancing**: We adjust stoichiometric coefficients so both sides have the exact same number of each atom.\n3. **Example**: $2\\text{H}_2 + \\text{O}_2 \\rightarrow 2\\text{H}_2\\text{O}$ (4 H's and 2 O's on both sides).\n\nHow does this look?",
     mayaClue:
-      "💡 Maya's Clue: Don't just balance atoms—look at oxidation numbers! In redox reactions, one species loses electrons (oxidized) while another gains electrons (reduced).",
+      "💡 **Maya's Clue**: Keep an eye on **Redox States** (Oxidation Numbers):\n\n* **Oxidation**: Loss of electrons ($\\text{OIL}$)\n* **Reduction**: Gain of electrons ($\\text{RIG}$)",
     leoPopQuiz:
-      "⚡ POP QUIZ! In the reaction 2H₂ + O₂ → 2H₂O, why can't we just write H₂ + O → H₂O? What makes oxygen diatomic in nature?",
+      "⚡ **Leo's Pop Quiz**:\n\nBalance this reaction: $$\\text{Fe} + \\text{O}_2 \\rightarrow \\text{Fe}_2\\text{O}_3$$\nWhat are the smallest whole-number coefficients?",
     mayaEdgeCase:
-      "Hold on! 🧐 Why do some reactions give off heat (exothermic) while others get freezing cold (endothermic)? Where is that energy stored in the chemical bonds?",
+      "**Analytical Question** 🧐:\n\nWhy do some reactions occur spontaneously at room temperature (exothermic with $\\Delta H < 0$), while others require continuous energy input (endothermic)? How does **Gibbs Free Energy** ($\\Delta G = \\Delta H - T\\Delta S$) determine reaction favorability?",
     tobyIntuition:
-      "Aha! 💡 So balancing equations is like a recipe: 2 slices of bread + 1 slice of cheese = 1 sandwich. You can't just change the cheese formula to make it work!",
+      "Aha! 💡 Chemical reactions are like taking Lego models apart and rebuilding them into new shapes without losing a single brick!",
     leoSummary:
-      "Mass in = Mass out. Bonds break, new bonds form, and energy transfers! 💥",
-    blackboardFormula: "Reactants → Products | ΔH = Σ(Bonds Broken) - Σ(Bonds Formed)",
+      "**Key Rules** 🎯:\n* Total mass is conserved.\n* Bonds break (requires energy), new bonds form (releases energy).\n* $\\Delta H = \\Sigma(\\text{Bonds Broken}) - \\Sigma(\\text{Bonds Formed})$",
+    samDirectAnswer:
+      "**Direct Summary** 🎯:\n\n* **Types**: Synthesis, Decomposition, Single Replacement, Double Replacement, Combustion.\n* **Stoichiometry**: Mole ratios govern reaction quantities.\n* **Enthalpy**: $\\Delta H < 0$ (Exothermic), $\\Delta H > 0$ (Endothermic).",
+    blackboardFormula: "Reactants → Products | ΔH = Σ(Bonds Broken) - Σ(Bonds Formed) | ΔG = ΔH - TΔS",
   },
   atomic: {
     tobyPeerTeach:
-      "Here is how I picture orbitals: ⚛️ Electrons aren't tiny planets orbiting in flat circles. They're 3D quantum probability clouds! An s-orbital is a sphere, and p-orbitals are like 3D dumbbells where electrons like to hang out 90% of the time! How's my explanation?",
+      "Here is my summary of **Atomic Structure & Orbitals** ⚛️:\n\n* Electrons exist in **3D probability clouds** called **orbitals** (regions where finding an electron is $90\\%$ likely).\n* **s-orbitals**: Spherical shape.\n* **p-orbitals**: Dumbbell shape across $x, y, z$ axes.\n* **Capacity**: Each orbital holds maximum **2 electrons** with opposite spins.\n\nDid I get the key points?",
     mayaClue:
-      "💡 Maya's Clue: Keep Heisenberg's Uncertainty Principle in mind! You can never know both the exact position and momentum of an electron simultaneously—that's why orbitals are probability densities (ψ²).",
+      "💡 **Maya's Clue**: Remember the three quantum filling rules:\n\n1. **Aufbau Principle**: Fill lowest energy orbitals first ($1s \\rightarrow 2s \\rightarrow 2p \\dots$).\n2. **Pauli Exclusion**: Maximum 2 electrons per orbital with opposite spins ($+\\frac{1}{2}, -\\frac{1}{2}$).\n3. **Hund's Rule**: Degenerate orbitals fill singly before pairing up.",
     leoPopQuiz:
-      "⚡ POP QUIZ! How many total electrons can the entire n=3 principal energy shell hold? (Think: 3s, 3p, and 3d!)",
+      "⚡ **Leo's Pop Quiz**:\n\nWhat is the full electron configuration of Carbon ($Z = 6$)? How many unpaired valence electrons does it have?",
     mayaEdgeCase:
-      "Wait... 🧐 If electrons are negatively charged and repel each other, why do two electrons fit into the exact same orbital? What is electron spin (ms = +1/2, -1/2)?",
+      "**Analytical Question** 🧐:\n\nAccording to Heisenberg's Uncertainty Principle ($\\Delta x \\cdot \\Delta p \\ge \\frac{\\hbar}{2}$), why is it impossible to define precise planetary orbits for electrons?",
     tobyIntuition:
-      "Whoa! 🤯 So an orbital is like a strobe-light photo of a hyperactive bee buzzing around a flower! You don't know the exact path, just the cloud where it spends its time!",
+      "Aha! 💡 An orbital is like a long-exposure photo of a hummingbird around a flower—a dense cloud showing where it spends its time rather than a fixed track!",
     leoSummary:
-      "Quantum numbers (n, l, ml, ms) define the address, shape, orientation, and spin of every electron! ⚛️",
-    blackboardFormula: "max electrons in shell = 2n² | s(2), p(6), d(10), f(14)",
+      "**Quantum Numbers Summary** 🎯:\n* $n$ (Principal): Shell/Energy level ($1, 2, 3\\dots$)\n* $l$ (Angular): Shape ($s=0, p=1, d=2, f=3$)\n* $m_l$ (Magnetic): 3D orientation\n* $m_s$ (Spin): $+\\frac{1}{2}, -\\frac{1}{2}$",
+    samDirectAnswer:
+      "**Direct Facts** 🎯:\n\n* Max electrons per energy level: $2n^2$.\n* Subshell capacities: $s=2, p=6, d=10, f=14$.\n* Valence electrons determine all chemical bonding behavior.",
+    blackboardFormula: "max e⁻ = 2n² | s(2), p(6), d(10), f(14) | Δx·Δp ≥ ℏ/2",
   },
   bond: {
     tobyPeerTeach:
-      "Let me explain VSEPR! 🎈 Valence electron pairs are negatively charged, so they push each other away as far as possible in 3D space. In water (H₂O), the two lone pairs on oxygen push the two hydrogen bonds down, bending the molecule into a 104.5° boomerang! Did I explain that right?",
+      "Here is my summary of **Chemical Bonding & VSEPR** 🎈:\n\n* **VSEPR Theory**: Valence electron pairs repel each other and spread out as far as possible in 3D space.\n* **Water ($H_2O$)**: 2 bonding pairs + 2 lone pairs on Oxygen form a **Bent geometry** ($104.5^\\circ$).\n* **Methane ($CH_4$)**: 4 bonding pairs form a **Tetrahedral geometry** ($109.5^\\circ$).\n\nIs this accurate?",
     mayaClue:
-      "💡 Maya's Clue: Differentiate between electron geometry and molecular shape! In NH₃ (ammonia), electron geometry is tetrahedral, but molecular geometry is trigonal pyramidal because of the lone pair.",
+      "💡 **Maya's Clue**: Distinguish between **Electron Geometry** and **Molecular Shape**:\n\n* In $NH_3$ (Ammonia), electron geometry is **Tetrahedral** (4 pairs), but molecular shape is **Trigonal Pyramidal** (lone pair occupies one apex).",
     leoPopQuiz:
-      "⚡ POP QUIZ! Why is carbon dioxide (CO₂) completely non-polar even though the individual C=O bonds are highly polar?",
+      "⚡ **Leo's Pop Quiz**:\n\nWhy is $CO_2$ linear ($180^\\circ$) and non-polar, while $SO_2$ is bent ($119^\\circ$) and polar?",
     mayaEdgeCase:
-      "Hold on! 🧐 Why do lone pairs repel more strongly than bonding pairs? Isn't an electron just an electron?",
+      "**Analytical Question** 🧐:\n\nWhy do lone pairs exert stronger electrostatic repulsion than bonded pairs? (Hint: Lone pairs are held by only one nucleus, spreading out wider in space).",
     tobyIntuition:
-      "Aha! 💡 It's like tying 4 balloons together at the knot—they automatically push into a 3D pyramid (tetrahedron) to give each other maximum room!",
+      "Aha! 💡 It's like tying 4 party balloons together at the knot—they automatically push into a 3D pyramid so every balloon gets maximum space!",
     leoSummary:
-      "Electron pairs repel → determines 3D bond angles → determines polarity and physical properties! 🧬",
+      "**VSEPR Shapes** 🎯:\n* 2 pairs $\\rightarrow$ Linear ($180^\\circ$)\n* 3 pairs $\\rightarrow$ Trigonal Planar ($120^\\circ$)\n* 4 pairs $\\rightarrow$ Tetrahedral ($109.5^\\circ$)",
+    samDirectAnswer:
+      "**Direct Specifications** 🎯:\n\n* **Hybridization**: $sp$ (Linear), $sp^2$ (Trigonal Planar), $sp^3$ (Tetrahedral).\n* **Polarity**: Determined by bond dipole vector sum ($\\Sigma \\vec{\\mu} \\neq 0$).",
     blackboardFormula: "Linear (180°) | Trigonal Planar (120°) | Tetrahedral (109.5°) | Bent (104.5°)",
   },
 
   // Physics
   vector: {
     tobyPeerTeach:
-      "Okay let me try! 🧭 A scalar is just a plain number like speed (50 km/h) or mass (10 kg). But a VECTOR has direction too, like velocity (50 km/h North). If I walk 3m North and 4m East, my net displacement is √(3² + 4²) = 5m at 53° East of North! Did I nail it?",
+      "Here is my summary of **Vectors & Kinematics** 🧭:\n\n* **Scalar**: Magnitude only (e.g. Distance $= 7\\text{ m}$, Speed $= 20\\text{ m/s}$).\n* **Vector**: Magnitude + Direction (e.g. Displacement $= 5\\text{ m}$ at $53^\\circ$ North of East).\n* **Pythagoras**: Walking $3\\text{m}$ North and $4\\text{m}$ East gives: $$R = \\sqrt{3^2 + 4^2} = 5\\text{ m}$$\n\nHow is this explanation?",
     mayaClue:
-      "💡 Maya's Clue: Remember vector resolution! Any vector at an angle θ can be split into perpendicular x and y components: Vx = V·cos(θ) and Vy = V·sin(θ).",
+      "💡 **Maya's Clue**: Always resolve vectors into perpendicular components before adding:\n\n* $V_x = V \\cos(\\theta)$\n* $V_y = V \\sin(\\theta)$\n* $\\vec{R} = (\\Sigma V_x)\\hat{i} + (\\Sigma V_y)\\hat{j}$",
     leoPopQuiz:
-      "⚡ RAPID FIRE QUIZ! Can two vectors of different magnitudes ever add up to give a zero resultant vector? What about three vectors?",
+      "⚡ **Leo's Pop Quiz**:\n\nA projectile is launched at $30^\\circ$ with velocity $v_0$. At the very highest point of its trajectory, what is its vertical velocity $v_y$ and horizontal velocity $v_x$?",
     mayaEdgeCase:
-      "Wait! 🧐 What is the difference between a dot product (scalar result: A·B = |A||B|cos θ) and a cross product (vector result: A×B = |A||B|sin θ)? When do we use which?",
+      "**Analytical Question** 🧐:\n\nWhen is the dot product $\\vec{A} \\cdot \\vec{B} = 0$ (perpendicular vectors), and when is the cross product $\\vec{A} \\times \\vec{B} = \\vec{0}$ (parallel vectors)?",
     tobyIntuition:
-      "Wait! 💡 So vector addition is like walking through city blocks: you can take a zigzag path, but displacement is just the straight laser beam from start to finish!",
+      "Aha! 💡 Scalars are like the odometer reading on your dashboard; vectors are like the GPS arrow pointing directly to your destination!",
     leoSummary:
-      "Scalars = Magnitude only. Vectors = Magnitude + Direction. Break into components, add x and y separately! 🚀",
-    blackboardFormula: "R = √(Rx² + Ry²) | θ = arctan(Ry/Rx) | A·B = |A||B|cos(θ)",
+      "**Kinematics Formulas** 🎯:\n* $v = u + at$\n* $s = ut + \\frac{1}{2}at^2$\n* $v^2 = u^2 + 2as$",
+    samDirectAnswer:
+      "**Direct Formulation** 🎯:\n\n* Magnitude: $|\\vec{V}| = \\sqrt{V_x^2 + V_y^2}$\n* Direction: $\\theta = \\arctan(V_y / V_x)$\n* Dot Product: $\\vec{A} \\cdot \\vec{B} = |A||B|\\cos(\\theta)$\n* Cross Product: $|\\vec{A} \\times \\vec{B}| = |A||B|\\sin(\\theta)$",
+    blackboardFormula: "R = √(Rx² + Ry²) | θ = arctan(Ry/Rx) | v = u + at | s = ut + ½at²",
   },
   newton: {
     tobyPeerTeach:
-      "Let me explain Newton's Laws! 🛹 1st Law: Things keep doing what they're doing unless pushed. 2nd Law: F = m·a (more mass means you need more force to accelerate). 3rd Law: Forces come in pairs (if I push a skateboard, it pushes back on my foot with equal force)! How is that?",
+      "Here is my summary of **Newton's Laws of Motion** 🛹:\n\n1. **1st Law (Inertia)**: Objects keep moving at constant velocity unless acted upon by a net external force.\n2. **2nd Law**: $\\Sigma \\vec{F} = m \\cdot \\vec{a}$ (Acceleration is proportional to net force).\n3. **3rd Law**: For every action force, there is an equal and opposite reaction force acting on the **other** object.\n\nDid I get all 3 laws clear?",
     mayaClue:
-      "💡 Maya's Clue: In Newton's 3rd law, the action and reaction forces NEVER act on the same object! That's why they don't cancel each other out.",
+      "💡 **Maya's Clue**: Draw a **Free Body Diagram (FBD)** before writing equations:\n\n* Identify all forces: Gravity ($mg$), Normal force ($N$), Tension ($T$), and Friction ($f_k = \\mu_k N$).",
     leoPopQuiz:
-      "⚡ POP QUIZ! If an elevator cord snaps and you are in free fall, what does a bathroom scale under your feet read? 0 kg or your normal weight?",
+      "⚡ **Leo's Pop Quiz**:\n\nA $10\\text{ kg}$ block is pushed with $50\\text{ N}$ of horizontal force. If kinetic friction is $20\\text{ N}$, what is the acceleration of the block?",
     mayaEdgeCase:
-      "Wait! 🧐 Why is static friction (μs) always greater than kinetic friction (μk)? Why is it harder to start sliding a couch than to keep it sliding?",
+      "**Analytical Question** 🧐:\n\nWhy does static friction have an inequality ($f_s \\le \\mu_s N$) while kinetic friction is constant ($f_k = \\mu_k N$)? How does static friction adjust to match the applied force up to its maximum threshold?",
     tobyIntuition:
-      "Ohhh! 💡 F=ma is why a tiny bullet can do massive damage (huge acceleration) while a giant ship moving at 0.001 m/s can still crush a dock (huge mass)!",
+      "Aha! 💡 If you push against a heavy wall, the wall pushes back on your hands with the exact same force. You only move because your feet push against the ground!",
     leoSummary:
-      "Inertia resists change, Net Force causes acceleration, and all forces are mutual interactions! ⚖️",
-    blackboardFormula: "ΣF = m·a | F_friction ≤ μ·N | F_AB = -F_BA",
+      "**Summary** 🎯:\n* Net force causes acceleration ($a = F_{\\text{net}} / m$).\n* Friction opposes relative motion.\n* Action-reaction pairs act on different bodies.",
+    samDirectAnswer:
+      "**Direct Reference** 🎯:\n\n* **Newton 1**: $\\Sigma \\vec{F} = 0 \\implies \\vec{a} = 0, \\vec{v} = \\text{const}$.\n* **Newton 2**: $\\vec{F}_{\\text{net}} = m\\frac{d\\vec{v}}{dt} = m\\vec{a}$.\n* **Newton 3**: $\\vec{F}_{AB} = -\\vec{F}_{BA}$.\n* **Friction**: $f_s^{\\max} = \\mu_s N, \\quad f_k = \\mu_k N$.",
+    blackboardFormula: "ΣF = m·a | F_friction ≤ μ·N | F_AB = -F_BA | W = F·d·cos(θ)",
   },
   light: {
     tobyPeerTeach:
-      "Let me summarize Snell's Law and refraction! 🌈 Light bends when passing into glass or water because its speed slows down in denser mediums. Snell's law: n₁·sin(θ₁) = n₂·sin(θ₂). When entering a denser medium, it bends TOWARDS the normal line! Is that right?",
+      "Here is my summary of **Light Reflection & Refraction** 🌈:\n\n* **Reflection**: Angle of incidence $=$ Angle of reflection ($\\theta_i = \\theta_r$).\n* **Refraction (Snell's Law)**: Light bends when moving between media of different optical densities: $$n_1 \\sin(\\theta_1) = n_2 \\sin(\\theta_2)$$\n* Entering a denser medium ($n_2 > n_1$), light slows down and bends **towards the normal**.\n\nIs this accurate?",
     mayaClue:
-      "💡 Maya's Clue: Don't forget Total Internal Reflection (TIR)! When light travels from a denser medium to a rarer medium past the critical angle (sin θc = n₂/n₁), 100% of the light reflects back inside!",
+      "💡 **Maya's Clue**: Remember **Total Internal Reflection (TIR)**:\n\n* Occurs when light travels from **denser to rarer** medium at $\\theta_i > \\theta_c$.\n* Critical angle formula: $\\sin(\\theta_c) = \\frac{n_2}{n_1}$.",
     leoPopQuiz:
-      "⚡ POP QUIZ! Why does a pencil look bent/broken when dipped in a glass of water, but a flat glass block just shifts the image sideways?",
+      "⚡ **Leo's Pop Quiz**:\n\nIf light travels from air ($n=1.0$) into glass ($n=1.5$), what happens to its **frequency**, **wavelength**, and **speed**?",
     mayaEdgeCase:
-      "Wait! 🧐 Why does white light split into a rainbow of colors inside a prism (dispersion)? Does red light travel at a different speed than violet light in glass?",
+      "**Analytical Question** 🧐:\n\nWhy does dispersion occur in a prism? (Because the refractive index $n$ varies slightly with wavelength $\\lambda$, so violet light bends more than red light).",
     tobyIntuition:
-      "Aha! 💡 Light bending is like a lawnmower crossing from smooth concrete into thick mud at an angle—one wheel hits the mud first, slows down, and turns the whole mower!",
+      "Aha! 💡 Light bending is like a car hitting a sand patch at an angle—the wheel that hits the sand first slows down, causing the car to pivot!",
     leoSummary:
-      "Index of refraction n = c/v. Slower speed = bends towards normal. Critical angle = Fiber optics magic! 💡",
-    blackboardFormula: "n₁·sin(θ₁) = n₂·sin(θ₂) | n = c/v | sin(θc) = 1/n",
+      "**Optics Checklist** 🎯:\n* Mirror Formula: $\\frac{1}{f} = \\frac{1}{v} + \\frac{1}{u}$\n* Lens Formula: $\\frac{1}{f} = \\frac{1}{v} - \\frac{1}{u}$\n* Magnification: $m = -\\frac{v}{u}$ (mirrors), $m = \\frac{v}{u}$ (lenses)",
+    samDirectAnswer:
+      "**Direct Formulas** 🎯:\n\n* Index of Refraction: $n = \\frac{c}{v}$.\n* Snell's Law: $n_1 \\sin(\\theta_1) = n_2 \\sin(\\theta_2)$.\n* Lens Power: $P = \\frac{1}{f\\text{ (in meters)}}$ (Diopters).",
+    blackboardFormula: "n₁·sin(θ₁) = n₂·sin(θ₂) | 1/f = 1/v - 1/u | P = 1/f | sin(θc) = 1/n",
   },
   electrostat: {
     tobyPeerTeach:
-      "Let me explain electric field vs potential! ⚡ An electric field E is a VECTOR measuring the force on a +1 Coulomb charge (how steep the hill is). Electric potential V is a SCALAR measuring the potential energy per unit charge (the height of the hill)! Did I explain the difference clearly?",
+      "Here is my summary of **Electrostatics & Electric Field** ⚡:\n\n* **Coulomb's Law**: Like charges repel, opposite charges attract: $$F = k\\frac{|q_1 q_2|}{r^2}$$\n* **Electric Field ($\\vec{E}$)**: Vector force per unit positive test charge ($E = F / q_0$).\n* **Electric Potential ($V$)**: Scalar potential energy per unit charge ($V = k q / r$).\n\nHow does that sound?",
     mayaClue:
-      "💡 Maya's Clue: Connect field to potential via calculus: E = -dV/dr! The electric field always points in the direction of the steepest drop in electric potential.",
+      "💡 **Maya's Clue**: Connect Field to Potential via gradient:\n\n* $\\vec{E} = -\\frac{dV}{dr}\\hat{r}$ (Electric field always points in direction of decreasing potential).",
     leoPopQuiz:
-      "⚡ POP QUIZ! Inside a hollow charged metal conductor (like a car in a lightning storm), what is the electric field? Why is it safe inside?",
+      "⚡ **Leo's Pop Quiz**:\n\nWhat is the electrostatic field $\\vec{E}$ inside a hollow conducting sphere with charge $Q$ on its outer surface?",
     mayaEdgeCase:
-      "Wait! 🧐 If electric field inside a conductor is zero, does that mean the electric potential inside is also zero, or is it constant?",
+      "**Analytical Question** 🧐:\n\nInside a conductor in electrostatic equilibrium, $\\vec{E} = 0$. Does this mean the potential $V$ inside is zero or a non-zero constant?",
     tobyIntuition:
-      "Mind blown! 🤯 Electric potential is like elevation on a topographical map, and the electric field arrows show which way a ball would roll downhill!",
+      "Aha! 💡 Potential is like height on a hill, and Electric Field is the slope—a positive charge naturally rolls downhill towards lower potential!",
     leoSummary:
-      "Coulomb's Law = 1/r² force. Field E is vector force/charge. Potential V is scalar energy/charge! ⚡",
-    blackboardFormula: "F = k·q₁q₂/r² | E = F/q = -dV/dr | V = k·q/r",
+      "**Electrostatics Summary** 🎯:\n* Force: $F = \\frac{k q_1 q_2}{r^2}$ (Vector)\n* Field: $E = \\frac{k q}{r^2}$ (Vector)\n* Potential: $V = \\frac{k q}{r}$ (Scalar)",
+    samDirectAnswer:
+      "**Direct Equations** 🎯:\n\n* Gauss's Law: $\\oint \\vec{E} \\cdot d\\vec{A} = \\frac{Q_{\\text{enclosed}}}{\\varepsilon_0}$.\n* Capacitance: $C = \\frac{Q}{V} = \\frac{\\varepsilon_0 A}{d}$.\n* Energy stored in capacitor: $U = \\frac{1}{2} C V^2$.",
+    blackboardFormula: "F = k·q₁q₂/r² | E = -dV/dr | V = k·q/r | C = ε₀A/d | U = ½CV²",
   },
 
   // Mathematics
   derivative: {
     tobyPeerTeach:
-      "Let me try to explain derivatives! 🚗 If my position is f(t), my speedometer reading at 2:15 PM is the DERIVATIVE f'(t)—the exact instantaneous rate of change at that split second. Geometrically, it's the slope of the tangent line touching the curve! Did I nail it?",
+      "Here is my summary of **Derivatives & Tangent Slopes** 📈:\n\n* **Derivative ($f'(x)$)**: Instantaneous rate of change of a function at a single instant.\n* **Geometry**: The slope of the tangent line touching the curve at that point.\n* **Power Rule**: If $f(x) = x^n$, then $f'(x) = n x^{n-1}$.\n* **Product Rule**: $(u \\cdot v)' = u' v + u v'$.\n\nIs this accurate?",
     mayaClue:
-      "💡 Maya's Clue: Think about the formal limit definition: f'(x) = lim(h→0) [f(x+h) - f(x)] / h. Why can't we just set h = 0 immediately?",
+      "💡 **Maya's Clue**: Remember the formal definition using limits:\n\n$$f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$$\nWe evaluate the limit as $h$ approaches 0 without dividing by zero!",
     leoPopQuiz:
-      "⚡ RAPID FIRE QUIZ! If a function has a peak or valley (local maximum/minimum), what must its derivative be at that point?",
+      "⚡ **Leo's Pop Quiz**:\n\nFind the derivative of $f(x) = 3x^4 - 5x^2 + 7$. What is $f'(2)$?",
     mayaEdgeCase:
-      "Wait! 🧐 Does every continuous function have a derivative? What about the sharp corner on y = |x| at x = 0?",
+      "**Analytical Question** 🧐:\n\nWhy is $f(x) = |x|$ continuous at $x = 0$ but **not differentiable** at $x = 0$? (Because the left-hand slope is $-1$ while the right-hand slope is $+1$).",
     tobyIntuition:
-      "Wait! 💡 So if you zoom into any smooth curved graph with a powerful microscope, it starts looking like a flat straight line—and the derivative is just the slope of that flat line!",
+      "Aha! 💡 If your odometer function is $s(t)$, your speedometer needle at this exact millisecond is the derivative $s'(t)$!",
     leoSummary:
-      "Position → Derivative = Velocity → Derivative = Acceleration. Slope of tangent line! 📈",
-    blackboardFormula: "f'(x) = lim_{h→0} [f(x+h) - f(x)]/h | (xⁿ)' = n·xⁿ⁻¹ | (uv)' = u'v + uv'",
+      "**Differentiation Rules** 🎯:\n* Constant: $(c)' = 0$\n* Power: $(x^n)' = n x^{n-1}$\n* Chain Rule: $[f(g(x))]' = f'(g(x)) \\cdot g'(x)$",
+    samDirectAnswer:
+      "**Direct Formulas** 🎯:\n\n* Quotient Rule: $\\left(\\frac{u}{v}\\right)' = \\frac{u' v - u v'}{v^2}$\n* Exponential: $(e^x)' = e^x, \\quad (\\ln x)' = \\frac{1}{x}$\n* Trigonometric: $(\\sin x)' = \\cos x, \\quad (\\cos x)' = -\\sin x, \\quad (\\tan x)' = \\sec^2 x$",
+    blackboardFormula: "f'(x) = lim_{h→0} [f(x+h) - f(x)]/h | (xⁿ)' = n·xⁿ⁻¹ | (fg)' = f'g + fg'",
   },
   limit: {
     tobyPeerTeach:
-      "Let me explain limits! 🎯 A limit isn't asking 'what happens when you slam into the wall', it's asking 'where were you headed right before you got there'. Even if there's a hole at x=2, as long as both sides approach 4, the limit is 4! Is that right?",
+      "Here is my summary of **Limits & Continuity** 🎯:\n\n* **Limit ($\\lim_{x \\to a} f(x) = L$)**: The value $f(x)$ gets arbitrarily close to as $x$ approaches $a$.\n* **Two-Sided Condition**: The limit exists if and only if: $$\\lim_{x \\to a^-} f(x) = \\lim_{x \\to a^+} f(x) = L$$\n* **Indeterminate Form**: $\\frac{0}{0}$ means simplify/factor or apply L'Hôpital's rule.\n\nDid I get the definition right?",
     mayaClue:
-      "💡 Maya's Clue: For a two-sided limit to exist, the left-hand limit lim(x→a⁻) and right-hand limit lim(x→a⁺) MUST be equal! If they disagree (like in a step function), the limit does not exist.",
+      "💡 **Maya's Clue**: A function is continuous at $x = a$ if and only if:\n\n1. $f(a)$ is defined.\n2. $\\lim_{x \\to a} f(x)$ exists.\n3. $\\lim_{x \\to a} f(x) = f(a)$.",
     leoPopQuiz:
-      "⚡ POP QUIZ! If plugging in x=a gives 0/0 (indeterminate form), does that mean the limit is 0, undefined, or could it be any real number?",
+      "⚡ **Leo's Pop Quiz**:\n\nEvaluate: $$\\lim_{x \\to 3} \\frac{x^2 - 9}{x - 3}$$",
     mayaEdgeCase:
-      "Wait! 🧐 What is the epsilon-delta (ε-δ) definition actually saying? How do we prove that closeness in x guarantees closeness in f(x)?",
+      "**Analytical Question** 🧐:\n\nWhy does $\\lim_{x \\to 0} \\sin(1/x)$ not exist, while $\\lim_{x \\to 0} x \\sin(1/x) = 0$ by the Squeeze Theorem?",
     tobyIntuition:
-      "Ohhh! 💡 So finding a limit is like walking towards a doorway in the dark: you don't need to step through to know where the doorway is located!",
+      "Aha! 💡 A limit is like looking at where a bridge was leading before it collapsed—you can see where the road meets even if there's a hole at that exact spot!",
     leoSummary:
-      "Approaching ≠ Value at point. Handle 0/0 by factoring, rationalizing, or L'Hôpital's rule! 🎯",
-    blackboardFormula: "lim_{x→a} f(x) = L ⇔ lim_{x→a⁻} = lim_{x→a⁺} = L",
+      "**Limit Strategies** 🎯:\n1. Direct substitution\n2. Factor & cancel\n3. Rationalize conjugate\n4. L'Hôpital: $\\lim \\frac{f'(x)}{g'(x)}$ for $\\frac{0}{0}$ or $\\frac{\\infty}{\\infty}$",
+    samDirectAnswer:
+      "**Direct Rules** 🎯:\n\n* Standard Trig Limit: $\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1$.\n* Exponential: $\\lim_{x \\to 0} \\frac{e^x - 1}{x} = 1$.\n* Continuous function property: $\\lim_{x \\to a} f(g(x)) = f(\\lim_{x \\to a} g(x))$.",
+    blackboardFormula: "lim_{x→a} f(x) = L ⇔ lim_{x→a⁻} = lim_{x→a⁺} = L | lim_{x→0} sin(x)/x = 1",
   },
   integral: {
     tobyPeerTeach:
-      "Here is my explanation of integrals! 🍞 Slicing a loaf of bread into infinitely thin rectangular slices and adding them all together gives the total volume. In math, integration adds infinite slivers under a curve to find exact area, and it reverses differentiation! How is that?",
+      "Here is my summary of **Integrals & Antiderivatives** 📊:\n\n* **Definite Integral ($\\int_a^b f(x)dx$)**: Exact net area between $f(x)$ and the $x$-axis from $x=a$ to $x=b$.\n* **Fundamental Theorem of Calculus**: Differentiation and integration are inverse operations: $$\\int_a^b f(x)dx = F(b) - F(a), \\quad \\text{where } F'(x) = f(x)$$\n\nIs this clear?",
     mayaClue:
-      "💡 Maya's Clue: The Fundamental Theorem of Calculus connects integration and differentiation: d/dx [∫_{a}^{x} f(t)dt] = f(x). It proves accumulation and rate of change are inverses!",
+      "💡 **Maya's Clue**: Integration by Substitution ($u$-sub) reverses the Chain Rule:\n\n$$\\int f(g(x)) g'(x) dx = \\int f(u) du, \\quad u = g(x)$$",
     leoPopQuiz:
-      "⚡ POP QUIZ! If you integrate velocity v(t) from t=0 to t=5, what physical quantity do you get? (Displacement or acceleration?)",
+      "⚡ **Leo's Pop Quiz**:\n\nEvaluate: $$\\int (4x^3 - 6x + 2) dx$$",
     mayaEdgeCase:
-      "Wait! 🧐 Why do indefinite integrals always require a constant of integration (+C)? What happens to constants when we differentiate?",
+      "**Analytical Question** 🧐:\n\nWhy does $\\int \\frac{1}{x} dx = \\ln|x| + C$ require absolute value bars? (Because the domain of $\\ln(x)$ is only $x > 0$, while $\\frac{1}{x}$ is defined for all $x \\neq 0$).",
     tobyIntuition:
-      "Mind blown! 🤯 If a derivative takes a speed graph and tells you acceleration, the integral takes the speed graph and tells you total distance traveled!",
+      "Aha! 💡 If derivative is slicing a graph into instantaneous slope slivers, integral is adding all those slivers back together to calculate total accumulated amount!",
     leoSummary:
-      "Integration = Continuous summation (Riemann sum). Reverse of derivative + Area under curve! 📊",
-    blackboardFormula: "∫ xⁿ dx = (xⁿ⁺¹)/(n+1) + C | ∫_{a}^{b} f(x)dx = F(b) - F(a)",
+      "**Integral Essentials** 🎯:\n* Power Rule: $\\int x^n dx = \\frac{x^{n+1}}{n+1} + C \\quad (n \\neq -1)$\n* Integration by Parts: $\\int u dv = uv - \\int v du$",
+    samDirectAnswer:
+      "**Direct Formulas** 🎯:\n\n* $\\int e^{kx} dx = \\frac{1}{k} e^{kx} + C$\n* $\\int \\cos(x) dx = \\sin(x) + C, \\quad \\int \\sin(x) dx = -\\cos(x) + C$\n* $\\int \\sec^2(x) dx = \\tan(x) + C$",
+    blackboardFormula: "∫ xⁿ dx = xⁿ⁺¹/(n+1) + C | ∫ f(x)dx = F(b) - F(a) | ∫ u dv = uv - ∫ v du",
   },
 };
 
-// Helper to find matching concept dialogue data
 function getConceptDialogue(conceptTitle: string): ConceptDialogueData {
   const t = conceptTitle.toLowerCase();
   for (const [key, data] of Object.entries(CONCEPT_DIALOGUES)) {
     if (t.includes(key)) return data;
   }
-  // Default versatile dialogue
   return {
-    tobyPeerTeach: `Let me summarize what I learned about ${conceptTitle}! The core idea is that we are looking at how parts connect in the physical world rather than just memorizing definitions. It balances out and predicts how things change! Did I capture the main essence?`,
-    mayaClue: `💡 Maya's Clue: Focus on the fundamental assumptions and boundary conditions of ${conceptTitle}. What happens at zero, infinity, or extreme values?`,
-    leoPopQuiz: `⚡ RAPID FIRE QUIZ! In your own words, what is the #1 real-world application of ${conceptTitle}? How would you explain it to a 10-year-old?`,
-    mayaEdgeCase: `Wait... 🧐 Does ${conceptTitle} hold true under all conditions, or are there special edge cases where the rule breaks down?`,
-    tobyIntuition: `Wait! 💡 So ${conceptTitle} is like a seesaw—when one side goes up, the other adjusts to maintain balance!`,
-    leoSummary: `Awesome! We connected the conceptual intuition directly to the formal rules for ${conceptTitle}! 🚀`,
+    tobyPeerTeach: `Here is my summary of **${conceptTitle}**:\n\n* **Core Principle**: Explains the relationship between inputs and outputs in the physical world.\n* **Key Takeaway**: Rules are derived from fundamental balance and conservation laws.\n\nDid I capture the main essence?`,
+    mayaClue: `💡 **Maya's Clue**: Focus on the boundary conditions and governing equations of **${conceptTitle}**. Examine what happens as parameters approach zero or infinity.`,
+    leoPopQuiz: `⚡ **Leo's Pop Quiz**: In 1-2 sentences, what is the #1 governing equation or real-world application of **${conceptTitle}**?`,
+    mayaEdgeCase: `**Analytical Question** 🧐: Under what specific conditions does the standard model for **${conceptTitle}** apply, and where are its limitations?`,
+    tobyIntuition: `Aha! 💡 So **${conceptTitle}** is all about balancing the system—when one variable changes, the others adjust predictably!`,
+    leoSummary: `**Key Summary** 🎯: We connected the intuitive physical model directly to the formal rules for **${conceptTitle}**!`,
+    samDirectAnswer: `**Direct Statement** 🎯:\n\n* **${conceptTitle}** is governed by standard conservation and equilibrium laws.\n* All variables must be evaluated with correct units and boundary limits.`,
     blackboardFormula: `Key Principle: Balance of inputs & outputs in ${conceptTitle}`,
   };
 }
 
-// Dynamic response generator for offline / fallback simulation
 function generateMockClassroomResponse(
   conceptTitle: string,
   userMessage: string,
   turnCount: number,
-  comprehensions: { toby: number; maya: number; leo: number },
+  comprehensions: { toby: number; maya: number; leo: number; sam: number },
   mode: string = "teach",
   targetSpeaker: ClassmateSpeaker = "Toby"
 ) {
   const lower = userMessage.toLowerCase();
   const dialogue = getConceptDialogue(conceptTitle);
 
-  // Auto-detect target speaker if mentioned in user's prompt
   let speaker: ClassmateSpeaker = targetSpeaker || "Toby";
-  if (lower.includes("maya")) speaker = "Maya";
+  if (lower.includes("sam")) speaker = "Sam";
+  else if (lower.includes("maya")) speaker = "Maya";
   else if (lower.includes("leo")) speaker = "Leo";
   else if (lower.includes("toby")) speaker = "Toby";
 
+  const tobyScore = Math.min(100, comprehensions.toby + 20);
+  const mayaScore = Math.min(100, comprehensions.maya + 18);
+  const leoScore = Math.min(100, comprehensions.leo + 22);
+  const samScore = Math.min(100, (comprehensions.sam || 20) + 25);
+
   // 1. PEER EXPLAIN MODE
   if (mode === "peer_explain" || lower.includes("your turn") || lower.includes("teach it back")) {
-    const tobyScore = Math.min(100, comprehensions.toby + 20);
-    const mayaScore = Math.min(100, comprehensions.maya + 15);
-    const leoScore = Math.min(100, comprehensions.leo + 20);
+    let reply = dialogue.tobyPeerTeach;
+    if (speaker === "Sam") {
+      reply = dialogue.samDirectAnswer;
+    } else if (speaker === "Maya") {
+      reply = `**Maya's Rigorous Breakdown** 🧐:\n\nFor **${conceptTitle}**, all valid solutions must satisfy boundary conditions without logical contradictions. Here is the formal relationship:\n\n* ${dialogue.blackboardFormula}\n\nDoes this rigorous formulation match your explanation?`;
+    }
 
     return {
-      speaker: speaker === "Maya" ? "Maya" : speaker === "Leo" ? "Leo" : "Toby",
-      reply:
-        speaker === "Maya"
-          ? `Let me test my logical derivation: For ${conceptTitle}, if we take the governing principle and test edge cases, the outputs stay balanced because the underlying equations enforce conservation. Did my rigorous summary hit the mark?`
-          : dialogue.tobyPeerTeach,
+      speaker,
+      reply,
       mood: "lightbulb",
-      thought: `${speaker} is testing their synthesized mental model of ${conceptTitle}.`,
+      thought: `${speaker} tested their understanding of ${conceptTitle} in structured Markdown.`,
       comprehensionDelta: 20,
-      newComprehensions: { toby: tobyScore, maya: mayaScore, leo: leoScore },
+      newComprehensions: { toby: tobyScore, maya: mayaScore, leo: leoScore, sam: samScore },
       xpAwarded: 70,
       comboMultiplier: 2.0,
       classmateChime: {
-        speaker: speaker === "Toby" ? "Maya" : "Toby",
-        emoji: speaker === "Toby" ? "🧐" : "💡",
+        speaker: speaker === "Sam" ? "Toby" : "Sam",
+        emoji: speaker === "Sam" ? "🎨" : "🎯",
         reaction:
-          speaker === "Toby"
-            ? "Toby's analogy was surprisingly solid! Let's make sure the edge cases check out."
-            : "Maya's explanation was super sharp!",
+          speaker === "Sam"
+            ? "Sam gave the exact facts! That makes it super clear."
+            : "Clear explanation from the team.",
       },
       blackboardTip: dialogue.blackboardFormula,
     };
@@ -284,19 +311,15 @@ function generateMockClassroomResponse(
       speaker: "Leo",
       reply: dialogue.leoPopQuiz,
       mood: "curious",
-      thought: "Leo threw a quick rapid-fire conceptual challenge.",
-      comprehensionDelta: 10,
-      newComprehensions: {
-        toby: comprehensions.toby,
-        maya: comprehensions.maya,
-        leo: Math.min(100, comprehensions.leo + 10),
-      },
+      thought: "Leo offered a quick structured quiz in Markdown.",
+      comprehensionDelta: 12,
+      newComprehensions: { toby: comprehensions.toby, maya: comprehensions.maya, leo: leoScore, sam: samScore },
       xpAwarded: 45,
       comboMultiplier: 1.5,
       classmateChime: {
-        speaker: "Maya",
-        emoji: "🧐",
-        reaction: "Pay attention to the units and boundary values!",
+        speaker: "Sam",
+        emoji: "🎯",
+        reaction: "Direct question. Look at the governing formula.",
       },
       blackboardTip: dialogue.blackboardFormula,
     };
@@ -305,141 +328,102 @@ function generateMockClassroomResponse(
   // 3. HINT / CLUE MODE
   if (mode === "hint" || lower.includes("clue") || lower.includes("hint") || lower.includes("help")) {
     return {
-      speaker: "Maya",
-      reply: dialogue.mayaClue,
+      speaker: speaker === "Sam" ? "Sam" : "Maya",
+      reply: speaker === "Sam" ? dialogue.samDirectAnswer : dialogue.mayaClue,
       mood: "curious",
-      thought: "Maya offered a scaffold hint to anchor the tutor's reasoning.",
+      thought: `${speaker} provided structured guidance in Markdown.`,
       comprehensionDelta: 10,
       newComprehensions: {
-        toby: Math.min(100, comprehensions.toby + 5),
-        maya: Math.min(100, comprehensions.maya + 10),
-        leo: Math.min(100, comprehensions.leo + 5),
+        toby: Math.min(100, comprehensions.toby + 10),
+        maya: Math.min(100, comprehensions.maya + 12),
+        leo: Math.min(100, comprehensions.leo + 10),
+        sam: Math.min(100, (comprehensions.sam || 20) + 15),
       },
       xpAwarded: 35,
       comboMultiplier: 1.0,
       classmateChime: {
         speaker: "Toby",
         emoji: "🎨",
-        reaction: "That clue helps a lot! Can you explain it with an everyday example?",
+        reaction: "That makes it so easy to follow step-by-step!",
       },
       blackboardTip: dialogue.blackboardFormula,
     };
   }
 
-  // 4. STANDARD TEACHING CONVERSATION
-  const hasAnalogy =
-    lower.includes("like") ||
-    lower.includes("imagine") ||
-    lower.includes("car") ||
-    lower.includes("water") ||
-    lower.includes("lemon") ||
-    lower.includes("soap") ||
-    lower.includes("proton") ||
-    lower.includes("balloon") ||
-    lower.includes("hill") ||
-    lower.includes("slope") ||
-    lower.includes("cloud") ||
-    lower.includes("pizza");
-
-  if (hasAnalogy) {
-    const tobyScore = Math.min(100, comprehensions.toby + 25);
-    const mayaScore = Math.min(100, comprehensions.maya + 20);
-    const leoScore = Math.min(100, comprehensions.leo + 25);
-
+  // 4. SAM DIRECT SPEAKER
+  if (speaker === "Sam") {
     return {
-      speaker: speaker,
-      reply:
-        speaker === "Maya"
-          ? `That's a very clever metaphor! 🧐 But tell me: how does this hold up when variables reach boundary extremes or zero? Does the analogy still work?`
-          : dialogue.tobyIntuition,
-      mood: "lightbulb",
-      thought: "The student used an intuitive real-world analogy.",
+      speaker: "Sam",
+      reply: dialogue.samDirectAnswer,
+      mood: "mastered",
+      thought: "Sam provided a straight-to-the-point factual breakdown in Markdown.",
       comprehensionDelta: 25,
-      newComprehensions: { toby: tobyScore, maya: mayaScore, leo: leoScore },
-      xpAwarded: 80,
+      newComprehensions: { toby: tobyScore, maya: mayaScore, leo: leoScore, sam: samScore },
+      xpAwarded: 75,
       comboMultiplier: 2.0,
       classmateChime: {
-        speaker: speaker === "Maya" ? "Leo" : "Maya",
-        emoji: speaker === "Maya" ? "⚡" : "🧐",
-        reaction:
-          speaker === "Maya"
-            ? "I love that analogy! It totally clicks for me!"
-            : "The analogy holds up well logically.",
+        speaker: "Leo",
+        emoji: "⚡",
+        reaction: "Short, sweet, and 100% accurate!",
       },
       blackboardTip: dialogue.blackboardFormula,
     };
   }
 
-  // Target specific responses
+  // 5. MAYA SKEPTICAL SPEAKER
   if (speaker === "Maya") {
-    const mayaScore = Math.min(100, comprehensions.maya + 18);
     return {
       speaker: "Maya",
       reply: dialogue.mayaEdgeCase,
       mood: "skeptical",
-      thought: "Maya is probing mathematical and physical edge cases.",
+      thought: "Maya posed a structured analytical question in Markdown.",
       comprehensionDelta: 18,
-      newComprehensions: {
-        toby: Math.min(100, comprehensions.toby + 10),
-        maya: mayaScore,
-        leo: Math.min(100, comprehensions.leo + 12),
-      },
+      newComprehensions: { toby: tobyScore, maya: mayaScore, leo: leoScore, sam: samScore },
       xpAwarded: 60,
       comboMultiplier: 1.5,
       classmateChime: {
-        speaker: "Toby",
-        emoji: "😵‍💫",
-        reaction: "Maya is asking the tough questions! Help us understand why!",
+        speaker: "Sam",
+        emoji: "🎯",
+        reaction: "Good point on boundary conditions.",
       },
       blackboardTip: dialogue.blackboardFormula,
     };
   }
 
+  // 6. LEO SUMMARY SPEAKER
   if (speaker === "Leo") {
-    const leoScore = Math.min(100, comprehensions.leo + 22);
     return {
       speaker: "Leo",
-      reply: `${dialogue.leoSummary} What do you think the next logical step in this topic would be?`,
+      reply: `${dialogue.leoSummary}\n\nWhat is the next key concept we should link with this?`,
       mood: "amazed",
-      thought: "Leo is summarizing and driving forward momentum.",
+      thought: "Leo synthesized key takeaways in clean Markdown.",
       comprehensionDelta: 22,
-      newComprehensions: {
-        toby: Math.min(100, comprehensions.toby + 15),
-        maya: Math.min(100, comprehensions.maya + 15),
-        leo: leoScore,
-      },
+      newComprehensions: { toby: tobyScore, maya: mayaScore, leo: leoScore, sam: samScore },
       xpAwarded: 65,
       comboMultiplier: 1.5,
       classmateChime: {
-        speaker: "Maya",
-        emoji: "🧐",
-        reaction: "Good synthesis, Leo!",
+        speaker: "Toby",
+        emoji: "💡",
+        reaction: "Everything is clicking into place!",
       },
       blackboardTip: dialogue.blackboardFormula,
     };
   }
 
-  // Toby default conversational progress
-  const tobyScore = Math.min(100, comprehensions.toby + 20);
-  const mayaScore = Math.min(100, comprehensions.maya + 15);
-  const leoScore = Math.min(100, comprehensions.leo + 20);
-
+  // 7. TOBY DEFAULT
   return {
     speaker: "Toby",
-    reply:
-      turnCount === 1
-        ? `Hmm, okay! But if you had to explain ${conceptTitle} using a simple story or a picture in my head, how would you draw it? 🤔`
-        : `Wait, that makes so much sense! 💡 So in ${conceptTitle}, everything balances out based on how the components interact! Can you summarize the golden rule for us?`,
+    reply: `${dialogue.tobyIntuition}\n\nCan you give us a quick $1$-sentence summary to lock this in?`,
     mood: tobyScore >= 80 ? "mastered" : "curious",
-    thought: "Toby is building intuitive scaffolding.",
+    thought: "Toby internalized the intuitive analogy.",
     comprehensionDelta: 20,
-    newComprehensions: { toby: tobyScore, maya: mayaScore, leo: leoScore },
+    newComprehensions: { toby: tobyScore, maya: mayaScore, leo: leoScore, sam: samScore },
     xpAwarded: 60,
     comboMultiplier: 1.5,
     classmateChime: {
-      speaker: "Leo",
-      emoji: "⚡",
-      reaction: "We are making serious progress on this topic!",
+      speaker: "Sam",
+      emoji: "🎯",
+      reaction: "Intuition aligns with the formal definition.",
     },
     blackboardTip: dialogue.blackboardFormula,
   };
@@ -452,15 +436,15 @@ export async function POST(request: Request) {
       conceptTitle,
       conceptDescription,
       messages,
-      currentComprehensions = { toby: 15, maya: 10, leo: 15 },
+      currentComprehensions = { toby: 15, maya: 10, leo: 15, sam: 20 },
       mode = "teach",
       targetClassmate = "Toby",
       streakCount = 1,
     } = body;
 
-    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+    const genAI = getGeminiClient();
 
-    if (!apiKey) {
+    if (!genAI) {
       console.log(`Using Topic-Aware Classroom Pod engine for: ${conceptTitle} (${mode})`);
       const userLastMessage = messages[messages.length - 1]?.content || "";
       const result = generateMockClassroomResponse(
@@ -474,13 +458,11 @@ export async function POST(request: Request) {
       return NextResponse.json(result);
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
-    const systemPrompt = `You are a lively high-school classroom study group consisting of 3 interactive classmates:
-1. **Toby (Visual & Intuitive Thinker)**: Enthusiastic, naive, loves real-world analogies (cars, pizza, rockets, water flow). Gets confused by dry formulas without intuition.
-2. **Maya (Skeptical Challenger & Fact-Checker)**: Sharp, questions boundary conditions, edge cases (what if x=0, what if friction=0?), demands rigorous explanation.
-3. **Leo (Cheerful Quizzer & Peer Partner)**: Energetic, offers quick pop-quizzes, loves summarizing, cheers on the tutor.
+    const systemPrompt = `You are a high-school study group of 4 distinct classmates learning together:
+1. **Toby (Visual & Intuitive)** 🎨: Enthusiastic, relates concepts to everyday physical analogies (speedometer, balloons, water flow).
+2. **Maya (Skeptical Challenger)** 🧐: Sharp, analytical, asks about boundary conditions, edge cases, and mathematical/chemical rigor without being confusing.
+3. **Leo (Quick Quizzer)** ⚡: Energetic, gives bulleted takeaways, pop quizzes, and celebrates combos.
+4. **Sam (Straightforward & Direct)** 🎯: Gives direct, concise, factual, no-nonsense answers, equations, and exact step-by-step definitions straight to the point.
 
 TARGET CONCEPT: "${conceptTitle}"
 CONCEPT SUMMARY: "${conceptDescription}"
@@ -488,38 +470,41 @@ CURRENT COMPREHENSIONS:
 - Toby: ${currentComprehensions.toby}%
 - Maya: ${currentComprehensions.maya}%
 - Leo: ${currentComprehensions.leo}%
+- Sam: ${currentComprehensions.sam ?? 20}%
 
-CURRENT MODE: "${mode}" (Options: "teach", "peer_explain" = student explains back in their own words, "pop_quiz" = classmate asks tutor a rapid fire test, "hint" = classmate gives a clue)
+CURRENT MODE: "${mode}" ("teach", "peer_explain" = student explains back in own words, "pop_quiz" = quick quiz, "hint" = helpful scaffold clue)
 TARGET CLASSMATE: "${targetClassmate}"
 
-GAMIFICATION RULES:
-1. Act like real high school classmates in a collaborative study session. Use natural expressions, banter, and emojis.
-2. If mode is "peer_explain": The speaker explains the concept back to the user in their own words with high-school flair, and asks the user to verify if their reasoning is accurate.
-3. If mode is "pop_quiz": The speaker asks a fun, conceptual rapid-fire question.
-4. If mode is "hint": Maya or Toby provides a helpful clue or analogy scaffold.
-5. Reward real-world analogies with XP (+50 to +100) and combo multipliers.
+CRITICAL PEDAGOGICAL & FORMATTING RULES:
+1. **Always format your response with clean Markdown**: Use **bolding**, bullet lists (*), numbered steps (1., 2.), and clear math expressions ($[H^+]$, $f'(x)$, equations).
+2. **Do NOT be confusing**: Ensure every explanation is proper, accurate, structured, and easy to understand.
+3. If speaking as **Sam**: Be direct, factual, and straight to the point with zero fluff.
+4. If speaking as **Toby**: Use a clear intuitive visual story.
+5. If speaking as **Maya**: Ask a coherent edge-case question.
+6. If speaking as **Leo**: Give a crisp quiz or bulleted summary.
 
 OUTPUT FORMAT:
 Respond with ONLY valid JSON:
 {
-  "speaker": "Toby" | "Maya" | "Leo",
-  "reply": "Spoken dialogue response to the tutor",
+  "speaker": "Toby" | "Maya" | "Leo" | "Sam",
+  "reply": "Your clear, properly structured Markdown response",
   "mood": "confused" | "curious" | "skeptical" | "lightbulb" | "amazed" | "mastered",
-  "thought": "Internal study pod thoughts (1-2 sentences)",
+  "thought": "Brief internal pod thought (1 sentence)",
   "comprehensionDelta": <number 5 to 30>,
   "newComprehensions": {
     "toby": <number 0-100>,
     "maya": <number 0-100>,
-    "leo": <number 0-100>
+    "leo": <number 0-100>,
+    "sam": <number 0-100>
   },
   "xpEarned": <number 20-100>,
   "comboMultiplier": <number 1.0, 1.5, 2.0, or 3.0>,
   "classmateChime": {
-    "speaker": "Maya" | "Toby" | "Leo",
-    "emoji": "🧐" | "💡" | "⚡" | "🤯",
-    "reaction": "Quick 1-sentence banter reaction"
+    "speaker": "Maya" | "Toby" | "Leo" | "Sam",
+    "emoji": "🧐" | "💡" | "⚡" | "🎯",
+    "reaction": "Quick 1-sentence supportive reaction"
   } | null,
-  "blackboardTip": "<LaTeX equation or key visual tip for the chalkboard, or null>"
+  "blackboardTip": "<LaTeX equation or key visual formula, or null>"
 }`;
 
     const conversationHistory = messages
@@ -528,8 +513,7 @@ Respond with ONLY valid JSON:
 
     const prompt = `${systemPrompt}\n\nCONVERSATION HISTORY:\n${conversationHistory}\n\nGenerate the next classroom response in exact JSON:`;
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const text = await generateWithGemini(genAI, prompt);
     const jsonMatch = text.match(/\{[\s\S]*\}/);
 
     if (!jsonMatch) {
@@ -550,14 +534,15 @@ Respond with ONLY valid JSON:
 
     return NextResponse.json({
       speaker: parsed.speaker || targetClassmate || "Toby",
-      reply: parsed.reply || "Wait, could you give a real-world example for that?",
+      reply: parsed.reply || "Could you summarize the key rule in one sentence?",
       mood: parsed.mood || "curious",
-      thought: parsed.thought || "The study group is considering your explanation...",
+      thought: parsed.thought || "The study group is following your explanation...",
       comprehensionDelta: parsed.comprehensionDelta || 15,
       newComprehensions: {
         toby: Math.min(100, Math.max(0, parsed.newComprehensions?.toby ?? (currentComprehensions.toby + 15))),
         maya: Math.min(100, Math.max(0, parsed.newComprehensions?.maya ?? (currentComprehensions.maya + 12))),
         leo: Math.min(100, Math.max(0, parsed.newComprehensions?.leo ?? (currentComprehensions.leo + 18))),
+        sam: Math.min(100, Math.max(0, parsed.newComprehensions?.sam ?? ((currentComprehensions.sam ?? 20) + 20))),
       },
       xpEarned: parsed.xpEarned || 50,
       comboMultiplier: parsed.comboMultiplier || (streakCount >= 3 ? 2.0 : 1.5),
@@ -570,10 +555,10 @@ Respond with ONLY valid JSON:
     const userLastMessage = body.messages?.[body.messages.length - 1]?.content || "";
     return NextResponse.json(
       generateMockClassroomResponse(
-        body.conceptTitle || "Chemistry",
+        body.conceptTitle || "Science",
         userLastMessage,
         body.messages ? body.messages.filter((m) => m.role === "user").length : 1,
-        body.currentComprehensions || { toby: 15, maya: 10, leo: 15 },
+        body.currentComprehensions || { toby: 15, maya: 10, leo: 15, sam: 20 },
         body.mode || "teach",
         body.targetClassmate || "Toby"
       )

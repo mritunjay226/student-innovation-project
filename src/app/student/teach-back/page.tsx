@@ -31,11 +31,13 @@ import {
   ShieldCheck,
   ChevronRight,
   FileText,
+  Target,
 } from "lucide-react";
 import Link from "next/link";
 import { soundEffects } from "@/lib/soundEffects";
+import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 
-type ClassmateSpeaker = "Toby" | "Maya" | "Leo";
+type ClassmateSpeaker = "Toby" | "Maya" | "Leo" | "Sam";
 type Mood = "confused" | "curious" | "skeptical" | "lightbulb" | "amazed" | "mastered";
 
 interface ChatMessage {
@@ -76,6 +78,7 @@ interface EvaluationResult {
     toby: { name: string; role: string; emoji: string; score: number; verdict: string };
     maya: { name: string; role: string; emoji: string; score: number; verdict: string };
     leo: { name: string; role: string; emoji: string; score: number; verdict: string };
+    sam?: { name: string; role: string; emoji: string; score: number; verdict: string };
   };
   tobyVerdict: string;
 }
@@ -114,6 +117,14 @@ const CLASSMATES: Record<
     avatarBg: "bg-emerald-100 border-emerald-300 text-emerald-700",
     accentColor: "#059669",
     bio: "Loves rapid-fire summaries, speed quizzes, and celebrating streaks.",
+  },
+  Sam: {
+    name: "Sam",
+    role: "Direct & Precise",
+    emoji: "🎯",
+    avatarBg: "bg-blue-100 border-blue-300 text-blue-700",
+    accentColor: "#2563eb",
+    bio: "Gives clear, direct, no-nonsense answers and exact step-by-step facts.",
   },
 };
 
@@ -228,10 +239,12 @@ export default function TeachBackPage() {
     toby: number;
     maya: number;
     leo: number;
+    sam: number;
   }>({
     toby: 15,
     maya: 10,
     leo: 15,
+    sam: 20,
   });
 
   const [isTyping, setIsTyping] = useState(false);
@@ -248,7 +261,7 @@ export default function TeachBackPage() {
     if (!concept) return;
 
     setSelectedConcept(conceptId);
-    setComprehensions({ toby: 15, maya: 10, leo: 15 });
+    setComprehensions({ toby: 15, maya: 10, leo: 15, sam: 20 });
     setStreakCount(1);
     setComboMultiplier(1.0);
     setEvaluation(null);
@@ -268,9 +281,9 @@ export default function TeachBackPage() {
       comprehensionDelta: 0,
       xpAwarded: 0,
       classmateChime: {
-        speaker: "Maya",
-        emoji: "🧐",
-        reaction: "Yeah, show us why this isn't just arbitrary math rules!",
+        speaker: "Sam",
+        emoji: "🎯",
+        reaction: "Let's keep the definitions and facts straight to the point.",
       },
     };
 
@@ -418,6 +431,10 @@ export default function TeachBackPage() {
     handleSendMessage("Maya, can you give me a clue or edge case to think about? 💡", "hint", "Maya");
   };
 
+  const triggerSamDirect = () => {
+    handleSendMessage(`Sam, give me the direct, straight-to-the-point facts on ${selectedConceptData?.title}! 🎯`, "teach", "Sam");
+  };
+
   const handleFinishAndEvaluate = async () => {
     if (!selectedConcept || !selectedConceptData || !userId || isEvaluating) return;
 
@@ -426,7 +443,7 @@ export default function TeachBackPage() {
 
     try {
       const avgComp = Math.round(
-        (comprehensions.toby + comprehensions.maya + comprehensions.leo) / 3
+        (comprehensions.toby + comprehensions.maya + comprehensions.leo + (comprehensions.sam || 20)) / 4
       );
 
       const res = await fetch("/api/ai/teach-back-evaluate", {
@@ -497,11 +514,11 @@ export default function TeachBackPage() {
             id: "triple_lightbulb",
             title: "Triple Lightbulb",
             emoji: "💡",
-            description: "Brought all 3 study pod classmates above 75% comprehension",
+            description: "Brought all study pod classmates above 75% comprehension",
             unlocked: true,
           },
         ],
-        feedback: `Brilliant classroom peer teaching session on "${selectedConceptData.title}"! You explained key concepts intuitively to Toby, answered Maya's doubts, and helped Leo solidify his understanding.`,
+        feedback: `Brilliant classroom peer teaching session on "${selectedConceptData.title}"! You explained key concepts intuitively to Toby, answered Maya's doubts, kept Leo energized, and satisfied Sam's precision standard.`,
         misconceptionsFound: [],
         missingConcepts: ["Formal mathematical derivation step"],
         classmateReportCards: {
@@ -526,6 +543,13 @@ export default function TeachBackPage() {
             score: comprehensions.leo,
             verdict: `"Super fun study session! I feel ready for the exam!"`,
           },
+          sam: {
+            name: "Sam",
+            role: "Direct & Precise",
+            emoji: "🎯",
+            score: comprehensions.sam || 90,
+            verdict: `"Clear, accurate, and straight to the point on ${selectedConceptData.title}."`,
+          },
         },
         tobyVerdict: `Toby says: "You're a legend! Our whole study pod mastered ${selectedConceptData.title}!" 🎓`,
       };
@@ -539,7 +563,7 @@ export default function TeachBackPage() {
     setSelectedConcept(null);
     setMessages([]);
     setEvaluation(null);
-    setComprehensions({ toby: 15, maya: 10, leo: 15 });
+    setComprehensions({ toby: 15, maya: 10, leo: 15, sam: 20 });
     setStreakCount(1);
     setComboMultiplier(1.0);
   };
@@ -574,8 +598,8 @@ export default function TeachBackPage() {
           </h1>
           <p className="text-base text-slate-600 max-w-2xl font-medium">
             Learn reciprocally by explaining concepts to your classmates{" "}
-            <strong>Toby 🎨</strong> (visual), <strong>Maya 🧐</strong> (skeptic), and{" "}
-            <strong>Leo ⚡</strong> (quizzer). Earn XP, chain combo streaks, and master the Feynman technique!
+            <strong>Toby 🎨</strong> (visual), <strong>Maya 🧐</strong> (skeptic),{" "}
+            <strong>Leo ⚡</strong> (quizzer), and <strong>Sam 🎯</strong> (direct facts). Earn XP, chain combo streaks, and master the Feynman technique!
           </p>
         </div>
 
@@ -768,7 +792,7 @@ export default function TeachBackPage() {
             <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
               <Smile className="w-4 h-4 text-purple-600" /> Classmate Report Cards
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
               {Object.entries(evaluation.classmateReportCards || {}).map(([key, card]) => (
                 <div
                   key={key}
@@ -806,9 +830,7 @@ export default function TeachBackPage() {
                 Pedagogical Supervisor Feedback
               </h3>
             </div>
-            <p className="text-sm font-medium leading-relaxed text-slate-700">
-              {evaluation.feedback}
-            </p>
+            <MarkdownRenderer content={evaluation.feedback} />
           </div>
 
           {/* Action Buttons */}
@@ -896,9 +918,9 @@ export default function TeachBackPage() {
         </div>
       </div>
 
-      {/* Classmate Pod Strip (Toby, Maya, Leo) */}
-      <div className="grid grid-cols-3 gap-2 mb-3 shrink-0">
-        {(["Toby", "Maya", "Leo"] as ClassmateSpeaker[]).map((name) => {
+      {/* Classmate Pod Strip (Toby, Maya, Leo, Sam) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3 shrink-0">
+        {(["Toby", "Maya", "Leo", "Sam"] as ClassmateSpeaker[]).map((name) => {
           const info = CLASSMATES[name];
           const score = comprehensions[name.toLowerCase() as keyof typeof comprehensions];
           const isSelected = activeSpeaker === name;
@@ -1029,7 +1051,7 @@ export default function TeachBackPage() {
                   </div>
                 )}
 
-                <p className="whitespace-pre-wrap">{msg.content}</p>
+                <MarkdownRenderer content={msg.content} isUser={isUser} />
 
                 {/* Secondary Classmate Banter Chime */}
                 {msg.classmateChime && (
@@ -1121,6 +1143,14 @@ export default function TeachBackPage() {
           className="px-3 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 hover:bg-amber-200 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
         >
           <Lightbulb className="w-3 h-3" /> Ask Maya for Clue
+        </button>
+
+        <button
+          onClick={triggerSamDirect}
+          disabled={isTyping}
+          className="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 hover:bg-blue-200 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
+        >
+          <Target className="w-3 h-3" /> Ask Sam (Direct Facts)
         </button>
 
         <button

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { getGeminiClient, generateWithGemini } from "@/lib/gemini";
 
 const MOCK_ANALYSIS = {
   completeness: 55,
@@ -22,19 +22,11 @@ export async function POST(request: Request) {
   try {
     const { concept, conceptDescription, explanation } = await request.json();
 
-    // Try Gemini API if key is available
-    const apiKey =
-      process.env.GEMINI_API_KEY ||
-      process.env.NEXT_PUBLIC_GEMINI_API_KEY ||
-      process.env.GOOGLE_API_KEY ||
-      process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-    if (!apiKey) {
+    const genAI = getGeminiClient();
+    if (!genAI) {
       console.log("No GEMINI_API_KEY found, using mock response");
       return NextResponse.json(MOCK_ANALYSIS);
     }
-
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const prompt = `You are an educational AI evaluating a student's "teach-back" explanation of a concept.
 
@@ -64,8 +56,7 @@ Respond ONLY with valid JSON in this exact format (no markdown, no code fences):
   "missingConcepts": ["<missing concept 1>", "<missing concept 2>"]
 }`;
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const text = await generateWithGemini(genAI, prompt);
 
     // Parse JSON from response
     const jsonMatch = text.match(/\{[\s\S]*\}/);

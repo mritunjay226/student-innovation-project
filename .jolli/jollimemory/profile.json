@@ -1,3 +1,11 @@
 {
-	"manuallyDisabled": false
+	"manuallyDisabled": false,
+	"cutoverAttemptedAtMs": 1787861942513,
+	"cutoverFence": {
+		"reason": "cutover to sqlite",
+		"at": "2026-08-27T20:19:02.747Z",
+		"tips": {
+			"C:\\Users\\mk\\Documents\\hackathon_research": "4e5a589e4fb9279f3c15d0ae92b74abd334527c1"
+		}
+	}
 }
