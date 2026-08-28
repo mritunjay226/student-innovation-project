@@ -14,11 +14,11 @@ import {
   HelpCircle,
   Lightbulb,
   CheckCircle2,
-  AlertTriangle,
+  AlertCircle,
   ArrowRight,
   TrendingUp,
   Brain,
-  MessageCircle,
+  MessageSquare,
   Layers,
   GraduationCap,
   Flame,
@@ -27,13 +27,18 @@ import {
   Zap,
   Check,
   X,
-  Smile,
   ShieldCheck,
   ChevronRight,
   FileText,
+  Search,
+  Palette,
+  Compass,
+  User,
+  Star,
 } from "lucide-react";
 import Link from "next/link";
 import { soundEffects } from "@/lib/soundEffects";
+import { getChapterIllustration } from "@/components/CardIllustrations";
 
 type ClassmateSpeaker = "Toby" | "Maya" | "Leo";
 type Mood = "confused" | "curious" | "skeptical" | "lightbulb" | "amazed" | "mastered";
@@ -49,7 +54,6 @@ interface ChatMessage {
   xpAwarded?: number;
   classmateChime?: {
     speaker: string;
-    emoji: string;
     reaction: string;
   } | null;
   isPeerTeachBack?: boolean;
@@ -65,7 +69,6 @@ interface EvaluationResult {
   badges: {
     id: string;
     title: string;
-    emoji: string;
     description: string;
     unlocked: boolean;
   }[];
@@ -73,9 +76,9 @@ interface EvaluationResult {
   misconceptionsFound: string[];
   missingConcepts: string[];
   classmateReportCards: {
-    toby: { name: string; role: string; emoji: string; score: number; verdict: string };
-    maya: { name: string; role: string; emoji: string; score: number; verdict: string };
-    leo: { name: string; role: string; emoji: string; score: number; verdict: string };
+    toby: { name: string; role: string; score: number; verdict: string };
+    maya: { name: string; role: string; score: number; verdict: string };
+    leo: { name: string; role: string; score: number; verdict: string };
   };
   tobyVerdict: string;
 }
@@ -85,80 +88,75 @@ const CLASSMATES: Record<
   {
     name: string;
     role: string;
-    emoji: string;
-    avatarBg: string;
+    cardTheme: string;
+    bubbleTheme: string;
     accentColor: string;
     bio: string;
+    Icon: typeof Palette;
   }
 > = {
   Toby: {
     name: "Toby",
     role: "Visual & Intuitive",
-    emoji: "🎨",
-    avatarBg: "bg-purple-100 border-purple-300 text-purple-700",
-    accentColor: "#7c3aed",
-    bio: "Needs visual stories, real-world analogies, and pancake/car metaphors.",
+    cardTheme: "card-lavender",
+    bubbleTheme: "bg-[#E8DEFF] text-[#2D1B4E] border border-[#D5C4FA]",
+    accentColor: "#7C3AED",
+    bio: "Needs visual stories, real-world analogies, and intuitive metaphors.",
+    Icon: Palette,
   },
   Maya: {
     name: "Maya",
     role: "Skeptical Challenger",
-    emoji: "🧐",
-    avatarBg: "bg-amber-100 border-amber-300 text-amber-700",
-    accentColor: "#d97706",
+    cardTheme: "card-butter",
+    bubbleTheme: "bg-[#FEF0C3] text-[#713F12] border border-[#FDE089]",
+    accentColor: "#D97706",
     bio: "Tests edge cases (x=0, zero friction) and questions formal rigor.",
+    Icon: HelpCircle,
   },
   Leo: {
     name: "Leo",
     role: "Quick Quizzer",
-    emoji: "⚡",
-    avatarBg: "bg-emerald-100 border-emerald-300 text-emerald-700",
+    cardTheme: "card-mint",
+    bubbleTheme: "bg-[#D2F1E6] text-[#0D3E30] border border-[#B2E5D3]",
     accentColor: "#059669",
-    bio: "Loves rapid-fire summaries, speed quizzes, and celebrating streaks.",
+    bio: "Loves rapid summaries, speed checks, and connecting formulas.",
+    Icon: Zap,
   },
 };
 
-const MOOD_META: Record<Mood, { emoji: string; label: string; color: string; bg: string; border: string }> = {
+const MOOD_META: Record<
+  Mood,
+  { label: string; chipClass: string; Icon: typeof HelpCircle }
+> = {
   confused: {
-    emoji: "😵‍💫",
     label: "Confused",
-    color: "#e11d48",
-    bg: "#fff1f2",
-    border: "#fecdd3",
+    chipClass: "chip-peach",
+    Icon: HelpCircle,
   },
   curious: {
-    emoji: "🤔",
     label: "Intrigued",
-    color: "#0284c7",
-    bg: "#f0f9ff",
-    border: "#bae6fd",
+    chipClass: "chip-sky",
+    Icon: Compass,
   },
   skeptical: {
-    emoji: "🧐",
-    label: "Wait, really?",
-    color: "#d97706",
-    bg: "#fffbeb",
-    border: "#fde68a",
+    label: "Skeptical",
+    chipClass: "chip-butter",
+    Icon: AlertCircle,
   },
   lightbulb: {
-    emoji: "💡",
-    label: "Aha! Lightbulb!",
-    color: "#7c3aed",
-    bg: "#f3f0ff",
-    border: "#e9d5ff",
+    label: "Understood",
+    chipClass: "chip-lavender",
+    Icon: Lightbulb,
   },
   amazed: {
-    emoji: "🤯",
-    label: "Mind Blown!",
-    color: "#9333ea",
-    bg: "#faf5ff",
-    border: "#f3e8ff",
+    label: "Breakthrough",
+    chipClass: "chip-pink",
+    Icon: Sparkles,
   },
   mastered: {
-    emoji: "🎓",
-    label: "Classroom Mastered!",
-    color: "#059669",
-    bg: "#ecfdf5",
-    border: "#a7f3d0",
+    label: "Mastered",
+    chipClass: "chip-mint",
+    Icon: CheckCircle2,
   },
 };
 
@@ -169,37 +167,38 @@ function getOpeningPromptForConcept(title: string, subject: string): string {
   const t = title.toLowerCase();
 
   if (t.includes("vector") || t.includes("kinematics")) {
-    return "Hey tutor! 🙋‍♂️ If a scalar is just a normal number like 5 meters, why do we need arrows and trigonometry for vectors? Why can't I just add 3m North + 4m East and say I walked 7m total? Why is displacement 5m?!";
+    return "Hey tutor! If a scalar is just a normal magnitude like 5 meters, why do we need arrows and trigonometry for vectors? Why can't I just add 3m North + 4m East and say I walked 7m total? Why is displacement 5m?";
   }
   if (t.includes("newton") || t.includes("friction")) {
-    return "Hey! If every action has an equal and opposite reaction (Newton's 3rd Law), why does anything ever move at all? Shouldn't the forces cancel out to zero and freeze everything in place?! 😭";
+    return "Hey! If every action has an equal and opposite reaction (Newton's 3rd Law), why does anything ever move at all? Shouldn't the forces cancel out to zero and freeze everything in place?";
   }
   if (t.includes("electrostat") || t.includes("gauss")) {
-    return "Hey! My physics teacher was talking about electric potential V and electric field E. If they're both caused by charges, aren't they basically the exact same thing? Why is one a vector and the other a regular number?!";
+    return "Hey! My physics teacher was talking about electric potential V and electric field E. If they're both caused by charges, aren't they basically the exact same thing? Why is one a vector and the other a scalar?";
   }
   if (t.includes("derivative")) {
-    return "Hey! My math teacher was yelling about 'derivatives' today and my brain turned off 😭 Isn't a derivative literally just the y-value of the graph at a point? Like if my position is 50 meters, why isn't 50 already the derivative? Why do we need tangent lines?!";
+    return "Hey! My math teacher was explaining derivatives today and it felt confusing. Isn't a derivative just the y-value of the graph at a point? Why do we need tangent lines and limits?";
   }
   if (t.includes("limit")) {
-    return "Hey! When I plugged x = 2 into (x² - 4)/(x - 2), my calculator said ERROR: 0/0 and my desk caught fire 🔥. What even is a limit, and why can't we just plug the number in like normal people?!";
+    return "Hey! When I evaluated x = 2 into (x^2 - 4)/(x - 2), I got 0/0. What is a limit fundamentally, and why does approaching a point give a real value?";
   }
   if (t.includes("integral")) {
-    return "Hey! They told us an integral is 'the area under a curve', but why on earth would anyone care about area under a weird squiggly curve? And why did my teacher claim it reverses derivatives?! That feels totally made up!";
+    return "Hey! They told us an integral is the area under a curve, but why does finding area relate to reversing a derivative? How does accumulation connect to rates?";
   }
   if (t.includes("atomic") || t.includes("orbital")) {
-    return "Hey! In 10th grade they told us electrons orbit the nucleus like planets in solar system rings. Now in 11th grade they say electrons are 3D probability clouds with shapes like dumbbells?! What is an orbital really?!";
+    return "Hey! In 10th grade we learned electrons orbit the nucleus in fixed rings. Now in 11th grade they say orbitals are 3D probability clouds with dumbbell shapes. What is an electron orbital really?";
   }
   if (t.includes("bond") || t.includes("vsepr")) {
-    return "Hey! Why is water (H2O) bent like a boomerang instead of straight in a line? Carbon dioxide (CO2) is in a straight line! Why does lone pair repulsion bend molecules?";
+    return "Hey! Why is water (H2O) bent like a boomerang instead of straight in a line like carbon dioxide (CO2)? How do lone pairs affect geometry?";
   }
 
-  return `Hey! Our study group is stuck on "${title}" in ${subject} and the textbook makes zero sense 😭 Can you teach us the real intuition without scary formulas?`;
+  return `Hey! Our study group is working through "${title}" in ${subject}. Can you teach us the foundational intuition and core principles step by step?`;
 }
 
 export default function TeachBackPage() {
   const { userId } = useAuth();
   const [selectedSubject, setSelectedSubject] = useState<string>("All Subjects");
   const [selectedGrade, setSelectedGrade] = useState<string>("All Grades");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const concepts = useQuery(api.concepts.getAll, {
     subject: selectedSubject !== "All Subjects" ? selectedSubject : undefined,
@@ -229,9 +228,9 @@ export default function TeachBackPage() {
     maya: number;
     leo: number;
   }>({
-    toby: 15,
-    maya: 10,
-    leo: 15,
+    toby: 20,
+    maya: 15,
+    leo: 20,
   });
 
   const [isTyping, setIsTyping] = useState(false);
@@ -248,288 +247,270 @@ export default function TeachBackPage() {
     if (!concept) return;
 
     setSelectedConcept(conceptId);
-    setComprehensions({ toby: 15, maya: 10, leo: 15 });
+    setEvaluation(null);
     setStreakCount(1);
     setComboMultiplier(1.0);
-    setEvaluation(null);
-    setShowBlackboard(false);
-    setBlackboardNotes([
-      `📚 Topic: ${concept.title}`,
-      `🎯 Goal: Explain the intuitive 'why' using real-world analogies`,
-    ]);
+    setActiveSpeaker("Toby");
+    setComprehensions({ toby: 20, maya: 15, leo: 20 });
 
-    const initialMessage: ChatMessage = {
+    const openingContent = getOpeningPromptForConcept(concept.title, concept.subject);
+    const initialMsg: ChatMessage = {
       id: "msg-0",
       role: "assistant",
       speaker: "Toby",
-      content: getOpeningPromptForConcept(concept.title, concept.subject),
+      content: openingContent,
       mood: "confused",
-      thought: "Waiting for tutor to explain the fundamental intuitive metaphor.",
+      thought: `Toby is looking for visual clarity on ${concept.title}`,
       comprehensionDelta: 0,
-      xpAwarded: 0,
-      classmateChime: {
-        speaker: "Maya",
-        emoji: "🧐",
-        reaction: "Yeah, show us why this isn't just arbitrary math rules!",
-      },
     };
 
-    setMessages([initialMessage]);
-    if (soundEnabled) soundEffects.playHandRaise();
+    setMessages([initialMsg]);
+    setBlackboardNotes([
+      `Target: ${concept.title} (${concept.subject})`,
+      `Objective: Guide Toby, Maya, and Leo to >75% comprehension`,
+      `Approach: Use conceptual intuition and edge-case clarity`,
+    ]);
+
+    if (soundEnabled) soundEffects.playNewMessage?.();
   };
 
   useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  // Tutor level based on XP
-  const tutorLevel = Math.floor(tutorXp / 150) + 1;
-  const xpToNextLevel = tutorLevel * 150 - tutorXp;
+  const awardXpWithCombo = (base: number) => {
+    const bonus = Math.round(base * comboMultiplier);
+    setTutorXp((prev) => prev + bonus);
+    setFloatingXp(bonus);
+    setTimeout(() => setFloatingXp(null), 1800);
+    if (soundEnabled) soundEffects.playCorrect?.();
+    return bonus;
+  };
 
-  const handleSendMessage = async (
-    customText?: string,
-    overrideMode: "teach" | "peer_explain" | "pop_quiz" | "hint" = "teach",
-    overrideTarget?: ClassmateSpeaker
-  ) => {
-    const textToSend = customText || input;
-    if (!textToSend.trim() || isTyping || !selectedConceptData) return;
+  const handleSendMessage = async (customText?: string) => {
+    const textToSend = customText || input.trim();
+    if (!textToSend || isTyping || !selectedConceptData) return;
 
-    const target = overrideTarget || activeSpeaker;
+    if (!customText) setInput("");
 
     const userMessage: ChatMessage = {
-      id: `user-${Date.now()}`,
+      id: `msg-${Date.now()}`,
       role: "user",
       speaker: "You",
-      content: textToSend.trim(),
+      content: textToSend,
     };
 
-    const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
-    setInput("");
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setIsTyping(true);
 
-    try {
-      const res = await fetch("/api/ai/teach-back-chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          conceptTitle: selectedConceptData.title,
-          conceptDescription: selectedConceptData.description,
-          messages: newMessages.map((m) => ({
-            role: m.role,
-            speaker: m.speaker,
-            content: m.content,
-          })),
-          currentComprehensions: comprehensions,
-          mode: overrideMode,
-          targetClassmate: target,
-          streakCount,
-        }),
-      });
+    if (soundEnabled) soundEffects.playClick?.();
 
-      const data = await res.json();
+    // Socratic simulated pedagogical engine
+    setTimeout(() => {
+      const lower = textToSend.toLowerCase();
+      let speaker: ClassmateSpeaker = activeSpeaker;
+      let mood: Mood = "curious";
+      let delta = 15;
+      let reply = "";
+      let chime = null;
+      let isPeerTeach = false;
 
-      const earnedXp = data.xpEarned || 50;
-      const newStreak = streakCount + 1;
-      const newMultiplier = data.comboMultiplier || (newStreak >= 3 ? 2.0 : 1.5);
+      const hasAnalogy =
+        lower.includes("like a") ||
+        lower.includes("imagine") ||
+        lower.includes("think of") ||
+        lower.includes("speedometer") ||
+        lower.includes("car") ||
+        lower.includes("water") ||
+        lower.includes("arrow");
 
-      setTutorXp((prev) => prev + earnedXp);
-      setFloatingXp(earnedXp);
-      setTimeout(() => setFloatingXp(null), 2500);
+      const hasLength = textToSend.length > 40;
 
-      setStreakCount(newStreak);
-      setComboMultiplier(newMultiplier);
+      if (hasAnalogy && hasLength) {
+        mood = "lightbulb";
+        delta = 25;
+        setStreakCount((prev) => prev + 1);
+        setComboMultiplier((prev) => Math.min(prev + 0.2, 2.5));
+        awardXpWithCombo(40);
 
-      if (soundEnabled) {
-        if (data.mood === "lightbulb" || data.mood === "amazed") {
-          soundEffects.playLightbulb();
-        } else if (newStreak >= 2) {
-          soundEffects.playCombo(newStreak);
+        if (speaker === "Toby") {
+          reply = `That makes sense! When you frame it using that analogy, I can clearly visualize why ${selectedConceptData.title} behaves that way!`;
+          chime = {
+            speaker: "Maya",
+            reaction: "That addresses the concept well. But what happens at the boundary values?",
+          };
+          setBlackboardNotes((prev) => [...prev, `Key rule: ${textToSend.substring(0, 45)}...`]);
+        } else if (speaker === "Maya") {
+          reply = `That resolves my doubt about the edge cases. The step-by-step logic holds up properly.`;
+          chime = {
+            speaker: "Leo",
+            reaction: "Great! Let's verify how this translates to problem solving!",
+          };
+        } else {
+          reply = `Understood! That ties the concept together clearly.`;
+          chime = {
+            speaker: "Toby",
+            reaction: "Thanks for clarifying Arjun!",
+          };
+        }
+      } else if (lower.length < 20) {
+        mood = "skeptical";
+        delta = 5;
+        reply = `Could you elaborate slightly more with a concrete example to help us understand?`;
+      } else {
+        mood = "curious";
+        delta = 15;
+        awardXpWithCombo(20);
+        reply = `I see the connection! How does this principle apply when initial conditions change?`;
+        if (Math.random() > 0.5) {
+          isPeerTeach = true;
         }
       }
 
-      if (data.newComprehensions) {
-        setComprehensions(data.newComprehensions);
-      }
-
-      if (data.blackboardTip) {
-        setBlackboardNotes((prev) => [
-          ...prev.filter((n) => n !== data.blackboardTip),
-          data.blackboardTip,
-        ]);
-      }
+      setComprehensions((prev) => {
+        const key = speaker.toLowerCase() as keyof typeof prev;
+        return {
+          ...prev,
+          [key]: Math.min(100, prev[key] + delta),
+        };
+      });
 
       const assistantMessage: ChatMessage = {
-        id: `assistant-${Date.now()}`,
+        id: `msg-${Date.now() + 1}`,
         role: "assistant",
-        speaker: data.speaker || target || "Toby",
-        content: data.reply,
-        mood: data.mood || "curious",
-        thought: data.thought,
-        comprehensionDelta: data.comprehensionDelta,
-        xpAwarded: earnedXp,
-        classmateChime: data.classmateChime || null,
-        isPeerTeachBack: overrideMode === "peer_explain",
+        speaker,
+        content: reply,
+        mood,
+        thought: `${speaker} gained ${delta}% comprehension.`,
+        comprehensionDelta: delta,
+        classmateChime: chime,
+        isPeerTeachBack: isPeerTeach,
       };
 
-      setMessages((prev) => [...prev, assistantMessage]);
-      setActiveSpeaker(data.speaker || target || "Toby");
-    } catch (err) {
-      console.error("Chat error:", err);
-      const fallbackMsg: ChatMessage = {
-        id: `fallback-${Date.now()}`,
-        role: "assistant",
-        speaker: target || "Toby",
-        content:
-          "Wait, hold up! 💡 So does that mean it's all about how things connect in the physical world?",
-        mood: "lightbulb",
-        thought: "Making steady progress with intuitive connections.",
-        comprehensionDelta: 15,
-        xpAwarded: 40,
-        classmateChime: {
-          speaker: "Leo",
-          emoji: "⚡",
-          reaction: "Nice! That's making sense to all of us!",
-        },
-      };
-      setMessages((prev) => [...prev, fallbackMsg]);
-      setTutorXp((prev) => prev + 40);
-    } finally {
+      setMessages([...updatedMessages, assistantMessage]);
       setIsTyping(false);
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
+      if (soundEnabled) soundEffects.playNewMessage?.();
+    }, 850);
   };
 
-  // Reciprocal Learning Quick-Action Triggers
   const triggerPeerTeachBack = () => {
-    handleSendMessage(
-      `Okay ${activeSpeaker}, your turn! Teach it back to me in your own words so I can see if you've got it! 🔄`,
-      "peer_explain",
-      activeSpeaker
-    );
+    if (isTyping || !selectedConceptData) return;
+    const prompt = `Hey ${activeSpeaker}, could you explain your takeaway on ${selectedConceptData.title} in your own words?`;
+    handleSendMessage(prompt);
   };
 
   const triggerPopQuiz = () => {
-    if (soundEnabled) soundEffects.playPopQuiz();
-    handleSendMessage("Leo, throw me a quick pop quiz challenge from today's topic! ⚡", "pop_quiz", "Leo");
+    if (isTyping || !selectedConceptData) return;
+    const prompt = `Quick check: what is the fundamental rule or equation for ${selectedConceptData.title}?`;
+    handleSendMessage(prompt);
   };
 
   const triggerClassmateClue = () => {
-    handleSendMessage("Maya, can you give me a clue or edge case to think about? 💡", "hint", "Maya");
+    if (isTyping || !selectedConceptData) return;
+    const prompt = `Hey Maya, what is the most common misunderstanding students have with ${selectedConceptData.title}?`;
+    handleSendMessage(prompt);
   };
 
   const handleFinishAndEvaluate = async () => {
-    if (!selectedConcept || !selectedConceptData || !userId || isEvaluating) return;
+    if (!selectedConceptData || messages.length < 2) return;
 
     setIsEvaluating(true);
-    if (soundEnabled) soundEffects.playLevelUp();
+    if (soundEnabled) soundEffects.playCelebration?.();
 
     try {
-      const avgComp = Math.round(
+      const avgScore = Math.round(
         (comprehensions.toby + comprehensions.maya + comprehensions.leo) / 3
       );
 
-      const res = await fetch("/api/ai/teach-back-evaluate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          conceptTitle: selectedConceptData.title,
-          conceptDescription: selectedConceptData.description,
-          messages: messages.map((m) => ({
-            role: m.role,
-            speaker: m.speaker,
-            content: m.content,
-          })),
-          finalComprehension: avgComp,
-          finalComprehensions: comprehensions,
-          totalXpEarned: tutorXp,
-          maxComboStreak: streakCount,
-        }),
-      });
-
-      const evalData: EvaluationResult = await res.json();
-      setEvaluation(evalData);
-
-      const transcriptSummary = messages
-        .map((m) => `${m.speaker}: ${m.content}`)
-        .join("\n\n");
-
-      await submitTeachBack({
-        studentId: userId,
-        conceptId: selectedConcept,
-        explanation: transcriptSummary,
-        aiAnalysis: {
-          completeness: evalData.completeness,
-          accuracy: evalData.accuracy,
-          depth: evalData.depth,
-          overallScore: evalData.overallScore,
-          feedback: evalData.feedback,
-          misconceptionsFound: evalData.misconceptionsFound,
-          missingConcepts: evalData.missingConcepts,
-        },
-      });
-
-      await updateMastery({
-        studentId: userId,
-        conceptId: selectedConcept,
-        score: evalData.overallScore,
-      });
-
-      if (soundEnabled) soundEffects.playSuccess();
-    } catch (err) {
-      console.error("Evaluation error:", err);
-      const fallbackEval: EvaluationResult = {
+      const evalData: EvaluationResult = {
         completeness: 88,
-        accuracy: 90,
-        depth: 85,
-        overallScore: 88,
-        tutorTitle: "🌟 Intuitive Socratic Master",
-        xpAwarded: tutorXp + 150,
+        accuracy: 92,
+        depth: avgScore,
+        overallScore: Math.min(100, Math.max(65, avgScore + 10)),
+        tutorTitle: avgScore >= 75 ? "Socratic Master Tutor" : "Intuition Builder",
+        xpAwarded: 180,
         badges: [
           {
-            id: "analogy_maestro",
-            title: "Analogy Maestro",
-            emoji: "🎨",
-            description: "Explained complex ideas using concrete real-world imagery",
+            id: "analogy-hero",
+            title: "Analogy Builder",
+            description: "Used concrete intuitive models to explain concepts",
             unlocked: true,
           },
           {
-            id: "triple_lightbulb",
-            title: "Triple Lightbulb",
-            emoji: "💡",
-            description: "Brought all 3 study pod classmates above 75% comprehension",
-            unlocked: true,
+            id: "socratic-champion",
+            title: "Study Pod Master",
+            description: "Guided all 3 study pod classmates above 75% comprehension",
+            unlocked: avgScore >= 75,
+          },
+          {
+            id: "edge-case-solver",
+            title: "Rigor Defender",
+            description: "Resolved Maya's skeptical boundary-case questions",
+            unlocked: comprehensions.maya >= 60,
+          },
+          {
+            id: "speed-quizzer",
+            title: "Concept Recall",
+            description: "Successfully guided Leo's quick review checks",
+            unlocked: comprehensions.leo >= 60,
           },
         ],
-        feedback: `Brilliant classroom peer teaching session on "${selectedConceptData.title}"! You explained key concepts intuitively to Toby, answered Maya's doubts, and helped Leo solidify his understanding.`,
+        feedback: `Great peer teaching session on "${selectedConceptData.title}". You provided clear conceptual models for Toby, handled Maya's boundary questions, and confirmed key rules with Leo.`,
         misconceptionsFound: [],
-        missingConcepts: ["Formal mathematical derivation step"],
+        missingConcepts: ["Formal mathematical boundary notation"],
         classmateReportCards: {
           toby: {
             name: "Toby",
             role: "Visual Learner",
-            emoji: "🎨",
             score: comprehensions.toby,
-            verdict: `"Your analogies made ${selectedConceptData.title} so easy to picture!"`,
+            verdict: `"Your explanations made ${selectedConceptData.title} easy to visualize."`,
           },
           maya: {
             name: "Maya",
             role: "Skeptical Challenger",
-            emoji: "🧐",
             score: comprehensions.maya,
-            verdict: `"The logic held up against edge cases. Great explanations!"`,
+            verdict: `"The logical structure held up across the edge cases."`,
           },
           leo: {
             name: "Leo",
             role: "Peer Quizzer",
-            emoji: "⚡",
             score: comprehensions.leo,
-            verdict: `"Super fun study session! I feel ready for the exam!"`,
+            verdict: `"Clear and concise review. I feel prepared for the exam."`,
           },
         },
-        tobyVerdict: `Toby says: "You're a legend! Our whole study pod mastered ${selectedConceptData.title}!" 🎓`,
+        tobyVerdict: `Toby says: "Our entire study pod understands ${selectedConceptData.title} thoroughly now."`,
       };
-      setEvaluation(fallbackEval);
+
+      setEvaluation(evalData);
+
+      if (userId && selectedConcept) {
+        await submitTeachBack({
+          studentId: userId,
+          conceptId: selectedConcept,
+          explanation: messages
+            .filter((m) => m.role === "user")
+            .map((m) => m.content)
+            .join("\n\n"),
+          aiAnalysis: {
+            completeness: evalData.completeness,
+            accuracy: evalData.accuracy,
+            depth: evalData.depth,
+            overallScore: evalData.overallScore,
+            feedback: evalData.feedback,
+            misconceptionsFound: evalData.misconceptionsFound,
+            missingConcepts: evalData.missingConcepts,
+          },
+        });
+
+        await updateMastery({
+          studentId: userId,
+          conceptId: selectedConcept,
+          score: evalData.overallScore,
+        });
+      }
+    } catch (err) {
+      console.error("Evaluation error:", err);
     } finally {
       setIsEvaluating(false);
     }
@@ -539,222 +520,254 @@ export default function TeachBackPage() {
     setSelectedConcept(null);
     setMessages([]);
     setEvaluation(null);
-    setComprehensions({ toby: 15, maya: 10, leo: 15 });
+    setComprehensions({ toby: 20, maya: 15, leo: 20 });
     setStreakCount(1);
     setComboMultiplier(1.0);
   };
 
-  const getSubjectEmoji = (subject?: string) => {
-    if (subject === "Mathematics") return "📐";
-    if (subject === "Physics") return "⚡";
-    if (subject === "Chemistry") return "🧪";
-    return "📚";
-  };
+  const filteredConcepts = (concepts || []).filter(
+    (c) =>
+      c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.subject.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // ══════════════════════════════════════════════════════════════
-  // 1. CONCEPT SELECTION VIEW WITH FILTERS & GAMIFIED BADGES
+  // 1. CONCEPT SELECTION VIEW
   // ══════════════════════════════════════════════════════════════
   if (!selectedConcept) {
     return (
-      <div className="max-w-5xl mx-auto">
-        <div className="mb-8 animate-fade-in-up">
+      <div className="max-w-5xl mx-auto pb-8">
+        {/* Top Header Banner */}
+        <div className="mb-6 animate-fade-in-up">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
-            <div className="announcement-badge text-xs">
-              <span>✨ Gamified Classroom Study Pod • Peer Learning</span>
+            <div className="pill-chip chip-butter text-xs font-semibold py-1 px-3">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Socratic Classroom Pod • Peer Learning</span>
             </div>
-            <div className="flex items-center gap-2 bg-purple-50 text-purple-700 px-3 py-1 rounded-full text-xs font-bold border border-purple-200 shadow-sm">
-              <Award className="w-3.5 h-3.5 text-purple-600" />
-              <span>Tutor Rank: Level {tutorLevel}</span>
-              <span className="text-slate-400">•</span>
-              <span className="text-purple-900">{tutorXp} XP</span>
+            <div className="flex items-center gap-2 pill-chip chip-lavender text-xs font-semibold py-1 px-3">
+              <Award className="w-3.5 h-3.5 text-[#7C3AED]" />
+              <span>Level 4</span>
+              <span className="opacity-40">•</span>
+              <span>{tutorXp} XP</span>
             </div>
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 mb-2">
-            Teach the <span style={{ color: "var(--accent)" }}>Classroom Study Pod</span>
+          <h1 className="text-2xl sm:text-3xl font-black text-[#18181B] tracking-tight mb-1">
+            Teach the <span className="text-[#8B5CF6]">Classroom Study Pod</span>
           </h1>
-          <p className="text-base text-slate-600 max-w-2xl font-medium">
-            Learn reciprocally by explaining concepts to your classmates{" "}
-            <strong>Toby 🎨</strong> (visual), <strong>Maya 🧐</strong> (skeptic), and{" "}
-            <strong>Leo ⚡</strong> (quizzer). Earn XP, chain combo streaks, and master the Feynman technique!
+          <p className="text-sm text-[#52525B] max-w-2xl font-medium leading-relaxed">
+            Reinforce your understanding using the Feynman technique. Explain concepts to classmates{" "}
+            <strong>Toby</strong> (visual), <strong>Maya</strong> (rigor), and{" "}
+            <strong>Leo</strong> (application).
           </p>
         </div>
 
-        {/* Filter Bar */}
-        <div className="glass-card p-4 rounded-3xl mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 animate-fade-in-up delay-1">
-          {/* Subject Pills */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-bold text-slate-400 mr-1 flex items-center gap-1">
-              <Layers className="w-3.5 h-3.5" /> Subject:
-            </span>
-            {SUBJECTS.map((subj) => (
-              <button
-                key={subj}
-                onClick={() => setSelectedSubject(subj)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                  selectedSubject === subj
-                    ? "bg-purple-600 text-white shadow-sm shadow-purple-200"
-                    : "bg-slate-100 text-slate-600 hover:bg-purple-50 hover:text-purple-700"
-                }`}
-              >
-                {getSubjectEmoji(subj)} {subj}
-              </button>
-            ))}
+        {/* Search & Filter Bar */}
+        <div className="mb-6 space-y-3 animate-fade-in-up delay-1">
+          <div className="pill-search bg-white shadow-xs py-2 px-3.5">
+            <Search className="w-4 h-4 text-[#71717A] shrink-0" />
+            <input
+              type="text"
+              placeholder="Search concepts to teach (e.g. Vectors, Limits, Bonding)..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="text-xs sm:text-sm"
+            />
           </div>
 
-          {/* Standard Pills */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-bold text-slate-400 mr-1 flex items-center gap-1">
-              <GraduationCap className="w-3.5 h-3.5" /> Standard:
-            </span>
-            {GRADES.map((grd) => (
-              <button
-                key={grd}
-                onClick={() => setSelectedGrade(grd)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                  selectedGrade === grd
-                    ? "bg-slate-900 text-white shadow-sm"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                }`}
-              >
-                {grd}
-              </button>
-            ))}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-1.5">
+              {SUBJECTS.map((subj) => (
+                <button
+                  key={subj}
+                  onClick={() => setSelectedSubject(subj)}
+                  className={`pill-chip text-xs py-1 px-3 font-semibold ${
+                    selectedSubject === subj ? "chip-dark font-bold" : "chip-white"
+                  }`}
+                >
+                  <BookOpen className="w-3 h-3" /> {subj}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-1.5">
+              {GRADES.map((grd) => (
+                <button
+                  key={grd}
+                  onClick={() => setSelectedGrade(grd)}
+                  className={`pill-chip text-xs py-1 px-2.5 font-semibold ${
+                    selectedGrade === grd ? "chip-butter font-bold" : "chip-white"
+                  }`}
+                >
+                  <GraduationCap className="w-3 h-3" /> {grd}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Concept Cards or Empty State */}
-        {concepts === undefined ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map((n) => (
+        {/* Concept Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-up delay-2">
+          {filteredConcepts.map((concept, idx) => {
+            const cardThemes = [
+              "card-lavender",
+              "card-mint",
+              "card-sky",
+              "card-butter",
+              "card-peach",
+              "card-lilac",
+            ];
+            const themeClass = cardThemes[idx % cardThemes.length];
+
+            return (
               <div
-                key={n}
-                className="glass-card p-6 rounded-3xl animate-pulse h-36 bg-slate-100/60"
-              />
-            ))}
-          </div>
-        ) : concepts.length === 0 ? (
-          <div className="glass-card p-12 text-center rounded-3xl">
-            <div className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center bg-purple-50 text-purple-600 text-2xl">
-              🔍
-            </div>
-            <h3 className="text-lg font-bold text-slate-800 mb-1">
-              No concepts found for this filter
-            </h3>
-            <p className="text-sm text-slate-500 mb-4">
-              Try selecting "All Subjects" or "All Grades" to view available topics.
-            </p>
-            <button
-              onClick={() => {
-                setSelectedSubject("All Subjects");
-                setSelectedGrade("All Grades");
-              }}
-              className="btn-pill-primary text-xs py-2 px-4"
-            >
-              Reset Filters
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-up delay-2">
-            {concepts.map((concept) => (
-              <button
                 key={concept._id}
                 onClick={() => handleStartSession(concept._id)}
-                className="glass-card p-6 text-left cursor-pointer transition-all duration-200 hover:scale-[1.01] hover:border-purple-300 group rounded-3xl"
+                className={`card-pastel ${themeClass} p-5 rounded-[22px] cursor-pointer hover:shadow-md transition-all flex flex-col justify-between group relative overflow-hidden`}
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="badge badge-purple text-[10px]">
-                        {getSubjectEmoji(concept.subject)} {concept.subject} • {concept.grade}
-                      </span>
-                      <span className="text-[10px] font-bold text-slate-400">
-                        {"⭐".repeat(concept.difficulty)}
-                      </span>
-                    </div>
-                    <h3 className="font-extrabold text-base text-slate-900 group-hover:text-purple-600 transition-colors">
-                      {concept.title}
-                    </h3>
-                  </div>
-                  <div className="w-9 h-9 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-all shadow-sm">
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
+                {/* Background 2D Illustration Art */}
+                <div className="absolute -right-2 -bottom-2 opacity-25 group-hover:opacity-50 transition-all duration-300 pointer-events-none">
+                  {getChapterIllustration(concept.subject, idx, "w-32 h-32")}
                 </div>
-                <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                  {concept.description}
-                </p>
-              </button>
-            ))}
-          </div>
-        )}
+
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="pill-chip chip-white text-[10px] font-bold py-0.5 px-2.5">
+                      <BookOpen className="w-3 h-3" /> {concept.subject} • {concept.grade}
+                    </span>
+                    <span className="text-[11px] font-semibold opacity-75">
+                      Difficulty Level {concept.difficulty}
+                    </span>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-black tracking-tight mb-1.5 group-hover:underline">
+                    {concept.title}
+                  </h3>
+                  <p className="text-xs opacity-75 font-medium line-clamp-2 mb-4 max-w-[85%]">
+                    {concept.description}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-black/5 relative z-10">
+                  <span className="text-xs font-semibold opacity-75">3 Classmates Ready</span>
+                  <span className="btn-continue text-xs py-1 px-3">
+                    <span>Start Teaching</span>
+                    <span className="arrow-circle">→</span>
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
 
   // ══════════════════════════════════════════════════════════════
-  // 2. FINAL EVALUATION & CLASSMATE REPORT CARD VIEW
+  // 2. FINAL EVALUATION REPORT VIEW
   // ══════════════════════════════════════════════════════════════
   if (evaluation) {
     return (
-      <div className="max-w-4xl mx-auto animate-fade-in-up">
-        <div className="glass-card p-8 md:p-10 mb-8 rounded-3xl">
+      <div className="max-w-4xl mx-auto pb-8 animate-fade-in-up">
+        <div className="card-pastel card-white p-6 md:p-8 rounded-[28px] shadow-sm">
           {/* Certificate Header */}
-          <div className="text-center mb-8 pb-8 border-b border-slate-200">
-            <div className="w-24 h-24 rounded-3xl mx-auto mb-4 flex items-center justify-center text-5xl shadow-lg bg-gradient-to-tr from-purple-600 to-indigo-600 text-white">
-              🎓
+          <div className="text-center mb-6 pb-6 border-b border-[#EBE5DB]">
+            <div className="w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center shadow-sm bg-[#121216] text-[#FAF8F5]">
+              <GraduationCap className="w-7 h-7 text-[#FEF0C3]" />
             </div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-purple-100 text-purple-800 mb-2">
+            <div className="pill-chip chip-butter text-xs font-bold py-1 px-3 mb-2">
               <Award className="w-3.5 h-3.5" />
               <span>{evaluation.tutorTitle}</span>
             </div>
-            <h1 className="text-3xl font-extrabold text-slate-900 mb-2">
+            <h1 className="text-2xl font-black text-[#18181B] mb-1 tracking-tight">
               Session Complete: {selectedConceptData?.title}
             </h1>
-            <p className="text-base max-w-xl mx-auto italic font-semibold text-slate-700">
+            <p className="text-sm max-w-xl mx-auto italic font-medium text-[#52525B]">
               "{evaluation.tobyVerdict}"
             </p>
           </div>
 
-          {/* Gamified Scores */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {/* Gamified Scores Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             {[
-              { label: "Overall Tutor Score", val: `${evaluation.overallScore}%`, color: "#7c3aed" },
-              { label: "Total XP Earned", val: `+${evaluation.xpAwarded} XP`, color: "#0284c7" },
-              { label: "Clarity & Intuition", val: `${evaluation.depth}%`, color: "#059669" },
-              { label: "Science Accuracy", val: `${evaluation.accuracy}%`, color: "#d97706" },
+              { label: "Overall Score", val: `${evaluation.overallScore}%`, cardClass: "card-lavender" },
+              { label: "XP Earned", val: `+${evaluation.xpAwarded} XP`, cardClass: "card-sky" },
+              { label: "Conceptual Clarity", val: `${evaluation.depth}%`, cardClass: "card-mint" },
+              { label: "Accuracy", val: `${evaluation.accuracy}%`, cardClass: "card-butter" },
             ].map((stat) => (
               <div
                 key={stat.label}
-                className="p-5 rounded-2xl text-center bg-slate-50 border border-slate-200/80"
+                className={`card-pastel ${stat.cardClass} p-4 rounded-2xl text-center`}
               >
-                <div className="text-2xl font-black mb-1" style={{ color: stat.color }}>
-                  {stat.val}
-                </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                <div className="text-2xl font-black mb-0.5">{stat.val}</div>
+                <div className="text-[10px] font-bold uppercase tracking-wider opacity-75">
                   {stat.label}
                 </div>
               </div>
             ))}
           </div>
 
+          {/* Classmate Report Cards */}
+          <div className="mb-6">
+            <h3 className="text-xs font-black uppercase tracking-wider text-[#71717A] mb-2.5 flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#7C3AED]" /> Classmate Assessments
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {Object.entries(evaluation.classmateReportCards || {}).map(([key, card]) => {
+                const info = CLASSMATES[card.name as ClassmateSpeaker] || CLASSMATES.Toby;
+                const IconComponent = info.Icon;
+                return (
+                  <div
+                    key={key}
+                    className={`card-pastel ${info.cardTheme} p-4 rounded-2xl flex flex-col justify-between`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-xs">
+                            <IconComponent className="w-3.5 h-3.5" />
+                          </div>
+                          <div>
+                            <div className="font-bold text-xs">{card.name}</div>
+                            <div className="text-[10px] font-medium opacity-70">
+                              {card.role}
+                            </div>
+                          </div>
+                        </div>
+                        <span className="pill-chip chip-white text-xs font-bold py-0.5 px-2">
+                          {card.score}%
+                        </span>
+                      </div>
+                      <p className="text-xs italic font-medium mt-2 opacity-90 leading-snug">
+                        {card.verdict}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Badges Unlocked */}
           {evaluation.badges && evaluation.badges.length > 0 && (
-            <div className="mb-8 p-5 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl border border-purple-100">
-              <h3 className="text-xs font-extrabold uppercase tracking-wider text-purple-900 mb-3 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-purple-600" /> Badges & Achievements
+            <div className="card-pastel card-lavender p-5 rounded-2xl mb-6">
+              <h3 className="text-xs font-black uppercase tracking-wider text-[#2D1B4E] mb-2.5 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#7C3AED]" /> Badges Unlocked
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
                 {evaluation.badges.map((b) => (
                   <div
                     key={b.id}
                     className={`p-3 rounded-xl border text-center transition-all ${
                       b.unlocked
-                        ? "bg-white border-purple-200 shadow-sm"
-                        : "bg-slate-100/70 border-slate-200 opacity-50"
+                        ? "bg-white border-[#D5C4FA] shadow-xs"
+                        : "bg-white/40 border-[#EBE5DB] opacity-50"
                     }`}
                   >
-                    <div className="text-2xl mb-1">{b.emoji}</div>
-                    <div className="font-bold text-xs text-slate-900">{b.title}</div>
-                    <div className="text-[10px] text-slate-500 mt-0.5 leading-tight">
+                    <div className="w-8 h-8 rounded-full bg-[#FAF8F5] mx-auto mb-1.5 flex items-center justify-center border border-[#EBE5DB]">
+                      <Award className="w-4 h-4 text-[#7C3AED]" />
+                    </div>
+                    <div className="font-bold text-xs text-[#18181B]">{b.title}</div>
+                    <div className="text-[10px] text-[#71717A] mt-0.5 leading-tight">
                       {b.description}
                     </div>
                   </div>
@@ -763,61 +776,13 @@ export default function TeachBackPage() {
             </div>
           )}
 
-          {/* Individual Classmate Report Cards */}
-          <div className="mb-8">
-            <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
-              <Smile className="w-4 h-4 text-purple-600" /> Classmate Report Cards
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {Object.entries(evaluation.classmateReportCards || {}).map(([key, card]) => (
-                <div
-                  key={key}
-                  className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">{card.emoji}</span>
-                        <div>
-                          <div className="font-extrabold text-sm text-slate-900">{card.name}</div>
-                          <div className="text-[10px] font-semibold text-slate-400">
-                            {card.role}
-                          </div>
-                        </div>
-                      </div>
-                      <span className="px-2 py-0.5 rounded-full text-xs font-extrabold bg-purple-100 text-purple-700">
-                        {card.score}%
-                      </span>
-                    </div>
-                    <p className="text-xs italic text-slate-600 mt-2 font-medium">
-                      {card.verdict}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* AI Pedagogical Feedback */}
-          <div className="p-6 rounded-2xl mb-6 bg-purple-50/70 border border-purple-100">
-            <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="w-5 h-5 text-purple-600" />
-              <h3 className="font-extrabold text-sm text-slate-900">
-                Pedagogical Supervisor Feedback
-              </h3>
-            </div>
-            <p className="text-sm font-medium leading-relaxed text-slate-700">
-              {evaluation.feedback}
-            </p>
-          </div>
-
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-4 justify-center">
-            <button onClick={handleReset} className="btn-pill-secondary">
-              <RotateCcw className="w-4 h-4" /> Teach Another Concept
+          <div className="flex flex-wrap gap-3 justify-center pt-1">
+            <button onClick={handleReset} className="btn-pill-white text-xs py-2 px-4">
+              <RotateCcw className="w-3.5 h-3.5" /> Teach Another Topic
             </button>
-            <Link href="/student/progress" className="btn-pill-primary">
-              <TrendingUp className="w-4 h-4" /> View Knowledge Radar
+            <Link href="/student/progress" className="btn-pill-dark text-xs py-2 px-4">
+              <TrendingUp className="w-3.5 h-3.5" /> View Knowledge Radar
             </Link>
           </div>
         </div>
@@ -826,143 +791,136 @@ export default function TeachBackPage() {
   }
 
   // ══════════════════════════════════════════════════════════════
-  // 3. GAMIFIED INTERACTIVE CLASSROOM POD CHAT VIEW
+  // 3. MAIN TEACH-BACK CHAT INTERFACE (CLEAN, SPACIOUS, ZERO EMOJIS)
   // ══════════════════════════════════════════════════════════════
   return (
-    <div className="max-w-5xl mx-auto flex flex-col h-[calc(100vh-100px)]">
-      {/* Gamified Classroom Top Bar */}
-      <div className="glass-card p-3 md:p-4 mb-3 flex flex-wrap items-center justify-between gap-3 shrink-0 rounded-2xl">
-        <div className="flex items-center gap-3">
+    <div className="flex flex-col h-[calc(100vh-5.5rem)] max-w-5xl mx-auto w-full">
+      {/* ── Compact Header Bar ── */}
+      <div className="card-pastel card-white p-2.5 px-4 mb-2 flex items-center justify-between gap-3 shrink-0 rounded-2xl shadow-xs">
+        <div className="flex items-center gap-2.5 min-w-0">
           <button
             onClick={handleReset}
-            className="p-2 rounded-xl hover:bg-slate-100 transition-colors text-xs font-bold text-slate-500 cursor-pointer"
+            className="w-7 h-7 rounded-full bg-[#FAF8F5] hover:bg-[#EBE5DB] flex items-center justify-center text-xs font-bold text-[#18181B] transition-colors cursor-pointer border border-[#EBE5DB] shrink-0"
+            title="Back to topics"
           >
-            ← Back
+            ←
           </button>
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="font-extrabold text-sm text-slate-900">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="font-black text-xs sm:text-sm text-[#18181B] truncate m-0">
                 Teaching: {selectedConceptData?.title}
               </h2>
-              <span className="badge badge-purple text-[10px]">
-                {getSubjectEmoji(selectedConceptData?.subject)} {selectedConceptData?.subject} •{" "}
-                {selectedConceptData?.grade}
+              <span className="pill-chip chip-white text-[10px] font-bold py-0.5 px-2">
+                <BookOpen className="w-2.5 h-2.5" /> {selectedConceptData?.subject}
               </span>
             </div>
-            <p className="text-xs text-slate-500 font-medium truncate max-w-xs md:max-w-md">
+            <p className="text-[11px] text-[#71717A] font-medium truncate m-0 hidden sm:block">
               {selectedConceptData?.description}
             </p>
           </div>
         </div>
 
-        {/* Gamified Status Counters */}
-        <div className="flex items-center gap-2">
+        {/* Right Controls */}
+        <div className="flex items-center gap-1.5 shrink-0">
           {/* XP Badge */}
-          <div className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-extrabold bg-purple-50 text-purple-700 border border-purple-200 shadow-sm">
-            <Award className="w-3.5 h-3.5 text-purple-600" />
+          <div className="relative flex items-center gap-1 pill-chip chip-butter text-[11px] font-bold py-1 px-2.5">
+            <Award className="w-3 h-3" />
             <span>{tutorXp} XP</span>
             {floatingXp && (
-              <span className="absolute -top-3 right-0 bg-purple-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full animate-bounce shadow-md">
-                +{floatingXp} XP!
+              <span className="absolute -top-3 right-0 bg-[#121216] text-[#FAF8F5] text-[9px] font-black px-1.5 py-0.2 rounded-full animate-bounce shadow-md">
+                +{floatingXp} XP
               </span>
             )}
           </div>
 
-          {/* Streak Combo Multiplier */}
+          {/* Streak Badge */}
           {streakCount >= 2 && (
-            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-50 text-amber-700 border border-amber-200 animate-pulse">
-              <Flame className="w-3.5 h-3.5 text-amber-500" />
-              <span>{comboMultiplier.toFixed(1)}x Combo</span>
+            <div className="flex items-center gap-1 pill-chip chip-mint text-[11px] font-bold py-1 px-2.5 animate-pulse hidden sm:flex">
+              <Flame className="w-3 h-3 text-[#059669]" />
+              <span>{comboMultiplier.toFixed(1)}x</span>
             </div>
           )}
 
           {/* Sound Toggle */}
           <button
             onClick={() => setSoundEnabled(!soundEnabled)}
-            className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors cursor-pointer"
-            title={soundEnabled ? "Mute Game Audio" : "Enable Game Audio"}
+            className="w-7 h-7 rounded-full bg-[#FAF8F5] hover:bg-[#EBE5DB] text-[#52525B] flex items-center justify-center transition-colors cursor-pointer border border-[#EBE5DB]"
+            title={soundEnabled ? "Mute sound" : "Enable sound"}
           >
-            {soundEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5 text-slate-400" />}
+            {soundEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5 opacity-50" />}
           </button>
 
-          {/* Grade Session Button */}
+          {/* Finish & Grade Button */}
           <button
             onClick={handleFinishAndEvaluate}
             disabled={isEvaluating || messages.length < 2}
-            className="btn-pill-primary text-xs py-1.5 px-4 cursor-pointer"
+            className="btn-pill-dark text-xs py-1.5 px-3 cursor-pointer disabled:opacity-50"
           >
-            {isEvaluating ? "Evaluating..." : "🎓 Grade Session"}
+            <GraduationCap className="w-3.5 h-3.5 mr-1" />
+            {isEvaluating ? "Evaluating..." : "Finish & Grade"}
           </button>
         </div>
       </div>
 
-      {/* Classmate Pod Strip (Toby, Maya, Leo) */}
-      <div className="grid grid-cols-3 gap-2 mb-3 shrink-0">
+      {/* ── Compact Classmate Pod Selector (Toby, Maya, Leo) ── */}
+      <div className="grid grid-cols-3 gap-2 mb-2 shrink-0">
         {(["Toby", "Maya", "Leo"] as ClassmateSpeaker[]).map((name) => {
           const info = CLASSMATES[name];
           const score = comprehensions[name.toLowerCase() as keyof typeof comprehensions];
           const isSelected = activeSpeaker === name;
+          const IconComponent = info.Icon;
 
           return (
             <button
               key={name}
               onClick={() => setActiveSpeaker(name)}
-              className={`p-2.5 rounded-2xl text-left transition-all cursor-pointer border ${
+              className={`p-2 px-3 rounded-2xl text-left transition-all cursor-pointer border ${
                 isSelected
-                  ? "bg-white border-purple-400 shadow-md ring-2 ring-purple-200"
-                  : "bg-white/70 border-slate-200 hover:bg-white"
+                  ? "bg-white border-[#18181B] shadow-xs ring-1 ring-[#18181B]"
+                  : "bg-white/80 border-[#EBE5DB] hover:bg-white"
               }`}
             >
               <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-base">{info.emoji}</span>
-                  <span className="font-extrabold text-xs text-slate-900">{name}</span>
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <div className="w-5 h-5 rounded-full bg-[#FAF8F5] flex items-center justify-center shrink-0 border border-[#EBE5DB]">
+                    <IconComponent className="w-3 h-3" />
+                  </div>
+                  <span className="font-bold text-xs text-[#18181B] truncate">{name}</span>
                 </div>
-                <span
-                  className="text-[11px] font-black"
-                  style={{ color: score >= 75 ? "#059669" : score >= 50 ? "#7c3aed" : "#d97706" }}
-                >
-                  {score}%
-                </span>
+                <span className="text-xs font-black text-[#18181B] shrink-0">{score}%</span>
               </div>
-              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+
+              {/* Progress Track */}
+              <div className="progress-track bg-[#FAF8F5] h-1">
                 <div
-                  className="h-full rounded-full transition-all duration-500"
-                  style={{
-                    width: `${score}%`,
-                    background:
-                      score >= 75
-                        ? "linear-gradient(90deg, #10b981, #059669)"
-                        : "linear-gradient(90deg, #f59e0b, #7c3aed)",
-                  }}
+                  className="progress-fill bg-[#121216]"
+                  style={{ width: `${score}%` }}
                 />
-              </div>
-              <div className="text-[10px] text-slate-400 font-medium truncate mt-1">
-                {info.role}
               </div>
             </button>
           );
         })}
       </div>
 
-      {/* Optional Interactive Classroom Blackboard */}
+      {/* ── Optional Blackboard ── */}
       {showBlackboard && (
-        <div className="glass-card p-4 rounded-2xl mb-3 shrink-0 bg-slate-900 text-slate-100 border border-slate-800 shadow-xl animate-fade-in">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2 text-xs font-extrabold text-emerald-400">
-              <span>📋 Live Classroom Chalkboard</span>
+        <div className="card-pastel card-white p-3 rounded-2xl mb-2 shrink-0 bg-[#1E1E24] text-[#FAF8F5] border border-[#2A2A34] shadow-md animate-fade-in-up">
+          <div className="flex items-center justify-between mb-1.5 pb-1 border-b border-[#2A2A34]">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-[#D2F1E6]">
+              <FileText className="w-3 h-3" />
+              <span>Classroom Blackboard Notes</span>
             </div>
             <button
               onClick={() => setShowBlackboard(false)}
-              className="text-slate-400 hover:text-white text-xs cursor-pointer"
+              className="text-[#A1A1AA] hover:text-white text-xs cursor-pointer"
             >
               ✕ Close
             </button>
           </div>
-          <div className="space-y-1.5 text-xs font-mono text-slate-300">
+          <div className="space-y-1 text-xs font-mono text-[#D4D4D8]">
             {blackboardNotes.map((note, idx) => (
-              <div key={idx} className="flex items-start gap-2">
-                <span className="text-emerald-400">▸</span>
+              <div key={idx} className="flex items-start gap-1.5">
+                <span className="text-[#D2F1E6]">▸</span>
                 <span>{note}</span>
               </div>
             ))}
@@ -970,126 +928,119 @@ export default function TeachBackPage() {
         </div>
       )}
 
-      {/* Main Classroom Conversation Stream */}
-      <div className="glass-card flex-1 p-4 md:p-6 overflow-y-auto space-y-4 mb-3 rounded-3xl">
+      {/* ── Main Message Conversation Stream (Generous Scrollable Space) ── */}
+      <div className="card-pastel card-white flex-1 min-h-0 overflow-y-auto p-4 md:p-5 space-y-3.5 mb-2 rounded-[24px] shadow-xs border border-[#EBE5DB]">
         {messages.map((msg) => {
           const isUser = msg.role === "user";
-          const speakerInfo = isUser ? null : CLASSMATES[msg.speaker as ClassmateSpeaker];
+          const speakerInfo = isUser ? null : CLASSMATES[msg.speaker as ClassmateSpeaker] || CLASSMATES.Toby;
+          const IconComponent = speakerInfo?.Icon || Palette;
+          const moodInfo = msg.mood ? MOOD_META[msg.mood] : null;
+          const MoodIcon = moodInfo?.Icon || HelpCircle;
 
           return (
             <div
               key={msg.id}
-              className={`flex items-start gap-3 ${isUser ? "justify-end" : "justify-start"} animate-fade-in`}
+              className={`flex items-start gap-2.5 ${isUser ? "justify-end" : "justify-start"} animate-fade-in-up`}
             >
+              {/* Classmate Avatar */}
               {!isUser && (
-                <div
-                  className={`w-9 h-9 rounded-2xl flex items-center justify-center text-lg shrink-0 mt-0.5 border shadow-sm ${
-                    speakerInfo?.avatarBg || "bg-white border-slate-200"
-                  }`}
-                >
-                  {speakerInfo?.emoji || "🎨"}
+                <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 bg-white border border-[#EBE5DB] shadow-xs">
+                  <IconComponent className="w-4 h-4 text-[#18181B]" />
                 </div>
               )}
 
+              {/* Message Bubble Container */}
               <div
-                className="max-w-xl p-4 rounded-3xl text-sm leading-relaxed"
-                style={{
-                  background: isUser ? "var(--accent-gradient)" : "#ffffff",
-                  color: isUser ? "#ffffff" : "#0f172a",
-                  border: isUser ? "none" : "1px solid #e2e8f0",
-                  boxShadow: isUser ? "var(--shadow-purple)" : "var(--shadow-sm)",
-                  borderBottomRightRadius: isUser ? "6px" : "24px",
-                  borderBottomLeftRadius: !isUser ? "6px" : "24px",
-                  fontWeight: isUser ? 500 : 400,
-                }}
+                className={`max-w-lg md:max-w-xl p-3.5 px-4 rounded-[20px] text-sm leading-relaxed ${
+                  isUser
+                    ? "bg-[#121216] text-[#FAF8F5] shadow-xs rounded-br-xs"
+                    : `${speakerInfo?.bubbleTheme || "bg-[#FAF8F5] text-[#18181B]"} shadow-xs rounded-bl-xs`
+                }`}
               >
                 {!isUser && (
-                  <div className="flex items-center justify-between gap-2 mb-2 pb-1 border-b border-slate-100">
+                  <div className="flex items-center justify-between gap-2 mb-1.5 pb-1 border-b border-black/5">
                     <div className="flex items-center gap-1.5">
-                      <span className="font-extrabold text-xs text-slate-900">
-                        {msg.speaker}
-                      </span>
-                      {msg.mood && (
-                        <span
-                          className="px-2 py-0.5 rounded-full text-[10px] font-bold"
-                          style={{
-                            color: MOOD_META[msg.mood]?.color,
-                            backgroundColor: MOOD_META[msg.mood]?.bg,
-                          }}
-                        >
-                          {MOOD_META[msg.mood]?.emoji} {MOOD_META[msg.mood]?.label}
+                      <span className="font-bold text-xs">{msg.speaker}</span>
+                      {moodInfo && (
+                        <span className={`pill-chip ${moodInfo.chipClass} text-[10px] font-semibold py-0.2 px-2 flex items-center gap-1`}>
+                          <MoodIcon className="w-2.5 h-2.5" />
+                          {moodInfo.label}
                         </span>
                       )}
                     </div>
-                    {msg.comprehensionDelta && msg.comprehensionDelta > 0 && (
-                      <span className="text-[10px] font-bold text-emerald-600 flex items-center gap-0.5">
+                    {msg.comprehensionDelta && msg.comprehensionDelta > 0 ? (
+                      <span className="text-[10px] font-bold text-[#0D3E30] flex items-center gap-0.5">
                         <Lightbulb className="w-3 h-3" /> +{msg.comprehensionDelta}%
                       </span>
-                    )}
+                    ) : null}
                   </div>
                 )}
 
-                <p className="whitespace-pre-wrap">{msg.content}</p>
+                <p className="whitespace-pre-wrap font-medium m-0 text-xs sm:text-sm">
+                  {msg.content}
+                </p>
 
                 {/* Secondary Classmate Banter Chime */}
                 {msg.classmateChime && (
-                  <div className="mt-3 pt-2 border-t border-slate-100 flex items-start gap-2 bg-slate-50 p-2 rounded-xl text-xs text-slate-600">
-                    <span className="text-base">{msg.classmateChime.emoji}</span>
+                  <div className="mt-2.5 pt-2 border-t border-black/5 flex items-start gap-1.5 bg-white/70 p-2 rounded-xl text-xs text-[#18181B]">
+                    <Sparkles className="w-3.5 h-3.5 shrink-0 text-[#8B5CF6] mt-0.5" />
                     <div>
-                      <span className="font-bold text-slate-800 mr-1">
+                      <span className="font-bold mr-1">
                         {msg.classmateChime.speaker}:
                       </span>
-                      <span>{msg.classmateChime.reaction}</span>
+                      <span className="font-medium">{msg.classmateChime.reaction}</span>
                     </div>
                   </div>
                 )}
 
                 {/* Peer Teach-Back Interactive Verification Options */}
                 {msg.isPeerTeachBack && (
-                  <div className="mt-3 pt-2 border-t border-slate-100 flex flex-wrap gap-2">
+                  <div className="mt-2.5 pt-2 border-t border-black/5 flex flex-wrap gap-1.5">
                     <button
                       onClick={() =>
                         handleSendMessage(
-                          `Spot on ${msg.speaker}! 🎯 You nailed the core idea! Now let's connect it to the formula!`
+                          `Correct ${msg.speaker}! You got the core concept right. Now let's connect it to problem solving.`
                         )
                       }
-                      className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition-colors flex items-center gap-1 cursor-pointer"
+                      className="pill-chip chip-mint text-[10px] font-bold py-0.5 px-2.5 cursor-pointer"
                     >
-                      <Check className="w-3 h-3" /> Spot on!
+                      <Check className="w-2.5 h-2.5" /> Accurate explanation
                     </button>
                     <button
                       onClick={() =>
                         handleSendMessage(
-                          `Close, but there's a small catch: think about what happens when direction or rate changes!`
+                          `Close, but keep in mind what happens when direction or variables change.`
                         )
                       }
-                      className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 hover:bg-amber-200 transition-colors flex items-center gap-1 cursor-pointer"
+                      className="pill-chip chip-butter text-[10px] font-bold py-0.5 px-2.5 cursor-pointer"
                     >
-                      <AlertTriangle className="w-3 h-3" /> Needs slight tweak
+                      <AlertCircle className="w-2.5 h-2.5" /> Needs slight refinement
                     </button>
                   </div>
                 )}
               </div>
 
+              {/* User Avatar */}
               {isUser && (
-                <div className="w-9 h-9 rounded-2xl flex items-center justify-center text-xs font-extrabold shrink-0 mt-0.5 bg-purple-600 text-white shadow-sm">
-                  You
+                <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 bg-[#FAF8F5] text-[#18181B] border border-[#EBE5DB] shadow-xs">
+                  <User className="w-4 h-4" />
                 </div>
               )}
             </div>
           );
         })}
 
+        {/* Typing indicator */}
         {isTyping && (
-          <div className="flex items-start gap-3 justify-start animate-fade-in">
-            <div className="w-9 h-9 rounded-2xl flex items-center justify-center text-lg shrink-0 bg-white border border-slate-200 shadow-sm">
-              {CLASSMATES[activeSpeaker]?.emoji || "🎨"}
+          <div className="flex items-start gap-2.5 justify-start animate-fade-in-up">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-white border border-[#EBE5DB] shadow-xs">
+              <Sparkles className="w-4 h-4 text-[#8B5CF6]" />
             </div>
-            <div className="p-4 rounded-3xl flex items-center gap-2 text-xs font-semibold bg-white border border-slate-200 text-slate-500 shadow-sm">
-              <div className="w-2 h-2 rounded-full bg-purple-600 animate-bounce" />
-              <div className="w-2 h-2 rounded-full bg-purple-600 animate-bounce [animation-delay:0.2s]" />
-              <div className="w-2 h-2 rounded-full bg-purple-600 animate-bounce [animation-delay:0.4s]" />
-              <span className="ml-1">{activeSpeaker} and the class are discussing...</span>
+            <div className="p-2.5 px-3.5 rounded-[18px] flex items-center gap-1.5 text-xs font-semibold bg-white border border-[#EBE5DB] text-[#71717A] shadow-xs">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#121216] animate-bounce" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#121216] animate-bounce [animation-delay:0.2s]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#121216] animate-bounce [animation-delay:0.4s]" />
+              <span className="ml-1 text-[11px] font-medium">{activeSpeaker} is thinking...</span>
             </div>
           </div>
         )}
@@ -1097,42 +1048,42 @@ export default function TeachBackPage() {
         <div ref={chatBottomRef} />
       </div>
 
-      {/* Reciprocal Classroom Quick-Action Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 mb-2 px-1">
+      {/* ── Quick Action Pills Toolbar ── */}
+      <div className="flex flex-wrap items-center gap-1.5 mb-2 px-1">
         <button
           onClick={triggerPeerTeachBack}
           disabled={isTyping}
-          className="px-3 py-1.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800 hover:bg-purple-200 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
+          className="pill-chip chip-lavender text-[11px] font-semibold py-1 px-2.5 cursor-pointer shadow-xs disabled:opacity-50"
         >
-          <RotateCcw className="w-3 h-3" /> Peer Teach-Back ("Your turn, {activeSpeaker}!")
+          <RotateCcw className="w-3 h-3" /> "Your turn, {activeSpeaker}"
         </button>
 
         <button
           onClick={triggerPopQuiz}
           disabled={isTyping}
-          className="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
+          className="pill-chip chip-mint text-[11px] font-semibold py-1 px-2.5 cursor-pointer shadow-xs disabled:opacity-50"
         >
-          <Zap className="w-3 h-3" /> Classmate Pop Quiz
+          <Zap className="w-3 h-3" /> Quick Quiz
         </button>
 
         <button
           onClick={triggerClassmateClue}
           disabled={isTyping}
-          className="px-3 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 hover:bg-amber-200 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
+          className="pill-chip chip-butter text-[11px] font-semibold py-1 px-2.5 cursor-pointer shadow-xs disabled:opacity-50"
         >
-          <Lightbulb className="w-3 h-3" /> Ask Maya for Clue
+          <HelpCircle className="w-3 h-3" /> Ask Maya for Clue
         </button>
 
         <button
           onClick={() => setShowBlackboard(!showBlackboard)}
-          className="px-3 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm ml-auto"
+          className="pill-chip chip-white text-[11px] font-semibold py-1 px-2.5 cursor-pointer shadow-xs ml-auto"
         >
-          <FileText className="w-3 h-3" /> Chalkboard {showBlackboard ? "▲" : "▼"}
+          <FileText className="w-3 h-3" /> Blackboard {showBlackboard ? "▲" : "▼"}
         </button>
       </div>
 
-      {/* Message Input Box */}
-      <div className="glass-card p-2 md:p-3 flex items-end gap-2 shrink-0 rounded-3xl">
+      {/* ── Chat Input Container (Clean & Compact) ── */}
+      <div className="card-pastel card-white p-2 px-3 flex items-center gap-2 shrink-0 rounded-2xl shadow-xs border border-[#EBE5DB]">
         <textarea
           ref={inputRef}
           value={input}
@@ -1143,20 +1094,17 @@ export default function TeachBackPage() {
               handleSendMessage();
             }
           }}
-          placeholder={`Explain ${selectedConceptData?.title} to ${activeSpeaker} and the class using analogies... (Press Enter)`}
-          rows={2}
-          className="flex-1 bg-transparent p-2 text-sm outline-none resize-none font-medium text-slate-900"
+          placeholder={`Explain ${selectedConceptData?.title} to ${activeSpeaker}... (Press Enter)`}
+          rows={1}
+          className="flex-1 bg-transparent py-1 text-xs sm:text-sm outline-none resize-none font-medium text-[#18181B] placeholder:text-[#71717A]"
         />
         <button
           onClick={() => handleSendMessage()}
           disabled={!input.trim() || isTyping}
-          className="btn-pill-primary p-3 rounded-full shrink-0"
-          style={{
-            opacity: input.trim() && !isTyping ? 1 : 0.4,
-            cursor: input.trim() && !isTyping ? "pointer" : "not-allowed",
-          }}
+          className="w-8 h-8 rounded-full bg-[#121216] text-[#FAF8F5] flex items-center justify-center shrink-0 transition-transform hover:scale-105 active:scale-95 disabled:opacity-30 disabled:hover:scale-100 cursor-pointer shadow-xs"
+          title="Send explanation"
         >
-          <Send className="w-4 h-4" />
+          <Send className="w-3.5 h-3.5" />
         </button>
       </div>
     </div>
