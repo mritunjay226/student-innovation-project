@@ -10,6 +10,7 @@ import {
   Filter,
   Layers,
   GraduationCap,
+  BookOpen,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -55,46 +56,38 @@ export default function ClassGapsPage() {
     return "#e11d48";
   };
 
-  const getSubjectEmoji = (subject?: string) => {
-    if (subject === "Mathematics") return "📐";
-    if (subject === "Physics") return "⚡";
-    if (subject === "Chemistry") return "🧪";
-    return "📚";
-  };
-
   return (
     <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-6 animate-fade-in-up">
-        <div className="announcement-badge mb-2 text-xs">
-          <span>✨ Class-Wide Learning Diagnostics</span>
+        <div className="pill-chip chip-butter mb-2 text-xs font-bold py-1 px-3">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Class-Wide Learning Diagnostics</span>
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 mb-1">
+        <h1 className="text-3xl font-black tracking-tight text-[#18181B] mb-1">
           Class Learning Gaps
         </h1>
-        <p className="text-sm text-slate-500 font-medium">
+        <p className="text-sm text-[#71717A] font-medium">
           Identify shared misconceptions and prerequisite bottlenecks across your entire curriculum
         </p>
       </div>
 
       {/* Subject & Standard Filters */}
-      <div className="glass-card p-4 rounded-3xl mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 animate-fade-in-up delay-1">
+      <div className="card-pastel card-white p-3.5 rounded-2xl mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 animate-fade-in-up delay-1 border border-[#EBE5DB]">
         {/* Subject Pills */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-bold text-slate-400 mr-1 flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-xs font-bold text-[#71717A] mr-1 flex items-center gap-1">
             <Layers className="w-3.5 h-3.5" /> Subject:
           </span>
           {SUBJECTS.map((subj) => (
             <button
               key={subj}
               onClick={() => setSelectedSubject(subj)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                selectedSubject === subj
-                  ? "bg-purple-600 text-white shadow-sm shadow-purple-200"
-                  : "bg-slate-100 text-slate-600 hover:bg-purple-50 hover:text-purple-700"
+              className={`pill-chip text-xs py-1 px-3 font-semibold ${
+                selectedSubject === subj ? "chip-dark font-bold" : "chip-white"
               }`}
             >
-              {getSubjectEmoji(subj)} {subj}
+              <BookOpen className="w-3 h-3" /> {subj}
             </button>
           ))}
         </div>
@@ -187,8 +180,8 @@ export default function ClassGapsPage() {
                       <span className="font-bold text-slate-900 text-sm">
                         {gap.concept.title}
                       </span>
-                      <span className="badge badge-purple text-[10px]">
-                        {getSubjectEmoji(gap.concept.subject)} {gap.concept.subject} • {gap.concept.grade}
+                      <span className="pill-chip chip-lavender text-[10px] font-bold py-0.5 px-2">
+                        <BookOpen className="w-2.5 h-2.5 inline mr-1" /> {gap.concept.subject} • {gap.concept.grade}
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-400 font-semibold m-0">

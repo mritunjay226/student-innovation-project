@@ -10,7 +10,7 @@ export default function TeacherLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { role } = useAuth();
+  const { role, isSidebarCollapsed } = useAuth();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
@@ -29,7 +29,13 @@ export default function TeacherLayout({
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <main className="main-content">{children}</main>
+      <main
+        className={`main-content flex-1 transition-all duration-300 ${
+          isSidebarCollapsed ? "!ml-0 px-6 sm:px-12 pt-16" : ""
+        }`}
+      >
+        {children}
+      </main>
     </div>
   );
 }
