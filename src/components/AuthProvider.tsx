@@ -12,6 +12,9 @@ interface AuthContextType {
   userId: Id<"users"> | null;
   userName: string;
   setRole: (role: Role) => void;
+  isSidebarCollapsed: boolean;
+  setIsSidebarCollapsed: (collapsed: boolean | ((prev: boolean) => boolean)) => void;
+  toggleSidebar: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -19,10 +22,14 @@ const AuthContext = createContext<AuthContextType>({
   userId: null,
   userName: "",
   setRole: () => {},
+  isSidebarCollapsed: false,
+  setIsSidebarCollapsed: () => {},
+  toggleSidebar: () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [role, setRole] = useState<Role>(null);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
   const seedDb = useMutation(api.seed.seedDatabase);
 
   const user = useQuery(
@@ -51,6 +58,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [role]);
 
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed((prev) => !prev);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -58,6 +69,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         userId: user?._id || null,
         userName: user?.name || "",
         setRole,
+        isSidebarCollapsed,
+        setIsSidebarCollapsed,
+        toggleSidebar,
       }}
     >
       {children}

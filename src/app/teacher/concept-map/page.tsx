@@ -13,7 +13,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useMemo, useCallback, useState } from "react";
-import { CheckCircle, AlertTriangle, GitBranch, Sparkles, ShieldCheck, Trash2, Layers, GraduationCap } from "lucide-react";
+import { CheckCircle, AlertTriangle, GitBranch, Sparkles, ShieldCheck, Trash2, Layers, GraduationCap, BookOpen } from "lucide-react";
 
 const SUBJECTS = ["All Subjects", "Mathematics", "Physics", "Chemistry"] as const;
 const GRADES = ["All Grades", "Class 10", "Class 11", "Class 12"] as const;
@@ -120,19 +120,12 @@ export default function ConceptMapPage() {
     setSelectedEdge(null);
   };
 
-  const getSubjectEmoji = (subject?: string) => {
-    if (subject === "Mathematics") return "📐";
-    if (subject === "Physics") return "⚡";
-    if (subject === "Chemistry") return "🧪";
-    return "📚";
-  };
-
   if (!conceptMap) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
-          <div className="w-10 h-10 rounded-2xl mx-auto mb-3 animate-spin border-3 border-purple-600 border-t-transparent" />
-          <p className="text-sm text-slate-500 font-bold">Rendering curriculum dependency graph...</p>
+          <div className="w-10 h-10 rounded-full mx-auto mb-3 animate-spin border-3 border-[#18181B] border-t-transparent" />
+          <p className="text-sm text-[#71717A] font-bold">Rendering curriculum dependency graph...</p>
         </div>
       </div>
     );
@@ -144,35 +137,34 @@ export default function ConceptMapPage() {
     <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-6 animate-fade-in-up">
-        <div className="announcement-badge mb-2 text-xs">
-          <span>✨ Multi-Subject Interactive Knowledge Graph</span>
+        <div className="pill-chip chip-butter mb-2 text-xs font-bold py-1 px-3">
+          <GitBranch className="w-3.5 h-3.5" />
+          <span>Interactive Knowledge Graph</span>
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 mb-1">
+        <h1 className="text-3xl font-black tracking-tight text-[#18181B] mb-1">
           Editable Prerequisite Map
         </h1>
-        <p className="text-sm text-slate-500 font-medium">
+        <p className="text-sm text-[#71717A] font-medium">
           Teachers retain full oversight: approve, reject, or edit AI-suggested concept dependencies across subjects
         </p>
       </div>
 
       {/* Subject & Standard Filters */}
-      <div className="glass-card p-4 rounded-3xl mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 animate-fade-in-up delay-1">
+      <div className="card-pastel card-white p-3.5 rounded-2xl mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 animate-fade-in-up delay-1 border border-[#EBE5DB]">
         {/* Subject Pills */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-bold text-slate-400 mr-1 flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-xs font-bold text-[#71717A] mr-1 flex items-center gap-1">
             <Layers className="w-3.5 h-3.5" /> Subject:
           </span>
           {SUBJECTS.map((subj) => (
             <button
               key={subj}
               onClick={() => setSelectedSubject(subj)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                selectedSubject === subj
-                  ? "bg-purple-600 text-white shadow-sm shadow-purple-200"
-                  : "bg-slate-100 text-slate-600 hover:bg-purple-50 hover:text-purple-700"
+              className={`pill-chip text-xs py-1 px-3 font-semibold ${
+                selectedSubject === subj ? "chip-dark font-bold" : "chip-white"
               }`}
             >
-              {getSubjectEmoji(subj)} {subj}
+              <BookOpen className="w-3 h-3" /> {subj}
             </button>
           ))}
         </div>
