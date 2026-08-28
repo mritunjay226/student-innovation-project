@@ -218,13 +218,16 @@ function getOpeningPromptForConcept(title: string, subject: string): string {
 
 export default function TeachBackPage() {
   const { userId } = useAuth();
-  const concepts = useQuery(api.concepts.getAll);
-  const submitTeachBack = useMutation(api.teachBack.submit);
-  const updateMastery = useMutation(api.mastery.updateScore);
-
   const [selectedSubject, setSelectedSubject] = useState<string>("All Subjects");
   const [selectedGrade, setSelectedGrade] = useState<string>("All Grades");
   const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const concepts = useQuery(api.concepts.getAll, {
+    subject: selectedSubject === "All Subjects" ? undefined : selectedSubject,
+    grade: selectedGrade === "All Grades" ? undefined : selectedGrade,
+  });
+  const submitTeachBack = useMutation(api.learning.submitTeachBack);
+  const updateMastery = useMutation(api.mastery.updateAfterTeachBack);
 
   const [selectedConcept, setSelectedConcept] = useState<Id<"concepts"> | null>(null);
   const [activeSpeaker, setActiveSpeaker] = useState<ClassmateSpeaker>("Toby");
@@ -648,8 +651,7 @@ export default function TeachBackPage() {
 
         {/* Concept Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 animate-fade-in-up delay-2">
-          {filteredConcepts.map((concept) => {
-            const Illustration = getChapterIllustration(concept.title, concept.subject);
+          {filteredConcepts.map((concept, idx) => {
             return (
               <div
                 key={concept._id}
@@ -659,7 +661,7 @@ export default function TeachBackPage() {
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div className="w-8 h-8 rounded-full bg-[#FAF8F5] border border-[#EBE5DB] flex items-center justify-center text-[#18181B] shrink-0">
-                      <Illustration className="w-4 h-4" />
+                      {getChapterIllustration(concept.subject, idx, "w-4 h-4")}
                     </div>
                     <span className="pill-chip chip-white text-[10px] font-bold py-0.5 px-2">
                       {concept.subject}
