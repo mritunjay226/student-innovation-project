@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { getGeminiClient, generateWithGemini } from "@/lib/gemini";
+import { globalRateLimiter, RATE_LIMITS, getClientIdentifier } from "@/lib/rateLimiter";
+import { sanitizeAndGuardPrompt, sanitizeString } from "@/lib/securityGuard";
 
 interface Message {
   role: "user" | "assistant";
@@ -24,8 +26,23 @@ interface RequestBody {
 
 export async function POST(request: Request) {
   try {
+    // ── RATE LIMITING & PROTECTION ──
+    const clientId = getClientIdentifier(request);
+    const rateCheck = globalRateLimiter.check(clientId, RATE_LIMITS.EVALUATION);
+    if (!rateCheck.allowed) {
+      const waitSeconds = Math.ceil(rateCheck.resetMs / 1000);
+      return NextResponse.json(
+        {
+          error: "Rate limit exceeded. System protected against API credit exhaustion.",
+          message: `Please wait ${waitSeconds}s before requesting evaluation.`,
+          retryAfter: waitSeconds,
+        },
+        { status: 429 }
+      );
+    }
+
     const body: RequestBody = await request.json();
-    const {
+    let {
       conceptTitle,
       conceptDescription,
       messages,
@@ -34,6 +51,14 @@ export async function POST(request: Request) {
       totalXpEarned = 250,
       maxComboStreak = 3,
     } = body;
+
+    conceptTitle = sanitizeString(conceptTitle || "Concept", 100);
+    conceptDescription = sanitizeString(conceptDescription || "", 300);
+
+    messages = (messages || []).map((m) => ({
+      ...m,
+      content: sanitizeAndGuardPrompt(m.content).safeText,
+    }));
 
     const apiKey =
       process.env.GEMINI_API_KEY ||

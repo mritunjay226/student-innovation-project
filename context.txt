@@ -1,0 +1,144 @@
+================================================================================
+PROJECT NAME: LearnAI (Smart Education AI Platform)
+TAGLINE: The AI Socratic Peer & Prerequisite Knowledge Engine for Deep Mastery
+CATEGORY: EdTech / Generative AI / Adaptive Learning / Knowledge Graphs
+HACKATHON TRACK: Education / AI Agents / Multimodal LLM Applications
+================================================================================
+
+1. EXECUTIVE SUMMARY & PROBLEM STATEMENT
+--------------------------------------------------------------------------------
+The Problem:
+1. Linear Curricula & Black-Box Scores: Traditional EdTech platforms treat learning as a linear conveyor belt. When a student fails a diagnostic quiz (e.g., scoring 60% on Calculus or Physics), the system simply flags a low score without identifying why or where the foundational misconception occurred.
+2. Passive Video Consumption & Rote Memorization: Watching videos and guessing multiple-choice options does not build deep cognitive intuition. Students memorize surface-level steps without understanding the underlying mechanisms.
+3. The Ebbinghaus Forgetting Curve: Without scientifically calibrated spaced review intervals, learners forget more than 80% of newly learned concepts within 48 hours.
+4. Educator Blindspots: Teachers lack real-time visibility into shared class-wide misconceptions and prerequisite dependencies across their syllabus.
+
+The Solution (LearnAI):
+LearnAI is a dual-sided (Student Portal & Teacher Console) intelligent learning platform that transitions education from passive memorization to active cognitive mastery through:
+- Directed Acyclic Graph (DAG) Knowledge Engine: Pinpoints root-cause learning gaps by traversing prerequisite dependencies backwards.
+- Multi-Agent Feynman "Teach-Back" Classroom Pod: Students reverse-tutor a pod of 4 AI classmates (Toby, Maya, Leo, Sam) with live comprehension meters and dynamic blackboard formulas.
+- Multimodal Document-to-Flashcards Engine: Extracts high-yield cards from lecture slides/PDFs using Google Gemini Vision OCR paired with modified SM-2 / Leitner Spaced Repetition algorithms.
+- Human-in-the-Loop (HITL) Teacher Command Center: AI-assisted curriculum ingestion, visual graph verification, and real-time class learning gap signal matrices.
+
+
+2. THE TWO-SIDED USER ECOSYSTEM & WORKFLOWS
+--------------------------------------------------------------------------------
+A. Student Experience:
+1. Dashboard & Knowledge Radar: Visualizes multi-dimensional concept mastery and retention risk across STEM subjects (Mathematics, Physics, Chemistry for Classes 10, 11, 12).
+2. Diagnostic Quizzes: Adaptive assessments calibrated to the student's Zone of Proximal Development (ZPD), tracking response latency and self-rated confidence.
+3. Feynman Teach-Back Studio: Active peer-tutoring where the student explains concepts to 4 AI classmates. The system measures pod comprehension (0-100%), provides dynamic blackboard tips, awards Tutor Ranks (e.g., Feynman Grandmaster), badges, and XP.
+4. PDF Flashcards Studio: Converts uploaded documents/slides into 5 card formats (Direct Q&A, Explanatory, One-Word Recall, MCQ, Mixed), utilizing 3D card flips, procedural sound effects, and spaced review scheduling.
+
+B. Teacher / Educator Experience:
+1. Interactive Visual Prerequisite Map: Visual DAG powered by React Flow (@xyflow/react) where teachers can view, create, verify, or remove prerequisite links between concepts.
+2. Human-in-the-Loop (HITL) Ingestion: Upload lecture notes/slides; AI proposes extracted concepts, questions, and prerequisite edges into an approval queue for teacher verification.
+3. Class Learning Gaps & Signals: Aggregates class performance to classify concepts into "Strong", "Watch", or "High Gap", recommending specific remediation interventions.
+4. Student Roster: In-depth drilldown into individual student mastery, retention risks, and active misconceptions.
+
+
+3. KEY FEATURES & DEEP DIVE
+--------------------------------------------------------------------------------
+Feature 1: Multi-Agent Feynman Teach-Back Pod
+- Pedagogical Foundation: The Feynman Technique ("To master a concept, explain it simply to someone else").
+- The 4 AI Classmate Personas:
+  * Toby (Visual & Intuitive Learner): Needs physical analogies (speedometer, balloons, water flow); confused by unexplained jargon.
+  * Maya (Skeptical Challenger): Probes mathematical rigor, boundary conditions, and edge-case exceptions.
+  * Leo (Quick Quizzer): Energetic, gives rapid pop-quizzes, bulleted takeaways, and celebrates combo streaks.
+  * Sam (Direct & Precise): Provides direct, factual definitions, step-by-step equations, and zero fluff.
+- Features: Real-time comprehension meters per classmate, dynamic LaTeX blackboard formulas, badge unlocks (Analogy Maestro, Skeptic Silencer, Combo Surge), and automated misconception detection saved to the database.
+
+Feature 2: Knowledge DAG & Root-Cause Prerequisite Engine
+- Structure: Concepts represented as graph vertices; pedagogical dependencies represented as directed edges (Prerequisite A -> Advanced Concept B).
+- Root-Cause Isolation: When a student fails an advanced diagnostic item (e.g., Chain Rule), the engine traces upstream dependencies (Limits, Function Composition) to pinpoint the exact failure point.
+- Dynamic Calibration: Adjusts difficulty in real-time based on student mastery and confidence scores.
+
+Feature 3: Multimodal PDF-to-Flashcards & Spaced Repetition
+- Multimodal Extraction: Powered by Google Gemini Vision/OCR for uploaded PDFs or text.
+- 5 Card Style Presets:
+  1. Direct Question (Concise Q&A)
+  2. Explanatory Concept (Deep mechanisms & proofs)
+  3. One-Word Recall (Fill-in-the-blank keyword recall)
+  4. Multiple Choice Question (MCQ with distractor explanations)
+  5. Mixed Deck
+- Spaced Repetition Algorithm (SM-2 / Leitner):
+  * R = e^(-t / S)
+  * Again (<10 min reset) -> Hard (1 day) -> Good (2-14 days) -> Easy (4-30 days).
+  * Counteracts the Ebbinghaus forgetting curve.
+
+Feature 4: Teacher Suite & HITL Safety
+- Slide Ingestion Pipeline: AI extracts curriculum nodes and proposes confidence-weighted edges.
+- Human Verification: Teachers approve, edit, or reject AI proposals, ensuring zero black-box hallucinations enter the syllabus.
+- Class Gap Matrix: Categorizes topics into Strong, Watch, and High Gap, enabling targeted classroom interventions.
+
+
+4. TECHNICAL ARCHITECTURE & TECH STACK
+--------------------------------------------------------------------------------
+- Frontend Framework: Next.js 16 (App Router) + React 19 + TypeScript
+- Real-Time Backend & Database: Convex (Reactive database, server queries, mutations, indexes)
+- AI & Multimodal Engine: Google Gemini API (@google/generative-ai, Gemini 1.5/2.0 Flash with Pro fallback cascade)
+- Graph Visualization: @xyflow/react (React Flow for interactive DAG node-edge mapping)
+- Data Visualization: Recharts (Knowledge Radar charts, bar graphs, retention meters)
+- Styling & Design System: Tailwind CSS v4 + Custom pastel/glassmorphism design tokens
+- Math & Markdown: React Markdown + KaTeX / Remark GFM (LaTeX equations)
+- Audio Engine: Web Audio API procedural sound synthesizer for interactive feedback
+
+
+5. UNIQUE SELLING PROPOSITIONS (USPs) FOR JUDGES
+--------------------------------------------------------------------------------
+1. Reverse-Tutoring over Passive Chatbots: Students teach the AI rather than receiving generated answers, fostering deep retention.
+2. Root-Cause DAG Traversal: Isolates upstream missing prerequisites instead of assigning repetitive busywork.
+3. Human-in-the-Loop Pedagogical Safety: Combines AI extraction speed with teacher verification.
+4. Grounded in Cognitive Science: Incorporates Bloom's Taxonomy, Vygotsky's ZPD, Feynman Technique, and Ebbinghaus Spaced Repetition.
+
+
+6. SLIDE-BY-SLIDE PRESENTATION OUTLINE (10 SLIDES)
+--------------------------------------------------------------------------------
+Slide 1: Title & Vision
+- Headline: LearnAI — Next-Generation Socratic & Adaptive Learning Platform
+- Tagline: The AI Socratic Peer & Prerequisite Knowledge Engine for Deep Mastery
+
+Slide 2: The Problem in EdTech
+- The 48-hour forgetting curve (80% memory decay)
+- Linear curricula fail to diagnose why students struggle with advanced topics
+- Passive video streaming and rote memorization yield shallow understanding
+
+Slide 3: The Solution — LearnAI
+- Prerequisite Knowledge DAG Engine
+- Multi-Agent Feynman Teach-Back Classroom Pod
+- Multimodal PDF-to-Flashcards with Spaced Repetition
+- Teacher Console with Human-in-the-Loop verification
+
+Slide 4: Feature Focus — Multi-Agent Feynman Teach-Back
+- 4 AI Classmate Personas (Toby, Maya, Leo, Sam)
+- Live comprehension gauges and dynamic LaTeX blackboard
+- Socratic reverse-tutoring and automated misconception tagging
+
+Slide 5: Feature Focus — Prerequisite Knowledge Graph
+- Visual DAG interactive map powered by React Flow
+- Backward-traversal algorithm for root-cause diagnosis
+- Dynamic difficulty calibration matching the Zone of Proximal Development
+
+Slide 6: Feature Focus — Multimodal PDF Flashcards
+- Gemini Vision OCR for slide and document conversion
+- 5 Card Types (Direct Q&A, Explanatory, One-Word, MCQ, Mixed)
+- Mathematical SM-2 spaced repetition scheduling
+
+Slide 7: Teacher Console & HITL Workflow
+- AI slide ingestion with Educator Review Queue
+- Class learning gap heatmaps (Strong / Watch / High Gap)
+- Data-driven classroom remediation recommendations
+
+Slide 8: Technical Architecture
+- Next.js 16 + React 19 + Convex reactive backend
+- Google Gemini multimodal prompt engineering with structured JSON schema
+- React Flow graph visualizer + Recharts analytics + Web Audio SFX
+
+Slide 9: Market Impact & Target Audience
+- Secondary & Higher Secondary STEM students (Classes 10-12)
+- Higher education and competitive exam test prep
+- Cognitive science foundations: Active Recall + Spaced Repetition + Feynman Method
+
+Slide 10: Summary & Live Demo
+- Transitioning education from passive consumption to verifiable mastery
+- Live Demo: Teach-Back Session -> Knowledge Graph -> Teacher Slide Ingestion
+================================================================================

@@ -2,6 +2,8 @@
 
 import { useAuth } from "@/components/AuthProvider";
 import { Sidebar } from "@/components/Sidebar";
+import { StudentHeader } from "@/components/StudentHeader";
+import { GamificationProvider } from "@/lib/gamificationContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -27,15 +29,22 @@ export default function StudentLayout({
   if (!mounted || role !== "student") return null;
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <main
-        className={`main-content flex-1 transition-all duration-300 ${
-          isSidebarCollapsed ? "!ml-0 px-6 sm:px-12 pt-16" : ""
-        }`}
-      >
-        {children}
-      </main>
-    </div>
+    <GamificationProvider>
+      <div className="flex min-h-screen flex-col bg-[#FAF8F5]">
+        <div className="flex flex-1">
+          <Sidebar />
+          <div className="flex-1 flex flex-col min-w-0">
+            <StudentHeader />
+            <main
+              className={`main-content flex-1 transition-all duration-300 p-4 sm:p-8 ${
+                isSidebarCollapsed ? "!ml-0 px-6 sm:px-12" : ""
+              }`}
+            >
+              {children}
+            </main>
+          </div>
+        </div>
+      </div>
+    </GamificationProvider>
   );
 }

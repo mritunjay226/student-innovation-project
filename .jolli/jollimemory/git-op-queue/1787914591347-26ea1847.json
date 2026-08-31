@@ -1,0 +1,10 @@
+{
+	"type": "commit",
+	"commitHash": "26ea18475fa03ec771f48fab5e0eb9cb37098bd1",
+	"branch": "main",
+	"commitSource": "cli",
+	"trigger": "agent",
+	"agent": "antigravity",
+	"createdAt": "2026-08-28T10:56:31.346Z",
+	"traceId": "b3bc266ccadb05b9d3fbba29b5d243fa"
+}

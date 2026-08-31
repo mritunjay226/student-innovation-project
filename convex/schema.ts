@@ -112,7 +112,8 @@ export default defineSchema({
   // Study actions log
   studyActions: defineTable({
     studentId: v.id("users"),
-    conceptId: v.id("concepts"),
+    conceptId: v.optional(v.id("concepts")),
+    deckId: v.optional(v.id("flashcardDecks")),
     actionType: v.union(
       v.literal("lesson_viewed"),
       v.literal("quiz_taken"),
@@ -122,4 +123,54 @@ export default defineSchema({
     ),
     result: v.optional(v.string()),
   }).index("by_student", ["studentId"]),
+
+  // Flashcard Decks generated from PDF or created by student
+  flashcardDecks: defineTable({
+    studentId: v.optional(v.id("users")),
+    title: v.string(),
+    subject: v.optional(v.string()),
+    grade: v.optional(v.string()),
+    fileName: v.optional(v.string()),
+    fileSize: v.optional(v.string()),
+    cardCount: v.number(),
+    masteredCount: v.number(),
+    createdAt: v.number(),
+    lastStudiedAt: v.optional(v.number()),
+    isSample: v.optional(v.boolean()),
+    description: v.optional(v.string()),
+    conceptId: v.optional(v.id("concepts")),
+    cardType: v.optional(v.string()),
+    targetExamDate: v.optional(v.number()), // Timestamp in ms for target exam
+    examReadinessScore: v.optional(v.number()), // 0-100% on-track mastery projection
+  }).index("by_student", ["studentId"]),
+
+  // Individual Flashcards with Spaced Repetition tracking
+  flashcards: defineTable({
+    deckId: v.id("flashcardDecks"),
+    conceptId: v.optional(v.id("concepts")), // Closed-loop linked concept
+    front: v.string(),
+    back: v.string(),
+    keyTakeaway: v.optional(v.string()),
+    commonPitfall: v.optional(v.string()),
+    cardType: v.optional(
+      v.union(
+        v.literal("direct_question"),
+        v.literal("explanatory"),
+        v.literal("one_word"),
+        v.literal("mcq")
+      )
+    ),
+    options: v.optional(v.array(v.string())),
+    correctOption: v.optional(v.string()),
+    difficulty: v.union(v.literal("easy"), v.literal("medium"), v.literal("hard")),
+    tags: v.optional(v.array(v.string())),
+    classmateHint: v.optional(v.string()),
+    masteryLevel: v.number(), // 0 to 5 (Leitner box / SM-2 rating)
+    intervalMs: v.optional(v.number()),
+    easeFactor: v.optional(v.number()),
+    nextReviewDate: v.optional(v.number()),
+    lastReviewed: v.optional(v.number()),
+    reviewCount: v.number(),
+    correctStreak: v.number(),
+  }).index("by_deck", ["deckId"]),
 });

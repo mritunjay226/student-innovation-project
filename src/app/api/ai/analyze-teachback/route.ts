@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { getGeminiClient, generateWithGemini } from "@/lib/gemini";
+import { globalRateLimiter, RATE_LIMITS, getClientIdentifier } from "@/lib/rateLimiter";
+import { sanitizeAndGuardPrompt, sanitizeString } from "@/lib/securityGuard";
 
 const MOCK_ANALYSIS = {
   completeness: 55,
@@ -20,7 +22,25 @@ const MOCK_ANALYSIS = {
 
 export async function POST(request: Request) {
   try {
-    const { concept, conceptDescription, explanation } = await request.json();
+    // ── RATE LIMITING & PROTECTION ──
+    const clientId = getClientIdentifier(request);
+    const rateCheck = globalRateLimiter.check(clientId, RATE_LIMITS.EVALUATION);
+    if (!rateCheck.allowed) {
+      const waitSeconds = Math.ceil(rateCheck.resetMs / 1000);
+      return NextResponse.json(
+        {
+          error: "Rate limit exceeded. System protected against API credit exhaustion.",
+          message: `Please wait ${waitSeconds}s before requesting analysis.`,
+          retryAfter: waitSeconds,
+        },
+        { status: 429 }
+      );
+    }
+
+    const body = await request.json();
+    const concept = sanitizeString(body.concept || "Concept", 100);
+    const conceptDescription = sanitizeString(body.conceptDescription || "", 300);
+    const explanation = sanitizeAndGuardPrompt(body.explanation || "").safeText;
 
     const genAI = getGeminiClient();
     if (!genAI) {

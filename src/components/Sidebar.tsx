@@ -18,14 +18,18 @@ import {
   PanelLeftOpen,
   User,
   BookOpen,
+  Layers,
+  Award,
 } from "lucide-react";
 
 const studentLinks = [
   { href: "/student", label: "Overview", icon: LayoutDashboard },
   { href: "/student/chapters", label: "Chapters", icon: BookOpen },
+  { href: "/student/flashcards", label: "PDF Flashcards", icon: Layers, badge: "AI" },
   { href: "/student/teach-back", label: "Teach-Back (Toby)", icon: MessageSquare, badge: "AI" },
   { href: "/student/assessment", label: "Diagnostic Quiz", icon: ClipboardCheck },
   { href: "/student/progress", label: "Knowledge Radar", icon: TrendingUp },
+  { href: "/student/badges", label: "Badges & Rewards", icon: Award, badge: "XP" },
 ];
 
 const teacherLinks = [

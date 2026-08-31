@@ -10,6 +10,7 @@
 
 import type * as assessments from "../assessments.js";
 import type * as concepts from "../concepts.js";
+import type * as flashcards from "../flashcards.js";
 import type * as learning from "../learning.js";
 import type * as mastery from "../mastery.js";
 import type * as seed from "../seed.js";
@@ -24,6 +25,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   assessments: typeof assessments;
   concepts: typeof concepts;
+  flashcards: typeof flashcards;
   learning: typeof learning;
   mastery: typeof mastery;
   seed: typeof seed;

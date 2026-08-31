@@ -2,10 +2,12 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // List of supported Gemini models in order of preference
 const MODEL_CANDIDATES = [
-  "gemini-1.5-flash",
-  "gemini-1.5-pro",
   "gemini-2.5-flash",
-  "gemini-2.0-flash",
+  "gemini-2.5-pro",
+  "gemini-1.5-flash-latest",
+  "gemini-1.5-pro-latest",
+  "gemini-2.0-flash-exp",
+  "gemini-1.5-flash",
   "gemini-pro",
 ];
 
@@ -22,13 +24,21 @@ export function getGeminiClient(): GoogleGenerativeAI | null {
 
 export async function generateWithGemini(
   genAI: GoogleGenerativeAI,
-  prompt: string
+  prompt: string,
+  jsonMode: boolean = false
 ): Promise<string> {
   let lastError: unknown = null;
 
   for (const modelName of MODEL_CANDIDATES) {
     try {
-      const model = genAI.getGenerativeModel({ model: modelName });
+      const model = genAI.getGenerativeModel({
+        model: modelName,
+        generationConfig: {
+          maxOutputTokens: 6000,
+          temperature: 0.25,
+          ...(jsonMode ? { responseMimeType: "application/json" } : {}),
+        },
+      });
       const result = await model.generateContent(prompt);
       const text = result.response.text();
       if (text && text.trim().length > 0) {

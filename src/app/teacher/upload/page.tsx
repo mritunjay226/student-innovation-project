@@ -46,12 +46,24 @@ export default function UploadLessonPage() {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile) setFile(droppedFile);
+    if (droppedFile) {
+      if (droppedFile.size > 25 * 1024 * 1024) {
+        alert(`File size (${(droppedFile.size / (1024 * 1024)).toFixed(1)} MB) exceeds 25 MB limit.`);
+        return;
+      }
+      setFile(droppedFile);
+    }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    if (selectedFile) setFile(selectedFile);
+    if (selectedFile) {
+      if (selectedFile.size > 25 * 1024 * 1024) {
+        alert(`File size (${(selectedFile.size / (1024 * 1024)).toFixed(1)} MB) exceeds 25 MB limit.`);
+        return;
+      }
+      setFile(selectedFile);
+    }
   };
 
   const handleExtract = async () => {

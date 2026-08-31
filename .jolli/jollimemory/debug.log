@@ -152,3 +152,162 @@
 [2026-08-28T09:08:20.623Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
 [2026-08-28T09:08:23.437Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, worktreeHooks=true, sessions=3, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
 [2026-08-28T10:50:45.791Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-08-28T10:53:36.897Z] INFO  [PrepareMsgHook] === Prepare-commit-msg hook started (source: message) ===
+[2026-08-28T10:53:36.909Z] INFO  [RepoProfile] manual-disable read → false (by=manuallyDisabled, pid=13588, cwd=C:\Users\mk\Documents\hackathon_research, profile=C:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-28T10:53:36.986Z] INFO  [PrepareMsgHook] === Prepare-commit-msg hook finished ===
+[2026-08-28T10:53:40.030Z] INFO  [RepoProfile] [trace=c171a84d8a77900ee529cc71b7aad1c4] manual-disable read → false (by=manuallyDisabled, pid=17396, cwd=C:\Users\mk\Documents\hackathon_research, profile=C:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-28T10:53:40.108Z] INFO  [PostCommitHook] [trace=c171a84d8a77900ee529cc71b7aad1c4] Detected operation: commit
+[2026-08-28T10:53:40.253Z] INFO  [PostCommitHook] [trace=c171a84d8a77900ee529cc71b7aad1c4] Enqueued: type=commit hash=0a2586d3
+[2026-08-28T10:53:40.254Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Launching background worker
+[2026-08-28T10:53:40.268Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Background worker spawned (PID: 19676)
+[2026-08-28T10:53:40.286Z] INFO  [EnsureGlobalDaemon] [trace=c171a84d8a77900ee529cc71b7aad1c4] spawned global daemon ensure helper (pid 21576)
+[2026-08-28T10:53:42.982Z] INFO  [RepoProfile] [trace=c171a84d8a77900ee529cc71b7aad1c4] manual-disable read → false (by=manuallyDisabled, pid=19676, cwd=C:\Users\mk\Documents\hackathon_research, profile=C:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-28T10:53:43.179Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] === Queue worker started === node=22.23.2 kind=vscode-plugin source=antigravity-ide pkgVer=0.99.15 cliVer=0.99.15 dist=c:\Users\mk\.antigravity-ide\extensions\jolli.jollimemory-vscode-0.99.15-universal\dist
+[2026-08-28T10:53:43.205Z] INFO  [StorageFactory] [trace=c171a84d8a77900ee529cc71b7aad1c4] StorageFactory.create: route=legacy-fenced, projectPath=C:\Users\mk\Documents\hackathon_research
+[2026-08-28T10:53:43.612Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Processing queue entry: type=commit hash=0a2586d3
+[2026-08-28T10:53:43.724Z] INFO  [GitOps] [trace=c171a84d8a77900ee529cc71b7aad1c4] Commit 0a2586d3: some changes in the ai
+[2026-08-28T10:53:43.724Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Commit: 0a2586d3 - some changes in the ai (98ms)
+[2026-08-28T10:53:44.060Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Discovered 3 Antigravity session(s)
+[2026-08-28T10:53:44.113Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Transcript source: session=a95373e2-5ea9-453b-9634-99d1a918b5da, lines=224→370, entries=6
+[2026-08-28T10:53:44.288Z] WARN  [GitOps] [trace=c171a84d8a77900ee529cc71b7aad1c4] Diff exceeds 150000-char budget (173602 chars) — prepending --stat file list and truncating body
+[2026-08-28T10:53:44.391Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Git diff: 17 files changed, +2218 -363 (277ms)
+[2026-08-28T10:53:44.882Z] WARN  [GitOps] [trace=c171a84d8a77900ee529cc71b7aad1c4] Diff exceeds 60000-char budget (173602 chars) — prepending --stat file list and truncating body
+[2026-08-28T10:53:44.895Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Prompt blocks: plans=0 notes=0 references=0 (+0 track-only archived, not prompted) (AI soft-excluded 0)
+[2026-08-28T10:53:44.897Z] INFO  [Summarizer] [trace=c171a84d8a77900ee529cc71b7aad1c4] Generating summary for commit 0a2586d3
+[2026-08-28T10:53:44.898Z] INFO  [Summarizer] [trace=c171a84d8a77900ee529cc71b7aad1c4] Context: transcript=6, files=17, lines=2218+363
+[2026-08-28T10:53:44.898Z] WARN  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] First API attempt failed: No LLM provider available. Set an Anthropic API key (ANTHROPIC_API_KEY) or configure a Jolli Space API key (jolliApiKey).. Retrying in 2000ms...
+[2026-08-28T10:53:46.908Z] INFO  [Summarizer] [trace=c171a84d8a77900ee529cc71b7aad1c4] Generating summary for commit 0a2586d3
+[2026-08-28T10:53:46.908Z] INFO  [Summarizer] [trace=c171a84d8a77900ee529cc71b7aad1c4] Context: transcript=6, files=17, lines=2218+363
+[2026-08-28T10:53:46.908Z] ERROR [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] API call failed after retry: No LLM provider available. Set an Anthropic API key (ANTHROPIC_API_KEY) or configure a Jolli Space API key (jolliApiKey).
+[2026-08-28T10:53:46.909Z] WARN  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Saving summary with empty topics + llm-failed marker for commit 0a2586d3
+[2026-08-28T10:53:46.909Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] API summary generated (2.0s)
+[2026-08-28T10:53:46.910Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Plan registry scan: found 0 uncommitted slug(s) on main: []
+[2026-08-28T10:53:46.911Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Plan association: detected 0 slug(s) from transcripts: []
+[2026-08-28T10:53:46.912Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Note registry scan: found 0 uncommitted note(s) on main: []
+[2026-08-28T10:53:46.912Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Note association: detected 0 note(s): []
+[2026-08-28T10:53:46.913Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Reference association: detected 0 ref(s) for branch main
+[2026-08-28T10:53:46.937Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Summary built for 0a2586d3: recap=no, topics=0, plans=absent, notes=absent, references=absent
+[2026-08-28T10:53:47.215Z] ERROR [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Failed to process queue entry type=commit ref=0a2586d3: SqliteStorage: cannot write memories for unregistered https://github.com/mritunjay226/student-innovation-project
+[2026-08-28T10:53:47.217Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] Processed 1 queue entries
+[2026-08-28T10:53:47.228Z] INFO  [QueueWorker] [trace=c171a84d8a77900ee529cc71b7aad1c4] === Queue worker finished ===
+[2026-08-28T10:53:47.417Z] INFO  [PlanService] detectPlans found 0 plans (0 in registry)
+[2026-08-28T10:53:47.417Z] INFO  [NoteService] detectNotes found 0 notes (0 in registry)
+[2026-08-28T10:53:47.417Z] INFO  [references] detectReferences(*) found 0 (0 in registry)
+[2026-08-28T10:53:47.418Z] INFO  [SkillProjection] projectActiveSkills: 0 active (0 in registry)
+[2026-08-28T10:56:30.446Z] INFO  [PrepareMsgHook] === Prepare-commit-msg hook started (source: message) ===
+[2026-08-28T10:56:30.454Z] INFO  [RepoProfile] manual-disable read → false (by=manuallyDisabled, pid=15160, cwd=C:\Users\mk\Documents\hackathon_research, profile=C:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-28T10:56:30.553Z] INFO  [PrepareMsgHook] === Prepare-commit-msg hook finished ===
+[2026-08-28T10:56:31.131Z] INFO  [RepoProfile] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] manual-disable read → false (by=manuallyDisabled, pid=16928, cwd=C:\Users\mk\Documents\hackathon_research, profile=C:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-28T10:56:31.220Z] INFO  [PostCommitHook] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Detected operation: commit
+[2026-08-28T10:56:31.347Z] INFO  [PostCommitHook] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Enqueued: type=commit hash=26ea1847
+[2026-08-28T10:56:31.348Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Launching background worker
+[2026-08-28T10:56:31.364Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Background worker spawned (PID: 17092)
+[2026-08-28T10:56:31.381Z] INFO  [EnsureGlobalDaemon] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] spawned global daemon ensure helper (pid 4012)
+[2026-08-28T11:11:19.750Z] INFO  [PrepareMsgHook] === Prepare-commit-msg hook started (source: message) ===
+[2026-08-28T11:11:19.803Z] INFO  [RepoProfile] manual-disable read → false (by=manuallyDisabled, pid=18872, cwd=C:\Users\mk\Documents\hackathon_research, profile=C:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-28T11:11:20.369Z] INFO  [PrepareMsgHook] === Prepare-commit-msg hook finished ===
+[2026-08-28T11:11:24.004Z] INFO  [RepoProfile] [trace=257c09ad7c89574bafd95752b15a6f66] manual-disable read → false (by=manuallyDisabled, pid=16720, cwd=C:\Users\mk\Documents\hackathon_research, profile=C:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-28T11:11:24.139Z] INFO  [PostCommitHook] [trace=257c09ad7c89574bafd95752b15a6f66] Detected operation: commit
+[2026-08-28T11:11:24.404Z] INFO  [PostCommitHook] [trace=257c09ad7c89574bafd95752b15a6f66] Enqueued: type=commit hash=33360cd8
+[2026-08-28T11:11:24.405Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Launching background worker
+[2026-08-28T11:11:24.430Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Background worker spawned (PID: 21256)
+[2026-08-28T11:11:24.453Z] INFO  [EnsureGlobalDaemon] [trace=257c09ad7c89574bafd95752b15a6f66] spawned global daemon ensure helper (pid 16992)
+[2026-08-29T10:22:11.662Z] INFO  [activate] Activating JolliMemory extension {"workspaceRoot":"c:\\Users\\mk\\Documents\\hackathon_research","extensionPath":"c:\\Users\\mk\\.antigravity-ide\\extensions\\jolli.jollimemory-vscode-0.99.15-universal"}
+[2026-08-29T10:22:12.909Z] INFO  [initialLoad] Loading all panels
+[2026-08-29T10:22:46.283Z] INFO  [RepoProfile] manual-disable read → false (by=manuallyDisabled, pid=8916, cwd=c:\Users\mk\Documents\hackathon_research, profile=c:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-29T10:22:46.500Z] INFO  [PlanService] detectPlans found 0 plans (0 in registry)
+[2026-08-29T10:22:46.500Z] INFO  [NoteService] detectNotes found 0 notes (0 in registry)
+[2026-08-29T10:22:46.500Z] INFO  [references] detectReferences(*) found 0 (0 in registry)
+[2026-08-29T10:22:46.500Z] INFO  [SkillProjection] projectActiveSkills: 0 active (0 in registry)
+[2026-08-29T10:23:01.222Z] INFO  [Sync:VsCodeBootstrap] Memory Bank sync engine built (auto-sync off — manual only)
+[2026-08-29T10:23:05.788Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-29T10:23:08.904Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-29T10:23:08.905Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-29T10:23:10.295Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-29T10:23:12.505Z] WARN  [activate] kbInitPromise watchdog fired after 60s — releasing sync gate; check initializeKB() for hangs
+[2026-08-29T10:23:16.493Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-29T10:23:33.905Z] INFO  [SchemaV5Migration] Storage backend not initialized yet — skipping schema v5 migration (no data to migrate)
+[2026-08-29T10:23:33.905Z] INFO  [activate] Schema v5 migration: alreadyDone=false fresh=true migrated=0 skipped=0
+[2026-08-29T10:23:47.210Z] INFO  [RepoProfile] [trace=0057fd3b24c47651b3157aefd4ee2628] manual-disable read → false (by=manuallyDisabled, pid=9320, cwd=c:\Users\mk\Documents\hackathon_research, profile=c:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-29T10:23:47.211Z] INFO  [PrePushWorker] [trace=0057fd3b24c47651b3157aefd4ee2628] PrePushWorker(vscode-activation): spawned compensation drain starting
+[2026-08-29T10:23:47.262Z] INFO  [PushExecutor] [trace=0057fd3b24c47651b3157aefd4ee2628] processPushPending(activation): 2 pending entr(ies)
+[2026-08-29T10:23:49.803Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, worktreeHooks=true, sessions=1, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-29T10:23:49.871Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-29T10:23:50.633Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, worktreeHooks=true, sessions=1, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-29T10:23:50.635Z] INFO  [initialLoad] All panels loaded — updating status bar
+[2026-08-29T10:23:50.636Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-29T10:23:52.647Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, worktreeHooks=true, sessions=1, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-29T10:23:52.653Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-29T10:23:53.376Z] INFO  [PushExecutor] [trace=0057fd3b24c47651b3157aefd4ee2628] processPushPending(activation): claimed 2/2 candidate(s)
+[2026-08-29T10:23:54.043Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, worktreeHooks=true, sessions=1, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-29T10:23:54.050Z] INFO  [StorageFactory] [trace=0057fd3b24c47651b3157aefd4ee2628] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-29T10:23:54.100Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-29T10:24:05.802Z] INFO  [PushExecutor] [trace=0057fd3b24c47651b3157aefd4ee2628] processPushPending(activation): triage — withMemory=0 noMemory=2 mergedChildren=0
+[2026-08-29T10:24:05.802Z] INFO  [PrePushWorker] [trace=0057fd3b24c47651b3157aefd4ee2628] PrePushWorker(vscode-activation): drain done — attempted=0 pushed=0 failed=0 (no candidates with memory)
+[2026-08-29T10:24:10.845Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, worktreeHooks=true, sessions=1, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-29T11:27:06.110Z] INFO  [activate] Activating JolliMemory extension {"workspaceRoot":"c:\\Users\\mk\\Documents\\hackathon_research","extensionPath":"c:\\Users\\mk\\.antigravity-ide\\extensions\\jolli.jollimemory-vscode-0.99.16-universal"}
+[2026-08-29T12:31:16.542Z] INFO  [activate] Activating JolliMemory extension {"workspaceRoot":"c:\\Users\\mk\\Documents\\hackathon_research","extensionPath":"c:\\Users\\mk\\.antigravity-ide\\extensions\\jolli.jollimemory-vscode-0.99.16-universal"}
+[2026-08-29T12:31:17.169Z] INFO  [initialLoad] Loading all panels
+[2026-08-29T12:31:17.930Z] INFO  [RepoProfile] manual-disable read → false (by=manuallyDisabled, pid=2268, cwd=c:\Users\mk\Documents\hackathon_research, profile=c:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-29T12:31:18.189Z] INFO  [PlanService] detectPlans found 0 plans (0 in registry)
+[2026-08-29T12:31:18.189Z] INFO  [NoteService] detectNotes found 0 notes (0 in registry)
+[2026-08-29T12:31:18.189Z] INFO  [references] detectReferences(*) found 0 (0 in registry)
+[2026-08-29T12:31:18.190Z] INFO  [SkillProjection] projectActiveSkills: 0 active (0 in registry)
+[2026-08-29T12:31:23.134Z] INFO  [Sync:VsCodeBootstrap] Memory Bank sync engine built (auto-sync off — manual only)
+[2026-08-29T12:31:40.464Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-29T12:31:42.269Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-29T12:31:42.269Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-29T12:31:43.221Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-29T12:31:46.087Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-29T12:31:51.909Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=1, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-29T12:31:52.090Z] INFO  [SchemaV5Migration] Storage backend not initialized yet — skipping schema v5 migration (no data to migrate)
+[2026-08-29T12:31:52.091Z] INFO  [activate] Schema v5 migration: alreadyDone=false fresh=true migrated=0 skipped=0
+[2026-08-29T12:31:52.857Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=1, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-29T12:31:52.921Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-29T12:31:54.999Z] INFO  [initialLoad] All panels loaded — updating status bar
+[2026-08-29T12:31:55.000Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-29T12:31:56.851Z] INFO  [RepoProfile] [trace=f512b8098c1383e9d395d25f15b50864] manual-disable read → false (by=manuallyDisabled, pid=16680, cwd=c:\Users\mk\Documents\hackathon_research, profile=c:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-29T12:31:56.852Z] INFO  [PrePushWorker] [trace=f512b8098c1383e9d395d25f15b50864] PrePushWorker(vscode-activation): spawned compensation drain starting
+[2026-08-29T12:31:56.855Z] INFO  [PushExecutor] [trace=f512b8098c1383e9d395d25f15b50864] processPushPending(activation): 2 pending entr(ies)
+[2026-08-29T12:31:59.030Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=1, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-29T12:31:59.031Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-29T12:32:08.376Z] INFO  [PushExecutor] [trace=f512b8098c1383e9d395d25f15b50864] processPushPending(activation): claimed 2/2 candidate(s)
+[2026-08-29T12:32:11.224Z] INFO  [StorageFactory] [trace=f512b8098c1383e9d395d25f15b50864] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-29T12:32:15.701Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=1, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-29T12:32:16.118Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-29T12:32:21.124Z] INFO  [PushExecutor] [trace=f512b8098c1383e9d395d25f15b50864] processPushPending(activation): triage — withMemory=0 noMemory=2 mergedChildren=0
+[2026-08-29T12:32:21.125Z] INFO  [PrePushWorker] [trace=f512b8098c1383e9d395d25f15b50864] PrePushWorker(vscode-activation): drain done — attempted=0 pushed=0 failed=0 (no candidates with memory)
+[2026-08-29T12:32:20.530Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=1, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-30T18:29:47.248Z] INFO  [deactivate] Jolli Memory extension deactivating
+[2026-08-30T18:34:16.458Z] INFO  [activate] Activating JolliMemory extension {"workspaceRoot":"c:\\Users\\mk\\Documents\\hackathon_research","extensionPath":"c:\\Users\\mk\\.antigravity-ide\\extensions\\jolli.jollimemory-vscode-0.99.16-universal"}
+[2026-08-30T18:34:22.236Z] INFO  [initialLoad] Loading all panels
+[2026-08-30T18:34:45.799Z] INFO  [RepoProfile] manual-disable read → false (by=manuallyDisabled, pid=17180, cwd=c:\Users\mk\Documents\hackathon_research, profile=c:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-30T18:34:45.979Z] INFO  [PlanService] detectPlans found 0 plans (0 in registry)
+[2026-08-30T18:34:45.979Z] INFO  [NoteService] detectNotes found 0 notes (0 in registry)
+[2026-08-30T18:34:45.979Z] INFO  [references] detectReferences(*) found 0 (0 in registry)
+[2026-08-30T18:34:45.979Z] INFO  [SkillProjection] projectActiveSkills: 0 active (0 in registry)
+[2026-08-30T18:34:52.438Z] INFO  [Sync:VsCodeBootstrap] Memory Bank sync engine built (auto-sync off — manual only)
+[2026-08-30T18:34:53.783Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-30T18:34:56.554Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-30T18:34:56.555Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-30T18:34:57.523Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-30T18:35:00.609Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-30T18:35:02.586Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=4, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-30T18:35:03.863Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=4, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-30T18:35:03.872Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-30T18:35:06.692Z] INFO  [SchemaV5Migration] Storage backend not initialized yet — skipping schema v5 migration (no data to migrate)
+[2026-08-30T18:35:06.692Z] INFO  [activate] Schema v5 migration: alreadyDone=false fresh=true migrated=0 skipped=0
+[2026-08-30T18:35:09.044Z] INFO  [initialLoad] All panels loaded — updating status bar
+[2026-08-30T18:35:09.045Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-30T18:35:19.794Z] INFO  [RepoProfile] [trace=7ef671e831eab5f8eb301e14e7edce6d] manual-disable read → false (by=manuallyDisabled, pid=3452, cwd=c:\Users\mk\Documents\hackathon_research, profile=c:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-30T18:35:19.795Z] INFO  [PrePushWorker] [trace=7ef671e831eab5f8eb301e14e7edce6d] PrePushWorker(vscode-activation): spawned compensation drain starting
+[2026-08-30T18:35:19.799Z] INFO  [PushExecutor] [trace=7ef671e831eab5f8eb301e14e7edce6d] processPushPending(activation): 2 pending entr(ies)
+[2026-08-30T18:35:24.950Z] INFO  [PushExecutor] [trace=7ef671e831eab5f8eb301e14e7edce6d] processPushPending(activation): claimed 2/2 candidate(s)
+[2026-08-30T18:35:25.292Z] INFO  [StorageFactory] [trace=7ef671e831eab5f8eb301e14e7edce6d] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-30T18:35:27.518Z] INFO  [PushExecutor] [trace=7ef671e831eab5f8eb301e14e7edce6d] processPushPending(activation): triage — withMemory=0 noMemory=2 mergedChildren=0
+[2026-08-30T18:35:27.518Z] INFO  [PrePushWorker] [trace=7ef671e831eab5f8eb301e14e7edce6d] PrePushWorker(vscode-activation): drain done — attempted=0 pushed=0 failed=0 (no candidates with memory)
+[2026-08-30T18:35:28.352Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=4, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-30T18:35:28.454Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-08-30T18:35:28.677Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=4, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-30T18:35:28.678Z] INFO  [Installer] Checking Jolli Memory status
+[2026-08-30T18:35:31.145Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=4, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true

@@ -15,6 +15,7 @@ import {
   Sparkles,
   Zap,
   Clock,
+  Layers,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -274,8 +275,15 @@ export default function StudentDashboard() {
       </div>
 
       {/* ── Quick Navigation Actions ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {[
+          {
+            href: "/student/flashcards",
+            label: "PDF Flashcards",
+            desc: "AI extraction & 3D study",
+            icon: Layers,
+            card: "card-mint",
+          },
           {
             href: "/student/chapters",
             label: "Browse Chapters",

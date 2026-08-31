@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { getGeminiClient, generateWithGemini } from "@/lib/gemini";
+import { globalRateLimiter, RATE_LIMITS, getClientIdentifier } from "@/lib/rateLimiter";
+import { sanitizeAndGuardPrompt, sanitizeString } from "@/lib/securityGuard";
 
 export type ClassmateSpeaker = "Toby" | "Maya" | "Leo" | "Sam";
 export type Mood = "confused" | "curious" | "skeptical" | "lightbulb" | "amazed" | "mastered";
@@ -431,8 +433,23 @@ function generateMockClassroomResponse(
 
 export async function POST(request: Request) {
   try {
+    // ── RATE LIMITING & PROTECTION ──
+    const clientId = getClientIdentifier(request);
+    const rateCheck = globalRateLimiter.check(clientId, RATE_LIMITS.TEACH_BACK_CHAT);
+    if (!rateCheck.allowed) {
+      const waitSeconds = Math.ceil(rateCheck.resetMs / 1000);
+      return NextResponse.json(
+        {
+          error: "Rate limit exceeded. System protected against API credit exhaustion.",
+          message: `Please wait ${waitSeconds}s before sending another message.`,
+          retryAfter: waitSeconds,
+        },
+        { status: 429 }
+      );
+    }
+
     const body: RequestBody = await request.json();
-    const {
+    let {
       conceptTitle,
       conceptDescription,
       messages,
@@ -441,6 +458,15 @@ export async function POST(request: Request) {
       targetClassmate = "Toby",
       streakCount = 1,
     } = body;
+
+    conceptTitle = sanitizeString(conceptTitle || "Concept", 100);
+    conceptDescription = sanitizeString(conceptDescription || "", 300);
+
+    // Sanitize user messages to neutralize prompt injections
+    messages = (messages || []).map((m) => ({
+      ...m,
+      content: sanitizeAndGuardPrompt(m.content).safeText,
+    }));
 
     const genAI = getGeminiClient();
 
