@@ -27,7 +27,7 @@ export default function TeacherLayout({
   if (!mounted || role !== "teacher") return null;
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-[#EEF1F7]">
       <Sidebar />
       <main
         className={`main-content flex-1 transition-all duration-300 ${

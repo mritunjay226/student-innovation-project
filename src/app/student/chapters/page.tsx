@@ -9,10 +9,12 @@ import {
   BookOpen,
   GraduationCap,
   Lock,
-  TrendingUp,
   MessageSquare,
   ClipboardCheck,
   Sparkles,
+  ChevronRight,
+  ArrowRight,
+  CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
 import { getChapterIllustration } from "@/components/CardIllustrations";
@@ -41,8 +43,8 @@ export default function ChaptersPage() {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-center">
-          <div className="w-8 h-8 rounded-full mx-auto mb-3 animate-spin border-2 border-[#18181B] border-t-transparent" />
-          <p className="text-xs font-semibold text-[#71717A]">Loading chapters…</p>
+          <div className="w-8 h-8 rounded-full mx-auto mb-3 animate-spin border-2 border-[#FF642F] border-t-transparent" />
+          <p className="text-xs font-bold text-[#8C93A4]">Loading curriculum chapters…</p>
         </div>
       </div>
     );
@@ -76,179 +78,179 @@ export default function ChaptersPage() {
     subjectGroups[c.subject].push(c);
   }
 
-  const subjectMeta: Record<string, { color: string; card: string }> = {
-    Mathematics: { color: "#7C3AED", card: "card-lavender" },
-    Physics: { color: "#0284C7", card: "card-sky" },
-    Chemistry: { color: "#059669", card: "card-mint" },
+  const subjectMeta: Record<string, { color: string; badgeBg: string }> = {
+    Mathematics: { color: "#FF642F", badgeBg: "bg-blue-50 text-[#FF642F]" },
+    Physics: { color: "#0284C7", badgeBg: "bg-sky-50 text-[#0284C7]" },
+    Chemistry: { color: "#059669", badgeBg: "bg-emerald-50 text-[#059669]" },
   };
 
-  const cardThemes = ["card-lavender", "card-mint", "card-sky", "card-butter", "card-peach", "card-lilac"];
-
   return (
-    <div className="max-w-6xl mx-auto pb-14 animate-fade-in-up">
-      {/* Header */}
-      <div className="mb-6">
-        <div className="pill-chip chip-butter text-xs font-bold py-1 px-3 mb-2">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>{filteredConcepts.length} Topics Across 3 Subjects</span>
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-[#18181B] tracking-tight mb-1">
-          Curriculum Chapters
-        </h1>
-        <p className="text-sm text-[#71717A] font-medium">
-          Browse all chapters, track mastery, and launch study sessions.
-        </p>
-      </div>
+    <div className="max-w-6xl mx-auto pb-14 text-[#1C1E23] font-sans antialiased">
+      {/* ── Top Header Bar ── */}
+      <div className="bg-white rounded-[28px] p-6 sm:p-7 shadow-xs border border-[#E6EAF2] mb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EBF3FE] text-[#FF642F] text-xs font-bold mb-2">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{filteredConcepts.length} Topics Across 3 Subjects</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#181A20] tracking-tight m-0">
+              Curriculum Chapters
+            </h1>
+            <p className="text-xs sm:text-sm text-[#7E8494] font-medium mt-1 mb-0">
+              Browse all chapters, track concept mastery, and launch Socratic study sessions.
+            </p>
+          </div>
 
-      {/* Search + Filters */}
-      <div className="mb-7 space-y-3">
-        <div className="pill-search bg-white shadow-xs py-2 px-3.5 border border-[#EBE5DB]">
-          <Search className="w-4 h-4 text-[#71717A] shrink-0" />
-          <input
-            type="text"
-            placeholder="Search chapters by name or topic…"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="text-xs sm:text-sm"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="text-xs font-bold text-[#71717A] hover:text-[#18181B] px-2 cursor-pointer"
-            >
-              Clear
-            </button>
-          )}
+          {/* Search Bar */}
+          <div className="relative w-full sm:w-72">
+            <Search className="w-4 h-4 text-[#8C93A4] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Search chapters by topic…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-[#F4F6FB] hover:bg-[#EAEFF8] focus:bg-white text-xs font-bold text-[#181A20] placeholder-[#8C93A4] pl-9 pr-4 py-2.5 rounded-full outline-none transition-all border border-[#E2E6F0] focus:border-[#FF642F]"
+            />
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          {/* Subject */}
-          <div className="flex flex-wrap gap-1.5">
+        {/* Filters Row */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-5 mt-5 border-t border-[#F2F4F8]">
+          {/* Subjects Pills */}
+          <div className="flex flex-wrap gap-2">
             {SUBJECTS.map((s) => (
               <button
                 key={s}
                 onClick={() => setSelectedSubject(s)}
-                className={`pill-chip text-xs py-1 px-3 font-semibold ${
-                  selectedSubject === s ? "chip-dark" : "chip-white"
+                className={`text-xs font-bold px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${
+                  selectedSubject === s
+                    ? "bg-[#FF642F] text-white shadow-sm shadow-[#FF642F]/25"
+                    : "bg-[#F4F6FB] text-[#555C6E] hover:text-[#181A20] border border-[#E2E6F0]"
                 }`}
               >
-                <BookOpen className="w-3 h-3" /> {s}
+                {s}
               </button>
             ))}
           </div>
-          {/* Grade */}
-          <div className="flex flex-wrap gap-1.5">
+
+          {/* Grade Selector Pills */}
+          <div className="flex flex-wrap gap-2">
             {GRADES.map((g) => (
               <button
                 key={g}
                 onClick={() => setSelectedGrade(g)}
-                className={`pill-chip text-xs py-1 px-2.5 font-semibold ${
-                  selectedGrade === g ? "chip-butter" : "chip-white"
+                className={`text-xs font-bold px-3 py-1.5 rounded-full transition-all cursor-pointer ${
+                  selectedGrade === g
+                    ? "bg-[#181A20] text-white"
+                    : "bg-[#F4F6FB] text-[#7E8494] hover:text-[#181A20] border border-[#E2E6F0]"
                 }`}
               >
-                <GraduationCap className="w-3 h-3" /> {g}
+                {g}
               </button>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Chapters grouped by subject */}
+      {/* ── Chapters Grouped by Subject ── */}
       {Object.entries(subjectGroups).map(([subject, concepts]) => {
-        const meta = subjectMeta[subject] || { color: "#121216", card: "card-white" };
+        const meta = subjectMeta[subject] || { color: "#FF642F", badgeBg: "bg-blue-50 text-[#FF642F]" };
         const masteredCount = concepts.filter((c) => (c.mastery?.score || 0) >= 75).length;
         const avgScore = concepts.length > 0
           ? Math.round(concepts.reduce((s, c) => s + (c.mastery?.score || 0), 0) / concepts.length)
           : 0;
 
         return (
-          <div key={subject} className="mb-10">
+          <div key={subject} className="mb-8">
             {/* Subject Header */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between mb-4 px-1">
+              <div className="flex items-center gap-2.5">
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{ background: meta.color }}
                 />
-                <h2 className="text-lg font-black text-[#18181B] tracking-tight">
+                <h2 className="text-base sm:text-lg font-black text-[#181A20] tracking-tight m-0">
                   {subject}
                 </h2>
-                <span className="pill-chip chip-white text-[10px] font-bold py-0.5 px-2">
+                <span className="text-[11px] font-bold text-[#7E8494] bg-white border border-[#E2E6F0] px-2.5 py-0.5 rounded-full">
                   {concepts.length} Chapters
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-[#71717A]">
+
+              {/* Subject Progress Pill */}
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-bold text-[#7E8494]">
                   {masteredCount}/{concepts.length} mastered
                 </span>
-                {/* Mini subject progress bar */}
-                <div className="w-20 h-1.5 bg-[#EBE5DB] rounded-full overflow-hidden">
+                <div className="w-24 h-2 bg-[#E5E9F2] rounded-full overflow-hidden">
                   <div
-                    className="h-full rounded-full transition-all"
+                    className="h-full rounded-full transition-all duration-700"
                     style={{
                       width: `${avgScore}%`,
                       background: meta.color,
                     }}
                   />
                 </div>
-                <span className="text-xs font-bold" style={{ color: meta.color }}>
+                <span className="text-xs font-black text-[#181A20]">
                   {avgScore}%
                 </span>
               </div>
             </div>
 
-            {/* Chapter Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {/* Chapter Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {concepts.map((concept, idx) => {
                 const score = concept.mastery?.score || 0;
                 const isBlocked = dontStudyYet.has(concept._id);
                 const isMastered = score >= 75;
                 const attempts = concept.mastery?.attemptCount || 0;
-                const themeClass = isBlocked
-                  ? "card-white opacity-80"
-                  : cardThemes[idx % cardThemes.length];
 
                 return (
                   <div
                     key={concept._id}
-                    className={`card-pastel ${themeClass} p-5 rounded-[24px] flex flex-col justify-between relative overflow-hidden group shadow-xs`}
+                    className="bg-white rounded-[26px] p-5 shadow-xs border border-[#E6EAF2] flex flex-col justify-between relative overflow-hidden group hover:scale-[1.01] hover:shadow-md transition-all"
                   >
-                    {/* Illustration */}
-                    <div className="absolute -right-2 -bottom-2 opacity-25 group-hover:opacity-55 transition-all duration-300 pointer-events-none">
+                    {/* Illustration watermark */}
+                    <div className="absolute -right-2 -bottom-2 opacity-15 group-hover:opacity-30 transition-all pointer-events-none">
                       {getChapterIllustration(concept.subject, idx, "w-28 h-28")}
                     </div>
 
                     {isBlocked && (
-                      <div className="absolute top-3 right-3 z-20">
-                        <Lock className="w-4 h-4 text-[#8A3B2E]" />
+                      <div className="absolute top-4 right-4 z-20 w-7 h-7 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700">
+                        <Lock className="w-3.5 h-3.5" />
                       </div>
                     )}
 
                     <div className="relative z-10">
-                      {/* Grade + mastery badge */}
-                      <div className="flex items-center justify-between gap-2 mb-2">
-                        <span className="pill-chip chip-white text-[10px] font-bold py-0.5 px-2">
+                      {/* Grade & Mastery status */}
+                      <div className="flex items-center justify-between gap-2 mb-2.5">
+                        <span className="text-[10px] font-bold text-[#7E8494] bg-[#F4F6FB] border border-[#E2E6F0] py-0.5 px-2.5 rounded-full">
                           {concept.grade}
                         </span>
                         {isMastered ? (
-                          <span className="pill-chip chip-mint text-[10px] font-bold py-0.5 px-2">
-                            ✓ Mastered
+                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 py-0.5 px-2.5 rounded-full flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3" /> Mastered
                           </span>
                         ) : score > 0 ? (
-                          <span className="text-xs font-bold opacity-75">{score}%</span>
+                          <span className="text-xs font-black text-[#FF642F] bg-blue-50 px-2 py-0.5 rounded-full">
+                            {score}%
+                          </span>
                         ) : (
-                          <span className="text-[10px] font-semibold opacity-50">Not started</span>
+                          <span className="text-[10px] font-bold text-[#8C93A4] bg-slate-50 px-2 py-0.5 rounded-full">
+                            Not started
+                          </span>
                         )}
                       </div>
 
                       {/* Title */}
-                      <h3 className="font-black text-sm text-[#18181B] leading-snug mb-1 group-hover:underline">
+                      <h3 className="font-extrabold text-sm text-[#181A20] leading-snug mb-1.5 group-hover:text-[#FF642F] transition-colors">
                         {concept.title}
                       </h3>
 
                       {/* Progress bar */}
                       {score > 0 && (
-                        <div className="h-1.5 bg-black/10 rounded-full overflow-hidden mb-2">
+                        <div className="h-1.5 bg-[#E5E9F2] rounded-full overflow-hidden mb-2">
                           <div
                             className="h-full rounded-full transition-all"
                             style={{
@@ -259,36 +261,36 @@ export default function ChaptersPage() {
                         </div>
                       )}
 
-                      <p className="text-[11px] opacity-70 font-medium line-clamp-2 max-w-[85%]">
+                      <p className="text-xs text-[#7E8494] font-medium line-clamp-2 leading-relaxed">
                         {concept.description}
                       </p>
                     </div>
 
-                    {/* Footer */}
-                    <div className="flex items-center justify-between pt-3 border-t border-black/5 mt-3 relative z-10">
-                      <span className="text-[10px] font-semibold opacity-60">
-                        {attempts > 0 ? `${attempts} attempt${attempts > 1 ? "s" : ""}` : "Level " + concept.difficulty}
+                    {/* Footer Controls */}
+                    <div className="flex items-center justify-between pt-3.5 border-t border-[#F2F4F8] mt-4 relative z-10">
+                      <span className="text-[11px] font-bold text-[#8C93A4]">
+                        {attempts > 0 ? `${attempts} attempts` : `Difficulty: Level ${concept.difficulty}`}
                       </span>
-                      {!isBlocked && (
-                        <div className="flex items-center gap-1.5">
+
+                      {!isBlocked ? (
+                        <div className="flex items-center gap-2">
                           <Link
                             href="/student/assessment"
-                            className="w-6 h-6 rounded-full bg-white/80 hover:bg-white flex items-center justify-center border border-black/5 transition-all"
-                            title="Quiz"
+                            className="w-7 h-7 rounded-full bg-[#F4F6FB] hover:bg-[#EAEFF8] flex items-center justify-center text-[#181A20] border border-[#E2E6F0] transition-colors"
+                            title="Diagnostic Quiz"
                           >
-                            <ClipboardCheck className="w-3 h-3 text-[#18181B]" />
+                            <ClipboardCheck className="w-3.5 h-3.5" />
                           </Link>
                           <Link
                             href="/student/teach-back"
-                            className="btn-continue text-[10px] py-1 px-2.5"
+                            className="bg-[#FF642F] hover:bg-[#2554D4] text-white text-[11px] font-bold py-1.5 px-3.5 rounded-full shadow-xs shadow-[#FF642F]/25 flex items-center gap-1 transition-all"
                           >
                             <span>Study</span>
-                            <span className="arrow-circle">→</span>
+                            <ChevronRight className="w-3 h-3" />
                           </Link>
                         </div>
-                      )}
-                      {isBlocked && (
-                        <span className="text-[10px] font-bold text-[#8A3B2E]">
+                      ) : (
+                        <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
                           Prereq required
                         </span>
                       )}
@@ -302,18 +304,18 @@ export default function ChaptersPage() {
       })}
 
       {filteredConcepts.length === 0 && (
-        <div className="text-center py-16">
-          <BookOpen className="w-8 h-8 text-[#D4D0C8] mx-auto mb-3" />
-          <p className="text-sm font-semibold text-[#71717A]">No chapters match your search.</p>
+        <div className="bg-white rounded-[28px] p-12 text-center border border-[#E6EAF2]">
+          <BookOpen className="w-8 h-8 text-[#8C93A4] mx-auto mb-3" />
+          <p className="text-sm font-bold text-[#181A20]">No chapters match your search.</p>
           <button
             onClick={() => {
               setSearchQuery("");
               setSelectedSubject("All");
               setSelectedGrade("All Grades");
             }}
-            className="mt-3 text-xs font-bold text-[#8B5CF6] hover:underline"
+            className="mt-3 text-xs font-bold text-[#FF642F] hover:underline cursor-pointer"
           >
-            Clear filters
+            Clear all filters
           </button>
         </div>
       )}

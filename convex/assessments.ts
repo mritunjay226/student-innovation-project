@@ -62,6 +62,8 @@ export const submitAttempt = mutation({
     answer: v.string(),
     timeTaken: v.number(),
     confidence: v.number(),
+    reasoning: v.optional(v.string()),
+    aiReasoningFeedback: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const question = await ctx.db.get(args.questionId);
@@ -79,6 +81,8 @@ export const submitAttempt = mutation({
       correct,
       timeTaken: args.timeTaken,
       confidence: args.confidence,
+      reasoning: args.reasoning,
+      aiReasoningFeedback: args.aiReasoningFeedback,
     });
 
     // Log study action

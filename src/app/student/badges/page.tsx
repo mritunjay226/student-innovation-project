@@ -13,11 +13,7 @@ import {
   CheckCircle2,
   Lock,
   ChevronRight,
-  TrendingUp,
   Filter,
-  Layers,
-  MessageSquare,
-  BookOpen,
   X,
   Share2,
 } from "lucide-react";
@@ -25,7 +21,6 @@ import {
 export default function BadgesPage() {
   const {
     xp,
-    credits,
     streak,
     unlockedBadgeIds,
     badgeProgress,
@@ -64,86 +59,82 @@ export default function BadgesPage() {
     setActiveModalBadge(badge);
   };
 
-  const getTierColor = (tier: BadgeTier) => {
+  const getTierBadge = (tier: BadgeTier) => {
     switch (tier) {
       case "diamond":
-        return "bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-indigo-400";
+        return "bg-indigo-50 text-indigo-700 border-indigo-200";
       case "gold":
-        return "bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-900 border-amber-300";
+        return "bg-amber-50 text-amber-800 border-amber-200";
       case "silver":
-        return "bg-gradient-to-r from-slate-200 to-slate-400 text-slate-800 border-slate-300";
+        return "bg-slate-100 text-slate-800 border-slate-200";
       case "bronze":
       default:
-        return "bg-gradient-to-r from-amber-700 to-amber-900 text-amber-100 border-amber-600";
+        return "bg-orange-50 text-orange-800 border-orange-200";
     }
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 pb-16">
+    <div className="max-w-6xl mx-auto space-y-6 pb-16 text-[#1C1E23] font-sans antialiased">
       
-      {/* ════════════════════════════════════════════════════════════════════
-          1. HERO SHOWCASE & GAMIFICATION DASHBOARD
-      ════════════════════════════════════════════════════════════════════ */}
-      <div className="rounded-[36px] p-6 sm:p-8 bg-gradient-to-br from-[#FAF8F5] via-white to-[#E8DEFF]/40 border-2 border-[#EBE5DB] shadow-sm relative overflow-hidden animate-fade-in">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-purple-200/30 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
-        
+      {/* ── 1. HERO SHOWCASE & GAMIFICATION DASHBOARD ── */}
+      <div className="bg-white rounded-[32px] p-6 sm:p-8 border border-[#E6EAF2] shadow-xs relative overflow-hidden">
         <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="pill-chip chip-lavender text-xs font-black py-1 px-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EBF3FE] text-[#FF642F] text-xs font-bold">
                 🏆 Student Achievement Hub
               </span>
-              <span className="pill-chip chip-butter text-xs font-extrabold py-1 px-3">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#E2E6F0] text-xs font-bold text-[#181A20]">
                 {levelInfo.rankEmoji} Level {levelInfo.level} Scholar
               </span>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-black text-[#18181B] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-[#181A20] tracking-tight m-0">
               Mastery Badges & Rewards
             </h1>
-            <p className="text-xs sm:text-sm text-[#71717A] max-w-xl font-medium leading-relaxed">
-              Earn high-yield pedagogical achievements across Feynman Teach-Backs, AI Flashcard ingests, Spaced Repetition mastery, and Prerequisite Knowledge Radars.
+            <p className="text-xs sm:text-sm text-[#7E8494] max-w-xl font-medium leading-relaxed m-0">
+              Earn high-yield achievements across Feynman Teach-Backs, AI Flashcard studies, and Socratic Knowledge Radars.
             </p>
           </div>
 
           {/* Quick Stats Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full lg:w-auto">
-            <div className="p-3.5 rounded-2xl bg-white border border-[#EBE5DB] shadow-xs text-center">
-              <div className="text-xl sm:text-2xl font-black text-[#7C3AED]">{unlockedCount} / {totalBadges}</div>
-              <div className="text-[10px] font-bold text-[#71717A] uppercase tracking-wider">Badges Won</div>
+            <div className="p-3.5 rounded-2xl bg-[#F8FAFD] border border-[#E6EAF2] text-center">
+              <div className="text-xl sm:text-2xl font-black text-[#FF642F]">{unlockedCount} / {totalBadges}</div>
+              <div className="text-[10px] font-bold text-[#7E8494] uppercase tracking-wider mt-0.5">Badges Won</div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-[#FEF0C3] border border-[#FDE089] text-center">
-              <div className="text-xl sm:text-2xl font-black text-[#713F12]">+{totalBadgeXpEarned}</div>
-              <div className="text-[10px] font-bold text-[#713F12] uppercase tracking-wider">Badge XP</div>
+            <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#FFE4D6] to-[#FFCBBF] border border-[#FFD5CC] text-center">
+              <div className="text-xl sm:text-2xl font-black text-[#2D1208]">+{totalBadgeXpEarned}</div>
+              <div className="text-[10px] font-bold text-[#5A2C18] uppercase tracking-wider mt-0.5">Badge XP</div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-[#D2F1E6] border border-[#B2E5D3] text-center">
-              <div className="text-xl sm:text-2xl font-black text-[#0D3E30]">{completionPercentage}%</div>
-              <div className="text-[10px] font-bold text-[#0D3E30] uppercase tracking-wider">Completion</div>
+            <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#C4F6EE] to-[#A8E2F9] border border-[#BDE8F2] text-center">
+              <div className="text-xl sm:text-2xl font-black text-[#0B2A24]">{completionPercentage}%</div>
+              <div className="text-[10px] font-bold text-[#18483F] uppercase tracking-wider mt-0.5">Completion</div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-[#FCD5CE] border border-[#F9BFB4] text-center">
-              <div className="text-xl sm:text-2xl font-black text-[#702114]">{streak} 🔥</div>
-              <div className="text-[10px] font-bold text-[#702114] uppercase tracking-wider">Active Streak</div>
+            <div className="p-3.5 rounded-2xl bg-white border border-[#E2E6F0] text-center shadow-2xs">
+              <div className="text-xl sm:text-2xl font-black text-[#FF6B6B]">{streak} 🔥</div>
+              <div className="text-[10px] font-bold text-[#7E8494] uppercase tracking-wider mt-0.5">Active Streak</div>
             </div>
           </div>
         </div>
 
         {/* Next Nearest Badge Spotlight */}
         {nextBadgeToUnlock && (
-          <div className="mt-6 pt-5 border-t border-[#F4F0EB] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white/70 backdrop-blur-sm p-4 rounded-2xl border border-[#EBE5DB]">
+          <div className="mt-6 pt-5 border-t border-[#F0F3F8] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-[#F8FAFD] p-4 rounded-2xl border border-[#E6EAF2]">
             <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-[#E8DEFF] border border-[#D5C4FA] flex items-center justify-center text-2xl shrink-0 shadow-xs">
+              <div className="w-12 h-12 rounded-2xl bg-white border border-[#E2E6F0] flex items-center justify-center text-2xl shrink-0 shadow-xs">
                 {nextBadgeToUnlock.icon}
               </div>
               <div>
-                <div className="text-[10px] font-extrabold uppercase tracking-wider text-[#7C3AED]">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-[#FF642F]">
                   Target Next Achievement
                 </div>
-                <div className="text-sm font-black text-[#18181B]">
+                <div className="text-sm font-black text-[#181A20]">
                   {nextBadgeToUnlock.title}
                 </div>
-                <p className="text-xs text-[#71717A] font-medium">
+                <p className="text-xs text-[#7E8494] font-medium m-0">
                   {nextBadgeToUnlock.requirementDescription}
                 </p>
               </div>
@@ -151,12 +142,12 @@ export default function BadgesPage() {
 
             <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
               <div className="text-right">
-                <div className="text-[10px] font-extrabold text-[#71717A]">
+                <div className="text-[10px] font-bold text-[#7E8494]">
                   Progress: {badgeProgress[nextBadgeToUnlock.id] || 0} / {nextBadgeToUnlock.maxProgress}
                 </div>
-                <div className="w-28 bg-[#EBE5DB] h-2 rounded-full overflow-hidden mt-1">
+                <div className="w-28 bg-[#E5E9F2] h-2 rounded-full overflow-hidden mt-1">
                   <div
-                    className="bg-[#7C3AED] h-full rounded-full transition-all"
+                    className="bg-[#FF642F] h-full rounded-full transition-all duration-500"
                     style={{
                       width: `${Math.min(
                         100,
@@ -172,21 +163,21 @@ export default function BadgesPage() {
               {nextBadgeToUnlock.category === "flashcards" ? (
                 <Link
                   href="/student/flashcards"
-                  className="btn-pill-dark text-xs py-2 px-4 cursor-pointer shrink-0"
+                  className="bg-[#FF642F] hover:bg-[#2554D4] text-white text-xs font-bold py-2 px-4 rounded-full shadow-xs shadow-[#FF642F]/25 shrink-0"
                 >
                   Study Flashcards
                 </Link>
               ) : nextBadgeToUnlock.category === "teach_back" ? (
                 <Link
                   href="/student/teach-back"
-                  className="btn-pill-dark text-xs py-2 px-4 cursor-pointer shrink-0"
+                  className="bg-[#FF642F] hover:bg-[#2554D4] text-white text-xs font-bold py-2 px-4 rounded-full shadow-xs shadow-[#FF642F]/25 shrink-0"
                 >
                   Teach Toby
                 </Link>
               ) : (
                 <Link
                   href="/student/progress"
-                  className="btn-pill-dark text-xs py-2 px-4 cursor-pointer shrink-0"
+                  className="bg-[#FF642F] hover:bg-[#2554D4] text-white text-xs font-bold py-2 px-4 rounded-full shadow-xs shadow-[#FF642F]/25 shrink-0"
                 >
                   View Radar
                 </Link>
@@ -196,9 +187,7 @@ export default function BadgesPage() {
         )}
       </div>
 
-      {/* ════════════════════════════════════════════════════════════════════
-          2. CATEGORY & TIER FILTERS
-      ════════════════════════════════════════════════════════════════════ */}
+      {/* ── 2. CATEGORY & TIER FILTERS ── */}
       <div className="space-y-3">
         {/* Category Tabs */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
@@ -216,10 +205,10 @@ export default function BadgesPage() {
                 soundEffects.playClick();
                 setSelectedCategory(tab.id as BadgeCategory);
               }}
-              className={`pill-chip py-2 px-4 text-xs font-black cursor-pointer transition-all shrink-0 ${
+              className={`py-2 px-4 rounded-full text-xs font-bold cursor-pointer transition-all shrink-0 ${
                 selectedCategory === tab.id
-                  ? "bg-[#18181B] text-white shadow-sm"
-                  : "bg-white hover:bg-[#FAF8F5] border border-[#EBE5DB] text-[#52525B]"
+                  ? "bg-[#FF642F] text-white shadow-sm shadow-[#FF642F]/25"
+                  : "bg-white hover:bg-[#F4F6FB] border border-[#E2E6F0] text-[#555C6E]"
               }`}
             >
               {tab.label} ({tab.count})
@@ -229,7 +218,7 @@ export default function BadgesPage() {
 
         {/* Tier Sub-Filter Pills */}
         <div className="flex items-center gap-2">
-          <span className="text-[11px] font-bold text-[#71717A] flex items-center gap-1">
+          <span className="text-[11px] font-bold text-[#7E8494] flex items-center gap-1">
             <Filter className="w-3 h-3" /> Tier:
           </span>
           {[
@@ -245,10 +234,10 @@ export default function BadgesPage() {
                 soundEffects.playClick();
                 setSelectedTier(tier.id as any);
               }}
-              className={`text-[11px] font-extrabold py-1 px-2.5 rounded-xl cursor-pointer transition-all ${
+              className={`text-[11px] font-bold py-1 px-3 rounded-full cursor-pointer transition-all ${
                 selectedTier === tier.id
-                  ? "bg-[#E8DEFF] text-[#2D1B4E] border border-[#7C3AED]"
-                  : "text-[#71717A] hover:text-[#18181B] bg-[#FAF8F5]"
+                  ? "bg-[#181A20] text-white"
+                  : "text-[#7E8494] hover:text-[#181A20] bg-white border border-[#E2E6F0]"
               }`}
             >
               {tier.label}
@@ -257,9 +246,7 @@ export default function BadgesPage() {
         </div>
       </div>
 
-      {/* ════════════════════════════════════════════════════════════════════
-          3. BADGES 3D INTERACTIVE GRID
-      ════════════════════════════════════════════════════════════════════ */}
+      {/* ── 3. BADGES GRID ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         {filteredBadges.map((badge) => {
           const isUnlocked = unlockedBadgeIds.includes(badge.id);
@@ -270,39 +257,39 @@ export default function BadgesPage() {
             <div
               key={badge.id}
               onClick={() => handleBadgeClick(badge)}
-              className={`rounded-[28px] p-5 border-2 transition-all cursor-pointer flex flex-col justify-between group relative overflow-hidden ${
+              className={`rounded-[28px] p-5.5 border transition-all cursor-pointer flex flex-col justify-between group relative overflow-hidden bg-white ${
                 isUnlocked
-                  ? "bg-white hover:border-[#7C3AED] shadow-sm hover:shadow-md hover:-translate-y-1"
-                  : "bg-white/60 border-[#EBE5DB] opacity-85 hover:opacity-100 hover:border-[#CBC2B4]"
-              } ${badge.accentColor}`}
+                  ? "border-[#E2E6F0] hover:border-[#FF642F] shadow-xs hover:shadow-md hover:-translate-y-0.5"
+                  : "border-[#E6EAF2] opacity-80 hover:opacity-100"
+              }`}
             >
               <div>
                 {/* Header Strip: Medallion + Tier Badge */}
                 <div className="flex items-start justify-between mb-3.5">
                   <div
-                    className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-sm transition-transform group-hover:scale-110 border ${
+                    className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-2xs transition-transform group-hover:scale-105 border ${
                       isUnlocked
-                        ? "bg-gradient-to-tr from-white to-[#FAF8F5] border-[#EBE5DB]"
-                        : "bg-slate-100 border-slate-200 grayscale opacity-60"
+                        ? "bg-[#F8FAFD] border-[#E2E6F0]"
+                        : "bg-slate-100 border-slate-200 grayscale opacity-50"
                     }`}
                   >
                     {badge.icon}
                   </div>
 
-                  <div className="flex flex-col items-end gap-1">
+                  <div className="flex flex-col items-end gap-1.5">
                     <span
-                      className={`text-[9px] font-black uppercase tracking-wider py-0.5 px-2 rounded-full border shadow-2xs ${getTierColor(
+                      className={`text-[9px] font-bold uppercase tracking-wider py-0.5 px-2 rounded-full border ${getTierBadge(
                         badge.tier
                       )}`}
                     >
                       {badge.tier}
                     </span>
                     {isUnlocked ? (
-                      <span className="text-[10px] font-extrabold text-[#059669] flex items-center gap-0.5 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 py-0.5 px-2 rounded-full flex items-center gap-1">
                         <CheckCircle2 className="w-3 h-3" /> Unlocked
                       </span>
                     ) : (
-                      <span className="text-[10px] font-bold text-[#71717A] flex items-center gap-0.5 bg-slate-100 px-2 py-0.5 rounded-md">
+                      <span className="text-[10px] font-bold text-slate-500 bg-slate-100 py-0.5 px-2 rounded-full flex items-center gap-1">
                         <Lock className="w-2.5 h-2.5" /> Locked
                       </span>
                     )}
@@ -310,37 +297,36 @@ export default function BadgesPage() {
                 </div>
 
                 {/* Badge Title & Description */}
-                <h3 className="text-base font-black text-[#18181B] mb-1 group-hover:text-[#7C3AED] transition-colors">
+                <h3 className="font-extrabold text-base text-[#181A20] leading-snug mb-1 group-hover:text-[#FF642F] transition-colors">
                   {badge.title}
                 </h3>
-                <p className="text-xs text-[#52525B] font-medium leading-relaxed mb-4">
+                <p className="text-xs text-[#7E8494] font-medium line-clamp-2 leading-relaxed mb-3">
                   {badge.description}
                 </p>
               </div>
 
-              {/* Bottom Progress & Reward Bar */}
-              <div className="pt-3.5 border-t border-[#F4F0EB] space-y-2">
-                {!isUnlocked && (
-                  <div>
-                    <div className="flex items-center justify-between text-[10px] font-bold text-[#71717A] mb-1">
-                      <span>{badge.requirementDescription}</span>
-                      <span>{currentProg} / {badge.maxProgress}</span>
-                    </div>
-                    <div className="w-full bg-[#EBE5DB] h-1.5 rounded-full overflow-hidden">
-                      <div
-                        className="bg-[#7C3AED] h-full rounded-full transition-all"
-                        style={{ width: `${progPercent}%` }}
-                      />
-                    </div>
-                  </div>
-                )}
+              {/* Progress Bar & Reward Footer */}
+              <div className="pt-3 border-t border-[#F2F4F8] mt-2">
+                <div className="flex items-center justify-between text-[11px] font-bold text-[#7E8494] mb-1.5">
+                  <span>{badge.requirementDescription}</span>
+                  <span>{currentProg} / {badge.maxProgress}</span>
+                </div>
+                <div className="w-full bg-[#E5E9F2] h-2 rounded-full overflow-hidden mb-3">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      isUnlocked ? "bg-emerald-500" : "bg-[#FF642F]"
+                    }`}
+                    style={{ width: `${isUnlocked ? 100 : progPercent}%` }}
+                  />
+                </div>
 
-                <div className="flex items-center justify-between text-[11px] font-bold">
-                  <span className="text-[#713F12] flex items-center gap-1 bg-[#FEF0C3] px-2 py-0.5 rounded-lg border border-[#FDE089]">
-                    <Sparkles className="w-3 h-3 text-amber-600" /> +{badge.xpReward} XP
+                <div className="flex items-center justify-between text-xs font-bold text-[#181A20]">
+                  <span className="text-amber-600 flex items-center gap-1">
+                    <Zap className="w-3.5 h-3.5 fill-amber-500" /> +{badge.xpReward} XP
                   </span>
-                  <span className="text-[#0D3E30] flex items-center gap-1 bg-[#D2F1E6] px-2 py-0.5 rounded-lg border border-[#B2E5D3]">
-                    <Zap className="w-3 h-3 text-emerald-600" /> +{badge.creditBonus} Credits
+                  <span className="text-xs font-bold text-[#FF642F] group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                    <span>Inspect</span>
+                    <ChevronRight className="w-3 h-3" />
                   </span>
                 </div>
               </div>
@@ -349,106 +335,60 @@ export default function BadgesPage() {
         })}
       </div>
 
-      {/* ════════════════════════════════════════════════════════════════════
-          4. INTERACTIVE BADGE DETAIL & LORE MODAL
-      ════════════════════════════════════════════════════════════════════ */}
+      {/* ── 4. BADGE DETAIL MODAL ── */}
       {activeModalBadge && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white w-full max-w-lg rounded-[36px] p-6 sm:p-8 text-center shadow-2xl border-2 border-[#D5C4FA] relative animate-scale-up">
-            
-            {/* Close Button */}
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-white rounded-[32px] p-7 max-w-md w-full shadow-2xl border border-[#E2E6F0] relative animate-in zoom-in-95 text-center">
             <button
               onClick={() => setActiveModalBadge(null)}
-              className="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#FAF8F5] hover:bg-[#EBE5DB] flex items-center justify-center text-[#71717A] cursor-pointer"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
 
-            {/* Medallion */}
-            <div className="w-24 h-24 rounded-3xl bg-gradient-to-tr from-[#FAF8F5] to-[#E8DEFF] border-2 border-[#D5C4FA] shadow-lg mx-auto mb-4 flex items-center justify-center text-5xl">
+            <div className="w-20 h-20 rounded-2xl bg-[#F8FAFD] border-2 border-[#E2E6F0] flex items-center justify-center text-4xl shadow-sm mx-auto mb-4">
               {activeModalBadge.icon}
             </div>
 
             <div className="flex items-center justify-center gap-2 mb-2">
-              <span className={`text-[10px] font-black uppercase tracking-wider py-0.5 px-3 rounded-full border ${getTierColor(activeModalBadge.tier)}`}>
+              <span className={`text-[10px] font-bold uppercase tracking-wider py-0.5 px-2 rounded-full border ${getTierBadge(activeModalBadge.tier)}`}>
                 {activeModalBadge.tier} Tier
               </span>
-              {unlockedBadgeIds.includes(activeModalBadge.id) ? (
-                <span className="pill-chip chip-mint text-[10px] font-black py-0.5 px-2.5">
+              {unlockedBadgeIds.includes(activeModalBadge.id) && (
+                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 py-0.5 px-2 rounded-full">
                   ✓ Unlocked
-                </span>
-              ) : (
-                <span className="pill-chip chip-peach text-[10px] font-black py-0.5 px-2.5">
-                  🔒 In Progress
                 </span>
               )}
             </div>
 
-            <h2 className="text-2xl font-black text-[#18181B] mb-1">
+            <h3 className="text-xl font-black text-[#181A20] mb-1">
               {activeModalBadge.title}
-            </h2>
-            <p className="text-xs sm:text-sm text-[#71717A] mb-4">
+            </h3>
+            <p className="text-xs text-[#7E8494] font-medium mb-4">
               {activeModalBadge.description}
             </p>
 
-            {/* Lore Card */}
-            <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-[#EBE5DB] text-xs text-[#2D1B4E] font-medium leading-relaxed mb-6 italic text-left">
+            <div className="bg-[#F8FAFD] rounded-2xl p-4 border border-[#E6EAF2] text-xs text-[#2A3142] italic mb-5">
               "{activeModalBadge.unlockedLore}"
             </div>
 
-            {/* Reward Breakdown */}
-            <div className="grid grid-cols-2 gap-3 mb-6 text-left">
-              <div className="p-3.5 rounded-2xl bg-[#FEF0C3] border border-[#FDE089]">
-                <div className="text-[10px] font-bold text-[#713F12] opacity-80 uppercase">Experience Reward</div>
-                <div className="text-xl font-black text-[#713F12]">+{activeModalBadge.xpReward} XP</div>
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#FFE4D6] to-[#FFC5B4] border border-[#FFD2C4] text-left">
+                <div className="text-[10px] font-bold text-[#5A2C18] uppercase">XP Reward</div>
+                <div className="text-lg font-black text-[#2A1208]">+{activeModalBadge.xpReward} XP</div>
               </div>
-              <div className="p-3.5 rounded-2xl bg-[#D2F1E6] border border-[#B2E5D3]">
-                <div className="text-[10px] font-bold text-[#0D3E30] opacity-80 uppercase">AI Token Allowance</div>
-                <div className="text-xl font-black text-[#0D3E30]">+{activeModalBadge.creditBonus} Credits</div>
+              <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#C4F6EE] to-[#A4E8DF] border border-[#BCEEE6] text-left">
+                <div className="text-[10px] font-bold text-[#103D36] uppercase">Credit Bonus</div>
+                <div className="text-lg font-black text-[#082420]">+{activeModalBadge.creditBonus} Credits</div>
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-3 justify-center">
-              <button
-                onClick={() => {
-                  soundEffects.playClick();
-                  setActiveModalBadge(null);
-                }}
-                className="btn-pill-white text-xs py-2.5 px-5 cursor-pointer"
-              >
-                Close
-              </button>
-
-              {activeModalBadge.category === "flashcards" ? (
-                <Link
-                  href="/student/flashcards"
-                  onClick={() => setActiveModalBadge(null)}
-                  className="btn-pill-dark text-xs py-2.5 px-6 cursor-pointer shadow-md flex items-center gap-1.5"
-                >
-                  <Layers className="w-3.5 h-3.5" />
-                  <span>Go to Flashcards</span>
-                </Link>
-              ) : activeModalBadge.category === "teach_back" ? (
-                <Link
-                  href="/student/teach-back"
-                  onClick={() => setActiveModalBadge(null)}
-                  className="btn-pill-dark text-xs py-2.5 px-6 cursor-pointer shadow-md flex items-center gap-1.5"
-                >
-                  <MessageSquare className="w-3.5 h-3.5" />
-                  <span>Teach Socratic Pod</span>
-                </Link>
-              ) : (
-                <Link
-                  href="/student/progress"
-                  onClick={() => setActiveModalBadge(null)}
-                  className="btn-pill-dark text-xs py-2.5 px-6 cursor-pointer shadow-md flex items-center gap-1.5"
-                >
-                  <TrendingUp className="w-3.5 h-3.5" />
-                  <span>View Knowledge Radar</span>
-                </Link>
-              )}
-            </div>
+            <button
+              onClick={() => setActiveModalBadge(null)}
+              className="w-full bg-[#FF642F] hover:bg-[#2554D4] text-white text-xs font-bold py-3 rounded-full shadow-sm shadow-[#FF642F]/30 cursor-pointer"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}

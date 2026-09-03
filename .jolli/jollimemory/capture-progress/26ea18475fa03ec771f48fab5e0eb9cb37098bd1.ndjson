@@ -1,0 +1,6 @@
+{"step":"start","hash":"26ea18475fa03ec771f48fab5e0eb9cb37098bd1","ts":1788179234345}
+{"step":"diff","hash":"26ea18475fa03ec771f48fab5e0eb9cb37098bd1","ts":1788179236553,"data":{"filesChanged":16,"insertions":2477,"deletions":1703}}
+{"step":"references","hash":"26ea18475fa03ec771f48fab5e0eb9cb37098bd1","ts":1788179236785,"data":{"references":[],"notes":0}}
+{"step":"analyzing","hash":"26ea18475fa03ec771f48fab5e0eb9cb37098bd1","ts":1788179236786}
+{"step":"failed","hash":"26ea18475fa03ec771f48fab5e0eb9cb37098bd1","ts":1788179239439}
+{"step":"end","hash":"26ea18475fa03ec771f48fab5e0eb9cb37098bd1","ts":1788179239440,"terminal":true}

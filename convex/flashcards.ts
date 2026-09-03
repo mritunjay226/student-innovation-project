@@ -166,6 +166,8 @@ export const reviewCard = mutation({
       v.literal("good"),
       v.literal("easy")
     ),
+    reasoning: v.optional(v.string()),
+    thoughtAnalysis: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const card = await ctx.db.get(args.cardId);
@@ -269,6 +271,8 @@ export const reviewCard = mutation({
       lastReviewed: now,
       intervalMs,
       nextReviewDate: now + intervalMs,
+      lastReasoning: args.reasoning,
+      lastThoughtAnalysis: args.thoughtAnalysis,
     });
 
     // ── 3. Recalculate Deck Mastered Count & Exam Readiness ──

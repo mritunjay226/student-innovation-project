@@ -1,5 +1,5 @@
 ================================================================================
-PROJECT NAME: LearnAI (Smart Education AI Platform)
+PROJECT NAME: Axiora (Smart Education AI Platform)
 TAGLINE: The AI Socratic Peer & Prerequisite Knowledge Engine for Deep Mastery
 CATEGORY: EdTech / Generative AI / Adaptive Learning / Knowledge Graphs
 HACKATHON TRACK: Education / AI Agents / Multimodal LLM Applications
@@ -13,8 +13,8 @@ The Problem:
 3. The Ebbinghaus Forgetting Curve: Without scientifically calibrated spaced review intervals, learners forget more than 80% of newly learned concepts within 48 hours.
 4. Educator Blindspots: Teachers lack real-time visibility into shared class-wide misconceptions and prerequisite dependencies across their syllabus.
 
-The Solution (LearnAI):
-LearnAI is a dual-sided (Student Portal & Teacher Console) intelligent learning platform that transitions education from passive memorization to active cognitive mastery through:
+The Solution (Axiora):
+Axiora is a dual-sided (Student Portal & Teacher Console) intelligent learning platform that transitions education from passive memorization to active cognitive mastery through:
 - Directed Acyclic Graph (DAG) Knowledge Engine: Pinpoints root-cause learning gaps by traversing prerequisite dependencies backwards.
 - Multi-Agent Feynman "Teach-Back" Classroom Pod: Students reverse-tutor a pod of 4 AI classmates (Toby, Maya, Leo, Sam) with live comprehension meters and dynamic blackboard formulas.
 - Multimodal Document-to-Flashcards Engine: Extracts high-yield cards from lecture slides/PDFs using Google Gemini Vision OCR paired with modified SM-2 / Leitner Spaced Repetition algorithms.
@@ -94,7 +94,7 @@ Feature 4: Teacher Suite & HITL Safety
 6. SLIDE-BY-SLIDE PRESENTATION OUTLINE (10 SLIDES)
 --------------------------------------------------------------------------------
 Slide 1: Title & Vision
-- Headline: LearnAI — Next-Generation Socratic & Adaptive Learning Platform
+- Headline: Axiora — Next-Generation Socratic & Adaptive Learning Platform
 - Tagline: The AI Socratic Peer & Prerequisite Knowledge Engine for Deep Mastery
 
 Slide 2: The Problem in EdTech
@@ -102,7 +102,7 @@ Slide 2: The Problem in EdTech
 - Linear curricula fail to diagnose why students struggle with advanced topics
 - Passive video streaming and rote memorization yield shallow understanding
 
-Slide 3: The Solution — LearnAI
+Slide 3: The Solution — Axiora
 - Prerequisite Knowledge DAG Engine
 - Multi-Agent Feynman Teach-Back Classroom Pod
 - Multimodal PDF-to-Flashcards with Spaced Repetition

@@ -30,19 +30,61 @@ export const seedDatabase = mutation({
       for (const u of users) await ctx.db.delete(u._id);
     }
 
-    // ── Create Demo Users ──
+    // ── Create Demo Users with High-Quality Real Avatars ──
     const studentId = await ctx.db.insert("users", {
-      name: "Arjun Mehta",
+      name: "Kristin Watson",
+      email: "kristin.watson@axiora.edu",
       role: "student",
-      grade: "Class 12",
-      avatar: "AM",
+      grade: "Class 12 STEM",
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=faces",
+    });
+
+    const student2Id = await ctx.db.insert("users", {
+      name: "Maya Lin",
+      email: "maya.lin@axiora.edu",
+      role: "student",
+      grade: "Class 12 STEM",
+      avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=faces",
+    });
+
+    const student3Id = await ctx.db.insert("users", {
+      name: "Toby Vance",
+      email: "toby.vance@axiora.edu",
+      role: "student",
+      grade: "Class 12 STEM",
+      avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=faces",
+    });
+
+    const student4Id = await ctx.db.insert("users", {
+      name: "Leo Chen",
+      email: "leo.chen@axiora.edu",
+      role: "student",
+      grade: "Class 12 STEM",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces",
+    });
+
+    const student5Id = await ctx.db.insert("users", {
+      name: "Samantha Reed",
+      email: "sam.reed@axiora.edu",
+      role: "student",
+      grade: "Class 12 STEM",
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=faces",
+    });
+
+    const student6Id = await ctx.db.insert("users", {
+      name: "Arjun Mehta",
+      email: "arjun.mehta@axiora.edu",
+      role: "student",
+      grade: "Class 12 STEM",
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=faces",
     });
 
     await ctx.db.insert("users", {
       name: "Dr. Priya Sharma",
+      email: "priya.sharma@axiora.edu",
       role: "teacher",
-      grade: "Class 12",
-      avatar: "PS",
+      grade: "Senior STEM Faculty",
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=faces",
     });
 
     // ══════════════════════════════════════════════════════════════

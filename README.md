@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Axiora — AI Socratic Peer & Prerequisite Knowledge Engine
+
+**Axiora** is an intelligent learning and diagnostics platform that transforms education from passive memorization into active cognitive mastery with Socratic AI peer pods, real-time knowledge graphs, and adaptive learning diagnostics.
 
 ## Getting Started
 

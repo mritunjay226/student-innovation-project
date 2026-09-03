@@ -12,6 +12,8 @@ import {
   ArrowRight,
   GitBranch,
   Upload,
+  ChevronRight,
+  ShieldAlert,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -21,11 +23,11 @@ export default function TeacherDashboard() {
 
   if (!classGaps || !users) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-center">
-          <div className="w-10 h-10 rounded-full mx-auto mb-4 animate-spin border-3 border-[#18181B] border-t-transparent" />
-          <p className="text-sm font-semibold text-[#71717A]">
-            Aggregating class diagnostics...
+          <div className="w-8 h-8 rounded-full mx-auto mb-3 animate-spin border-2 border-[#2F65F6] border-t-transparent" />
+          <p className="text-xs font-bold text-[#8C93A4]">
+            Aggregating class diagnostics…
           </p>
         </div>
       </div>
@@ -45,234 +47,231 @@ export default function TeacherDashboard() {
     0
   );
 
-  const getMasteryColor = (score: number) => {
-    if (score >= 80) return "#0D3E30";
-    if (score >= 50) return "#713F12";
-    return "#702114";
-  };
-
   return (
-    <div className="max-w-5xl mx-auto pb-12">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 animate-fade-in-up">
-        <div>
-          <div className="pill-chip chip-butter mb-2 text-xs font-bold">
-            <span>✨ Class Analytics & Teacher Oversight</span>
+    <div className="max-w-6xl mx-auto space-y-6 pb-16 text-[#1C1E23] font-sans antialiased">
+      {/* ── 1. Header Bar ── */}
+      <div className="bg-white rounded-[28px] p-6 sm:p-7 shadow-xs border border-[#E6EAF2]">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EBF3FE] text-[#2F65F6] text-xs font-bold mb-2">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Class Analytics & Pedagogical Oversight</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#18181B] tracking-tight m-0">
+              Teacher Console • Dr. Priya Sharma
+            </h1>
+            <p className="text-xs sm:text-sm text-[#7E8494] font-medium mt-1 mb-0">
+              Multi-Subject STEM Curriculum • Automated prerequisite bottleneck diagnostics
+            </p>
           </div>
-          <h1 className="text-3xl font-black tracking-tight text-[#18181B] mb-1">
-            Teacher Console • Dr. Priya Sharma
-          </h1>
-          <p className="text-sm text-[#71717A] font-medium">
-            Multi-Subject Curriculum • Automated learning gap diagnostics
-          </p>
-        </div>
 
-        <div className="flex items-center gap-3">
-          <Link href="/teacher/upload" className="btn-pill-dark text-xs py-2.5 px-5">
-            <Upload className="w-3.5 h-3.5" />
-            Upload Lesson PPT/PDF
-          </Link>
-          <Link href="/teacher/concept-map" className="btn-pill-white text-xs py-2.5 px-5">
-            <GitBranch className="w-3.5 h-3.5" />
-            Prerequisite Graph
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/teacher/upload"
+              className="bg-[#2F65F6] hover:bg-[#2554D4] text-white text-xs font-bold py-2.5 px-5 rounded-full shadow-sm shadow-[#2F65F6]/25 flex items-center gap-2 transition-all"
+            >
+              <Upload className="w-3.5 h-3.5" />
+              <span>Upload Syllabus PPT/PDF</span>
+            </Link>
+            <Link
+              href="/teacher/concept-map"
+              className="bg-white hover:bg-[#F4F6FB] text-[#181A20] text-xs font-bold py-2.5 px-5 rounded-full border border-[#E2E6F0] flex items-center gap-2 transition-all"
+            >
+              <GitBranch className="w-3.5 h-3.5 text-[#2F65F6]" />
+              <span>Prerequisite Graph</span>
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Pastel Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {[
-          {
-            icon: Users,
-            value: students.length,
-            label: "Enrolled Students",
-            cardClass: "card-lavender",
-            delay: "delay-1",
-          },
-          {
-            icon: Brain,
-            value: `${avgClassMastery}%`,
-            label: "Avg Class Mastery",
-            cardClass: "card-mint",
-            delay: "delay-2",
-          },
-          {
-            icon: AlertTriangle,
-            value: highGapConcepts.length,
-            label: "Critical Bottlenecks",
-            cardClass: "card-peach",
-            delay: "delay-3",
-          },
-          {
-            icon: Sparkles,
-            value: totalMisconceptions,
-            label: "Misconceptions Flagged",
-            cardClass: "card-butter",
-            delay: "delay-4",
-          },
-        ].map((stat) => (
-          <div
-            key={stat.label}
-            className={`card-pastel ${stat.cardClass} p-6 animate-fade-in-up ${stat.delay} rounded-[28px]`}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 rounded-2xl bg-[#121216] text-white flex items-center justify-center shadow-xs">
-                <stat.icon className="w-5 h-5 text-[#FAF8F5]" />
-              </div>
-              <span className="pill-chip chip-white text-[10px] font-bold">
-                Live
-              </span>
-            </div>
-            <div className="text-3xl font-black tracking-tight mb-1">
-              {stat.value}
-            </div>
-            <div className="text-xs font-bold uppercase tracking-wider opacity-75">
-              {stat.label}
+      {/* ── 2. Metric Cards ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-gradient-to-br from-[#FFE4D6] via-[#FFBFA8] to-[#FFA199] rounded-[24px] p-5 flex flex-col justify-between shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#5A2C18]">Enrolled Students</span>
+            <div className="w-7 h-7 rounded-full bg-white/40 backdrop-blur-md flex items-center justify-center text-[#2A1208]">
+              <Users className="w-3.5 h-3.5" />
             </div>
           </div>
-        ))}
+          <div className="mt-4">
+            <div className="text-2xl sm:text-3xl font-black text-[#1C1E23] tracking-tight">{students.length}</div>
+            <div className="text-[11px] font-semibold text-[#5A2C18] mt-0.5">Active Class 12 Roster</div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-[#C4F6EE] via-[#A8E2F9] to-[#99B6F9] rounded-[24px] p-5 flex flex-col justify-between shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#0E3830]">Avg Class Mastery</span>
+            <div className="w-7 h-7 rounded-full bg-white/40 backdrop-blur-md flex items-center justify-center text-[#082420]">
+              <Brain className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-2xl sm:text-3xl font-black text-[#1C1E23] tracking-tight">{avgClassMastery}%</div>
+            <div className="text-[11px] font-semibold text-[#0E3830] mt-0.5">Across all concepts</div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-[24px] p-5 border border-[#E6EAF2] flex flex-col justify-between shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#7E8494]">Critical Bottlenecks</span>
+            <div className="w-7 h-7 rounded-full bg-[#FFF0E6] flex items-center justify-center text-[#FF7A00]">
+              <AlertTriangle className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-2xl sm:text-3xl font-black text-[#18181B] tracking-tight">{highGapConcepts.length}</div>
+            <div className="text-[11px] font-semibold text-[#7E8494] mt-0.5">High learning gap nodes</div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-[24px] p-5 border border-[#E6EAF2] flex flex-col justify-between shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#7E8494]">Misconceptions Flagged</span>
+            <div className="w-7 h-7 rounded-full bg-[#EBF3FE] flex items-center justify-center text-[#2F65F6]">
+              <Sparkles className="w-3.5 h-3.5 fill-[#2F65F6]" />
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-2xl sm:text-3xl font-black text-[#18181B] tracking-tight">{totalMisconceptions}</div>
+            <div className="text-[11px] font-semibold text-[#7E8494] mt-0.5">Cognitive errors detected</div>
+          </div>
+        </div>
       </div>
 
-      {/* AI Class Intervention Alert Banner */}
+      {/* ── 3. AI Class Intervention Alert Banner ── */}
       {highGapConcepts.length > 0 && (
-        <div className="card-pastel card-lavender p-6 rounded-[28px] mb-8 animate-fade-in-up delay-2 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-2xl bg-white border border-[#D5C4FA] shadow-xs">
-              💡
+        <div className="bg-white rounded-[28px] p-6 shadow-xs border border-[#E6EAF2] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-start gap-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 text-amber-600">
+              <ShieldAlert className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-black text-base text-[#2D1B4E] m-0">
+                <h3 className="font-extrabold text-base text-[#18181B] m-0">
                   AI Diagnostic Insight: Shared Prerequisite Bottlenecks
                 </h3>
-                <span className="pill-chip chip-white text-[10px] font-bold">
-                  Class Signal
+                <span className="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                  Signal
                 </span>
               </div>
-              <p className="text-xs text-[#4E3875] max-w-2xl leading-relaxed font-medium m-0">
-                Multiple students show prerequisite gaps on foundational concepts. <strong className="text-[#2D1B4E]">Recommendation:</strong> Run a targeted 5-question Socratic review before assigning upcoming unit tests.
+              <p className="text-xs text-[#7E8494] font-medium max-w-2xl leading-relaxed m-0">
+                Multiple students show prerequisite fractures in downstream physics & calculus. <strong className="text-[#18181B]">Recommendation:</strong> Assign a targeted 5-question Socratic teach-back review.
               </p>
             </div>
           </div>
 
-          <Link href="/teacher/class-gaps" className="btn-continue shrink-0">
+          <Link
+            href="/teacher/class-gaps"
+            className="bg-[#2F65F6] hover:bg-[#2554D4] text-white text-xs font-bold py-2.5 px-5 rounded-full shadow-xs shadow-[#2F65F6]/25 flex items-center gap-1.5 shrink-0"
+          >
             <span>View Gaps</span>
-            <span className="arrow-circle">→</span>
+            <ChevronRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       )}
 
-      {/* Quick Navigation Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      {/* ── 4. Quick Navigation Cards ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
           {
             href: "/teacher/class-gaps",
             title: "Class Learning Gaps",
-            desc: "Concept-by-concept mastery breakdown and actionable teacher interventions",
+            desc: "Concept-by-concept mastery breakdown and actionable remediation triggers.",
             icon: TrendingUp,
-            cardClass: "card-mint",
           },
           {
             href: "/teacher/concept-map",
             title: "Editable Concept Graph",
-            desc: "Add concepts, verify AI dependencies, and connect curriculum prerequisites",
+            desc: "Add concepts, verify AI dependencies, and connect curriculum prerequisites.",
             icon: GitBranch,
-            cardClass: "card-sky",
           },
           {
             href: "/teacher/upload",
             title: "AI Lesson Ingestion",
-            desc: "Drop PPT/PDF to auto-extract concepts and draft assessment questions",
+            desc: "Drop PPT/PDF to auto-extract concepts and draft assessment questions.",
             icon: Upload,
-            cardClass: "card-butter",
           },
         ].map((item, i) => (
           <Link
             key={i}
             href={item.href}
-            className={`card-pastel ${item.cardClass} p-6 rounded-[28px] group no-underline transition-all hover:scale-[1.02] flex flex-col justify-between`}
+            className="bg-white rounded-[26px] p-6 border border-[#E6EAF2] shadow-xs group no-underline transition-all hover:scale-[1.01] hover:border-[#2F65F6] flex flex-col justify-between"
           >
             <div>
-              <div className="w-10 h-10 rounded-2xl bg-[#121216] text-white flex items-center justify-center mb-4 shadow-xs">
-                <item.icon className="w-5 h-5" />
+              <div className="w-9 h-9 rounded-2xl bg-[#F4F6FB] text-[#2F65F6] flex items-center justify-center mb-3 border border-[#E2E6F0] group-hover:bg-[#2F65F6] group-hover:text-white transition-colors">
+                <item.icon className="w-4 h-4" />
               </div>
-              <h4 className="font-black text-lg mb-1 tracking-tight">
+              <h4 className="font-extrabold text-base text-[#18181B] mb-1.5 group-hover:text-[#2F65F6] transition-colors">
                 {item.title}
               </h4>
-              <p className="text-xs opacity-75 mb-6 leading-relaxed font-medium">
+              <p className="text-xs text-[#7E8494] font-medium leading-relaxed mb-4">
                 {item.desc}
               </p>
             </div>
-            <div className="flex items-center justify-between pt-2">
-              <span className="text-xs font-bold opacity-80">Open Tool</span>
-              <span className="btn-continue">
-                <span>Launch</span>
-                <span className="arrow-circle">→</span>
-              </span>
+            <div className="flex items-center justify-between pt-3 border-t border-[#F2F4F8] text-xs font-bold text-[#2F65F6]">
+              <span>Open Tool</span>
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
         ))}
       </div>
 
-      {/* Class Knowledge Table Preview */}
-      <div className="card-pastel card-white p-6 rounded-[28px] animate-fade-in-up delay-3">
+      {/* ── 5. Class Knowledge Table Preview ── */}
+      <div className="bg-white rounded-[28px] p-6 shadow-xs border border-[#E6EAF2]">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xs font-black uppercase tracking-wider text-[#71717A] m-0">
+          <h3 className="text-base font-bold text-[#18181B] m-0">
             Curriculum Concept Mastery & Action Signals
           </h3>
-          <Link href="/teacher/class-gaps" className="pill-chip chip-dark text-xs font-bold no-underline">
+          <Link
+            href="/teacher/class-gaps"
+            className="text-xs font-bold text-[#2F65F6] hover:underline"
+          >
             Full Table →
           </Link>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="data-table">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr>
-                <th>Concept</th>
-                <th>Class Mastery</th>
-                <th>Status Signal</th>
-                <th>Suggested Action</th>
+              <tr className="border-b border-[#F0F3F8] text-[#8C93A4] font-bold">
+                <th className="pb-3 px-2">Concept</th>
+                <th className="pb-3 px-2">Class Mastery</th>
+                <th className="pb-3 px-2">Status Signal</th>
+                <th className="pb-3 px-2">Suggested Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-[#F2F4F8]">
               {classGaps.slice(0, 5).map((gap) => (
-                <tr key={gap.concept._id}>
-                  <td>
-                    <span className="font-bold text-[#18181B] text-sm">
-                      {gap.concept.title}
-                    </span>
+                <tr key={gap.concept._id} className="hover:bg-[#FAFBFD] transition-colors">
+                  <td className="py-3 px-2 font-bold text-[#18181B]">
+                    {gap.concept.title}
                   </td>
-                  <td>
-                    <div className="flex items-center gap-2">
-                      <div className="progress-track w-20 h-2">
+                  <td className="py-3 px-2">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-20 h-1.5 rounded-full bg-[#E5E9F2] overflow-hidden">
                         <div
-                          className="progress-fill"
-                          style={{
-                            width: `${gap.avgMastery}%`,
-                            backgroundColor: getMasteryColor(gap.avgMastery),
-                          }}
+                          className="h-full rounded-full bg-[#2F65F6] transition-all"
+                          style={{ width: `${gap.avgMastery}%` }}
                         />
                       </div>
-                      <span className="text-xs font-black" style={{ color: getMasteryColor(gap.avgMastery) }}>
-                        {gap.avgMastery}%
-                      </span>
+                      <span className="font-black text-[#18181B]">{gap.avgMastery}%</span>
                     </div>
                   </td>
-                  <td>
+                  <td className="py-3 px-2">
                     <span
-                      className={`pill-chip text-xs font-bold ${
+                      className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
                         gap.signal === "Strong"
-                          ? "chip-mint"
+                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                           : gap.signal === "Watch"
-                            ? "chip-butter"
-                            : "chip-peach"
+                          ? "bg-amber-50 text-amber-700 border border-amber-200"
+                          : "bg-rose-50 text-rose-700 border border-rose-200"
                       }`}
                     >
                       {gap.signal}
                     </span>
                   </td>
-                  <td className="text-xs font-medium text-[#52525B]">
+                  <td className="py-3 px-2 font-medium text-[#7E8494]">
                     {gap.suggestedAction}
                   </td>
                 </tr>

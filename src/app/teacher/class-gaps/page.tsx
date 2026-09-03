@@ -29,10 +29,10 @@ export default function ClassGapsPage() {
 
   if (!classGaps) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-center">
-          <div className="w-10 h-10 rounded-2xl mx-auto mb-3 animate-spin border-3 border-purple-600 border-t-transparent" />
-          <p className="text-sm text-slate-500 font-bold">Analyzing class learning gaps...</p>
+          <div className="w-8 h-8 rounded-full mx-auto mb-3 animate-spin border-2 border-[#2F65F6] border-t-transparent" />
+          <p className="text-xs font-bold text-[#8C93A4]">Analyzing class learning gaps…</p>
         </div>
       </div>
     );
@@ -50,61 +50,57 @@ export default function ClassGapsPage() {
         )
       : 0;
 
-  const getMasteryColor = (score: number) => {
-    if (score >= 80) return "#10b981";
-    if (score >= 50) return "#f59e0b";
-    return "#e11d48";
-  };
-
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="mb-6 animate-fade-in-up">
-        <div className="pill-chip chip-butter mb-2 text-xs font-bold py-1 px-3">
+    <div className="max-w-6xl mx-auto space-y-6 pb-16 text-[#1C1E23] font-sans antialiased">
+      {/* ── 1. Header Bar ── */}
+      <div className="bg-white rounded-[28px] p-6 sm:p-7 shadow-xs border border-[#E6EAF2]">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EBF3FE] text-[#2F65F6] text-xs font-bold mb-2">
           <Sparkles className="w-3.5 h-3.5" />
           <span>Class-Wide Learning Diagnostics</span>
         </div>
-        <h1 className="text-3xl font-black tracking-tight text-[#18181B] mb-1">
-          Class Learning Gaps
+        <h1 className="text-2xl sm:text-3xl font-black text-[#18181B] tracking-tight m-0">
+          Class Learning Gaps & Prerequisite Bottlenecks
         </h1>
-        <p className="text-sm text-[#71717A] font-medium">
-          Identify shared misconceptions and prerequisite bottlenecks across your entire curriculum
+        <p className="text-xs sm:text-sm text-[#7E8494] font-medium mt-1 mb-0">
+          Identify shared misconceptions and prerequisite fractures across your entire enrolled cohort.
         </p>
       </div>
 
-      {/* Subject & Standard Filters */}
-      <div className="card-pastel card-white p-3.5 rounded-2xl mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 animate-fade-in-up delay-1 border border-[#EBE5DB]">
+      {/* ── 2. Filters ── */}
+      <div className="bg-white rounded-2xl p-4 border border-[#E6EAF2] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         {/* Subject Pills */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-xs font-bold text-[#71717A] mr-1 flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs font-bold text-[#7E8494] mr-1 flex items-center gap-1">
             <Layers className="w-3.5 h-3.5" /> Subject:
           </span>
           {SUBJECTS.map((subj) => (
             <button
               key={subj}
               onClick={() => setSelectedSubject(subj)}
-              className={`pill-chip text-xs py-1 px-3 font-semibold ${
-                selectedSubject === subj ? "chip-dark font-bold" : "chip-white"
+              className={`text-xs font-bold px-3 py-1 rounded-full transition-all cursor-pointer ${
+                selectedSubject === subj
+                  ? "bg-[#2F65F6] text-white shadow-sm shadow-[#2F65F6]/25"
+                  : "bg-[#F4F6FB] text-[#555C6E] hover:text-[#181A20] border border-[#E2E6F0]"
               }`}
             >
-              <BookOpen className="w-3 h-3" /> {subj}
+              {subj}
             </button>
           ))}
         </div>
 
-        {/* Standard Pills */}
+        {/* Grade Pills */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-bold text-slate-400 mr-1 flex items-center gap-1">
-            <GraduationCap className="w-3.5 h-3.5" /> Standard:
+          <span className="text-xs font-bold text-[#7E8494] mr-1 flex items-center gap-1">
+            <GraduationCap className="w-3.5 h-3.5" /> Grade:
           </span>
           {GRADES.map((grd) => (
             <button
               key={grd}
               onClick={() => setSelectedGrade(grd)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+              className={`text-xs font-bold px-3 py-1 rounded-full transition-all cursor-pointer ${
                 selectedGrade === grd
-                  ? "bg-slate-900 text-white shadow-sm"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  ? "bg-[#181A20] text-white"
+                  : "bg-[#F4F6FB] text-[#7E8494] hover:text-[#181A20] border border-[#E2E6F0]"
               }`}
             >
               {grd}
@@ -113,32 +109,28 @@ export default function ClassGapsPage() {
         </div>
       </div>
 
-      {/* AI Insight Card */}
+      {/* ── 3. AI Intervention Insight Banner ── */}
       {highGapPercent > 0 && (
-        <div
-          className="glass-card p-6 rounded-3xl mb-6 animate-fade-in-up delay-1 bg-amber-50/60 border-amber-200"
-        >
-          <div className="flex items-start gap-4">
-            <div
-              className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-2xl bg-white border border-amber-200 shadow-sm"
-            >
-              💡
+        <div className="bg-white rounded-[26px] p-5 shadow-xs border border-[#E6EAF2] flex items-start gap-3.5">
+          <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 text-amber-600 text-lg">
+            💡
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <h3 className="font-extrabold text-sm text-[#18181B] m-0">Actionable Remediation Triggered</h3>
+              <span className="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                AI Diagnostic
+              </span>
             </div>
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-extrabold text-base text-amber-900">Actionable Intervention Detected</h3>
-                <span className="badge badge-warning">AI Diagnostic</span>
-              </div>
-              <p className="text-xs text-amber-800 leading-relaxed max-w-3xl font-medium">
-                {highGapPercent}% of topics in this selection show prerequisite decay. Shared patterns detected in foundation stages. <strong>Suggested Action:</strong> Review foundational dependencies and assign a 5-question diagnostic before moving to advanced topics.
-              </p>
-            </div>
+            <p className="text-xs text-[#7E8494] font-medium leading-relaxed max-w-3xl m-0">
+              {highGapPercent}% of topics in this selection show prerequisite decay. Shared patterns detected in foundation stages. <strong className="text-[#18181B]">Suggested Action:</strong> Assign a targeted 5-question Socratic review before assigning exams.
+            </p>
           </div>
         </div>
       )}
 
-      {/* Status Signal Filter Tabs */}
-      <div className="flex flex-wrap gap-2 mb-6 animate-fade-in-up delay-2">
+      {/* ── 4. Status Signal Filter Tabs ── */}
+      <div className="flex flex-wrap gap-2">
         {(["all", "Strong", "Watch", "High gap"] as const).map((f) => {
           const count = f === "all" ? classGaps.length : classGaps.filter((g) => g.signal === f).length;
           const isActive = filter === f;
@@ -146,102 +138,98 @@ export default function ClassGapsPage() {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
+              className={`text-xs font-bold px-4 py-2 rounded-full transition-all cursor-pointer ${
                 isActive
-                  ? "bg-purple-600 text-white shadow-sm shadow-purple-200"
-                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                  ? "bg-[#2F65F6] text-white shadow-sm shadow-[#2F65F6]/25"
+                  : "bg-white text-[#555C6E] border border-[#E2E6F0] hover:bg-[#F4F6FB]"
               }`}
             >
               {f === "all" ? "All Statuses" : f}
-              <span className="ml-1.5 opacity-80">({count})</span>
+              <span className="ml-1.5 opacity-75">({count})</span>
             </button>
           );
         })}
       </div>
 
-      {/* Gaps Table */}
-      <div className="glass-card p-6 rounded-3xl animate-fade-in-up delay-3">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Concept</th>
-              <th>Class Mastery</th>
-              <th>Status Signal</th>
-              <th>Misconceptions</th>
-              <th>Suggested Teacher Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((gap) => (
-              <tr key={gap.concept._id}>
-                <td>
-                  <div>
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="font-bold text-slate-900 text-sm">
-                        {gap.concept.title}
-                      </span>
-                      <span className="pill-chip chip-lavender text-[10px] font-bold py-0.5 px-2">
-                        <BookOpen className="w-2.5 h-2.5 inline mr-1" /> {gap.concept.subject} • {gap.concept.grade}
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-400 font-semibold m-0">
-                      {gap.studentCount} student{gap.studentCount !== 1 ? "s" : ""} tracked
-                    </p>
-                  </div>
-                </td>
-                <td>
-                  <div className="flex items-center gap-2">
-                    <div className="progress-bar w-24">
-                      <div
-                        className="progress-bar-fill"
-                        style={{
-                          width: `${gap.avgMastery}%`,
-                          background: getMasteryColor(gap.avgMastery),
-                        }}
-                      />
-                    </div>
-                    <span
-                      className="text-xs font-black"
-                      style={{ color: getMasteryColor(gap.avgMastery) }}
-                    >
-                      {gap.avgMastery}%
-                    </span>
-                  </div>
-                </td>
-                <td>
-                  <span
-                    className={`badge ${
-                      gap.signal === "Strong"
-                        ? "badge-success"
-                        : gap.signal === "Watch"
-                          ? "badge-warning"
-                          : "badge-danger"
-                    }`}
-                  >
-                    {gap.signal}
-                  </span>
-                </td>
-                <td>
-                  {gap.misconceptionCount > 0 ? (
-                    <span className="badge badge-warning">
-                      <AlertTriangle className="w-3 h-3" />
-                      {gap.misconceptionCount} pattern{gap.misconceptionCount > 1 ? "s" : ""}
-                    </span>
-                  ) : (
-                    <span className="text-xs text-slate-400 font-bold">
-                      Clear
-                    </span>
-                  )}
-                </td>
-                <td>
-                  <span className="text-xs font-bold text-slate-700">
-                    {gap.suggestedAction}
-                  </span>
-                </td>
+      {/* ── 5. Gaps Table ── */}
+      <div className="bg-white rounded-[28px] p-6 shadow-xs border border-[#E6EAF2]">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="border-b border-[#F0F3F8] text-[#8C93A4] font-bold">
+                <th className="pb-3 px-3">Concept</th>
+                <th className="pb-3 px-3">Class Mastery</th>
+                <th className="pb-3 px-3">Status Signal</th>
+                <th className="pb-3 px-3">Misconceptions</th>
+                <th className="pb-3 px-3">Suggested Teacher Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-[#F2F4F8]">
+              {filtered.map((gap) => (
+                <tr key={gap.concept._id} className="hover:bg-[#FAFBFD] transition-colors">
+                  <td className="py-3.5 px-3">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-bold text-[#18181B] text-sm">
+                          {gap.concept.title}
+                        </span>
+                        <span className="text-[10px] font-bold text-[#7E8494] bg-[#F4F6FB] border border-[#E2E6F0] py-0.5 px-2 rounded-full">
+                          {gap.concept.subject} • {gap.concept.grade}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-[#8C93A4] font-medium m-0">
+                        {gap.studentCount} student{gap.studentCount !== 1 ? "s" : ""} tracked
+                      </p>
+                    </div>
+                  </td>
+                  <td className="py-3.5 px-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-24 h-1.5 rounded-full bg-[#E5E9F2] overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-[#2F65F6] transition-all"
+                          style={{ width: `${gap.avgMastery}%` }}
+                        />
+                      </div>
+                      <span className="font-black text-[#18181B]">
+                        {gap.avgMastery}%
+                      </span>
+                    </div>
+                  </td>
+                  <td className="py-3.5 px-3">
+                    <span
+                      className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
+                        gap.signal === "Strong"
+                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                          : gap.signal === "Watch"
+                          ? "bg-amber-50 text-amber-700 border border-amber-200"
+                          : "bg-rose-50 text-rose-700 border border-rose-200"
+                      }`}
+                    >
+                      {gap.signal}
+                    </span>
+                  </td>
+                  <td className="py-3.5 px-3">
+                    {gap.misconceptionCount > 0 ? (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                        <AlertTriangle className="w-3 h-3" />
+                        {gap.misconceptionCount} pattern{gap.misconceptionCount > 1 ? "s" : ""}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-[#8C93A4] font-semibold">
+                        Clear
+                      </span>
+                    )}
+                  </td>
+                  <td className="py-3.5 px-3">
+                    <span className="text-xs font-bold text-[#555C6E]">
+                      {gap.suggestedAction}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

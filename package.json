@@ -1,5 +1,5 @@
 {
-  "name": "hackathon_research",
+  "name": "axiora",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.8.4",
     "@google/generative-ai": "^0.24.1",
     "@types/katex": "^0.16.8",
     "@xyflow/react": "^12.11.5",

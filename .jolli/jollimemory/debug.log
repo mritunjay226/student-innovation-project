@@ -311,3 +311,178 @@
 [2026-08-30T18:35:28.677Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=4, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
 [2026-08-30T18:35:28.678Z] INFO  [Installer] Checking Jolli Memory status
 [2026-08-30T18:35:31.145Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=4, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-08-31T12:27:08.405Z] INFO  [PrepareMsgHook] === Prepare-commit-msg hook started (source: message) ===
+[2026-08-31T12:27:08.430Z] INFO  [RepoProfile] manual-disable read → false (by=manuallyDisabled, pid=11464, cwd=C:\Users\mk\Documents\hackathon_research, profile=C:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-31T12:27:08.518Z] INFO  [PrepareMsgHook] === Prepare-commit-msg hook finished ===
+[2026-08-31T12:27:11.636Z] INFO  [RepoProfile] [trace=e26d265ac3fb312c8f75e8878d983044] manual-disable read → false (by=manuallyDisabled, pid=5160, cwd=C:\Users\mk\Documents\hackathon_research, profile=C:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-31T12:27:11.714Z] INFO  [PostCommitHook] [trace=e26d265ac3fb312c8f75e8878d983044] Detected operation: commit
+[2026-08-31T12:27:11.837Z] INFO  [PostCommitHook] [trace=e26d265ac3fb312c8f75e8878d983044] Enqueued: type=commit hash=cfa68a20
+[2026-08-31T12:27:11.837Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Launching background worker
+[2026-08-31T12:27:11.851Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Background worker spawned (PID: 1852)
+[2026-08-31T12:27:11.870Z] INFO  [EnsureGlobalDaemon] [trace=e26d265ac3fb312c8f75e8878d983044] spawned global daemon ensure helper (pid 7648)
+[2026-08-31T12:27:13.639Z] INFO  [RepoProfile] [trace=e26d265ac3fb312c8f75e8878d983044] manual-disable read → false (by=manuallyDisabled, pid=1852, cwd=C:\Users\mk\Documents\hackathon_research, profile=C:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-31T12:27:13.787Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] === Queue worker started === node=22.23.2 kind=vscode-plugin source=antigravity-ide pkgVer=0.99.16 cliVer=0.99.16 dist=c:\Users\mk\.antigravity-ide\extensions\jolli.jollimemory-vscode-0.99.16-universal\dist
+[2026-08-31T12:27:13.810Z] INFO  [StorageFactory] [trace=e26d265ac3fb312c8f75e8878d983044] StorageFactory.create: route=legacy-fenced, projectPath=C:\Users\mk\Documents\hackathon_research
+[2026-08-31T12:27:14.342Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Processing queue entry: type=commit hash=26ea1847
+[2026-08-31T12:27:14.417Z] INFO  [GitOps] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Commit 26ea1847: Merge remote main into local branch and integrate 4-student 
+[2026-08-31T12:27:14.417Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Commit: 26ea1847 - Merge remote main into local branch and integrate 4-student pod with markdown compiler (66ms)
+[2026-08-31T12:27:16.237Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Discovered 4 Antigravity session(s)
+[2026-08-31T12:27:16.480Z] WARN  [GitOps] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Diff exceeds 150000-char budget (235698 chars) — prepending --stat file list and truncating body
+[2026-08-31T12:27:16.553Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Git diff: 16 files changed, +2477 -1703 (254ms)
+[2026-08-31T12:27:16.772Z] WARN  [GitOps] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Diff exceeds 60000-char budget (235698 chars) — prepending --stat file list and truncating body
+[2026-08-31T12:27:16.784Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Prompt blocks: plans=0 notes=0 references=0 (+0 track-only archived, not prompted) (AI soft-excluded 0)
+[2026-08-31T12:27:16.787Z] INFO  [Summarizer] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Generating summary for commit 26ea1847
+[2026-08-31T12:27:16.787Z] INFO  [Summarizer] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Context: transcript=0, files=16, lines=2477+1703
+[2026-08-31T12:27:16.788Z] WARN  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] First API attempt failed: No LLM provider available. Set an Anthropic API key (ANTHROPIC_API_KEY) or configure a Jolli Space API key (jolliApiKey).. Retrying in 2000ms...
+[2026-08-31T12:27:18.822Z] INFO  [Summarizer] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Generating summary for commit 26ea1847
+[2026-08-31T12:27:18.823Z] INFO  [Summarizer] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Context: transcript=0, files=16, lines=2477+1703
+[2026-08-31T12:27:18.823Z] ERROR [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] API call failed after retry: No LLM provider available. Set an Anthropic API key (ANTHROPIC_API_KEY) or configure a Jolli Space API key (jolliApiKey).
+[2026-08-31T12:27:18.823Z] WARN  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Saving summary with empty topics + llm-failed marker for commit 26ea1847
+[2026-08-31T12:27:18.824Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] API summary generated (2.0s)
+[2026-08-31T12:27:18.825Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Plan registry scan: found 0 uncommitted slug(s) on main: []
+[2026-08-31T12:27:18.825Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Plan association: detected 0 slug(s) from transcripts: []
+[2026-08-31T12:27:18.826Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Note registry scan: found 0 uncommitted note(s) on main: []
+[2026-08-31T12:27:18.827Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Note association: detected 0 note(s): []
+[2026-08-31T12:27:18.827Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Reference association: detected 0 ref(s) for branch main
+[2026-08-31T12:27:18.832Z] INFO  [QueueWorker] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] Summary built for 26ea1847: recap=no, topics=0, plans=absent, notes=absent, references=absent
+[2026-08-31T12:27:19.418Z] INFO  [DashboardDb] [trace=b3bc266ccadb05b9d3fbba29b5d243fa] dashboard schema migrated: 2026-08-26-0000-memory-lookups, 2026-08-27-0804-session-activity-keyset-index, 2026-08-27-0824-session-turns, 2026-08-27-0922-skill-invocation-sync-stamp, 2026-08-28-0516-session-turns-keyset-index, 2026-08-28-0910-skill-invocation-keyset-index
+[2026-08-31T12:27:19.442Z] ERROR [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Failed to process queue entry type=commit ref=26ea1847: SqliteStorage: cannot write memories for unregistered https://github.com/mritunjay226/student-innovation-project
+[2026-08-31T12:27:19.443Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Processing queue entry: type=commit hash=33360cd8
+[2026-08-31T12:27:19.569Z] INFO  [GitOps] [trace=257c09ad7c89574bafd95752b15a6f66] Commit 33360cd8: Fix convex hook bindings and card illustrations in teach-bac
+[2026-08-31T12:27:19.569Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Commit: 33360cd8 - Fix convex hook bindings and card illustrations in teach-back (123ms)
+[2026-08-31T12:27:19.859Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Discovered 4 Antigravity session(s)
+[2026-08-31T12:27:20.187Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Git diff: 1 files changed, +9 -7 (250ms)
+[2026-08-31T12:27:20.661Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Prompt blocks: plans=0 notes=0 references=0 (+0 track-only archived, not prompted) (AI soft-excluded 0)
+[2026-08-31T12:27:20.663Z] INFO  [Summarizer] [trace=257c09ad7c89574bafd95752b15a6f66] Generating summary for commit 33360cd8
+[2026-08-31T12:27:20.664Z] INFO  [Summarizer] [trace=257c09ad7c89574bafd95752b15a6f66] Context: transcript=0, files=1, lines=9+7
+[2026-08-31T12:27:20.664Z] WARN  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] First API attempt failed: No LLM provider available. Set an Anthropic API key (ANTHROPIC_API_KEY) or configure a Jolli Space API key (jolliApiKey).. Retrying in 2000ms...
+[2026-08-31T12:27:22.677Z] INFO  [Summarizer] [trace=257c09ad7c89574bafd95752b15a6f66] Generating summary for commit 33360cd8
+[2026-08-31T12:27:22.677Z] INFO  [Summarizer] [trace=257c09ad7c89574bafd95752b15a6f66] Context: transcript=0, files=1, lines=9+7
+[2026-08-31T12:27:22.677Z] ERROR [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] API call failed after retry: No LLM provider available. Set an Anthropic API key (ANTHROPIC_API_KEY) or configure a Jolli Space API key (jolliApiKey).
+[2026-08-31T12:27:22.677Z] WARN  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Saving summary with empty topics + llm-failed marker for commit 33360cd8
+[2026-08-31T12:27:22.677Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] API summary generated (2.0s)
+[2026-08-31T12:27:22.678Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Plan registry scan: found 0 uncommitted slug(s) on main: []
+[2026-08-31T12:27:22.678Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Plan association: detected 0 slug(s) from transcripts: []
+[2026-08-31T12:27:22.678Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Note registry scan: found 0 uncommitted note(s) on main: []
+[2026-08-31T12:27:22.678Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Note association: detected 0 note(s): []
+[2026-08-31T12:27:22.678Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Reference association: detected 0 ref(s) for branch main
+[2026-08-31T12:27:22.684Z] INFO  [QueueWorker] [trace=257c09ad7c89574bafd95752b15a6f66] Summary built for 33360cd8: recap=no, topics=0, plans=absent, notes=absent, references=absent
+[2026-08-31T12:27:22.831Z] ERROR [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Failed to process queue entry type=commit ref=33360cd8: SqliteStorage: cannot write memories for unregistered https://github.com/mritunjay226/student-innovation-project
+[2026-08-31T12:27:22.832Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Processing queue entry: type=commit hash=cfa68a20
+[2026-08-31T12:27:22.946Z] INFO  [GitOps] [trace=e26d265ac3fb312c8f75e8878d983044] Commit cfa68a20: flashcard and ai updates
+[2026-08-31T12:27:22.946Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Commit: cfa68a20 - flashcard and ai updates (110ms)
+[2026-08-31T12:27:23.194Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Discovered 4 Antigravity session(s)
+[2026-08-31T12:27:23.226Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Transcript source: session=06a1ab69-c5ee-4771-8f5c-ec508ce75754, lines=0→413, entries=20
+[2026-08-31T12:27:23.263Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Transcript source: session=446cec92-8cd0-4382-b657-f3170a8d9f73, lines=0→527, entries=18
+[2026-08-31T12:27:23.297Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Transcript source: session=59f08e56-62fe-40e6-9f04-a2b1eb19457d, lines=0→162, entries=6
+[2026-08-31T12:27:23.313Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Transcript source: session=6007192e-4f68-4cfb-96b3-797ebb134c9b, lines=0→95, entries=4
+[2026-08-31T12:27:23.587Z] WARN  [GitOps] [trace=e26d265ac3fb312c8f75e8878d983044] Diff exceeds 150000-char budget (399600 chars) — prepending --stat file list and truncating body
+[2026-08-31T12:27:23.709Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Git diff: 40 files changed, +7836 -183 (394ms)
+[2026-08-31T12:27:24.117Z] WARN  [GitOps] [trace=e26d265ac3fb312c8f75e8878d983044] Diff exceeds 60000-char budget (399600 chars) — prepending --stat file list and truncating body
+[2026-08-31T12:27:24.126Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Prompt blocks: plans=0 notes=0 references=0 (+0 track-only archived, not prompted) (AI soft-excluded 0)
+[2026-08-31T12:27:24.127Z] INFO  [Summarizer] [trace=e26d265ac3fb312c8f75e8878d983044] Generating summary for commit cfa68a20
+[2026-08-31T12:27:24.127Z] INFO  [Summarizer] [trace=e26d265ac3fb312c8f75e8878d983044] Context: transcript=48, files=40, lines=7836+183
+[2026-08-31T12:27:24.128Z] WARN  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] First API attempt failed: No LLM provider available. Set an Anthropic API key (ANTHROPIC_API_KEY) or configure a Jolli Space API key (jolliApiKey).. Retrying in 2000ms...
+[2026-08-31T12:27:26.137Z] INFO  [Summarizer] [trace=e26d265ac3fb312c8f75e8878d983044] Generating summary for commit cfa68a20
+[2026-08-31T12:27:26.137Z] INFO  [Summarizer] [trace=e26d265ac3fb312c8f75e8878d983044] Context: transcript=48, files=40, lines=7836+183
+[2026-08-31T12:27:26.137Z] ERROR [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] API call failed after retry: No LLM provider available. Set an Anthropic API key (ANTHROPIC_API_KEY) or configure a Jolli Space API key (jolliApiKey).
+[2026-08-31T12:27:26.137Z] WARN  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Saving summary with empty topics + llm-failed marker for commit cfa68a20
+[2026-08-31T12:27:26.137Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] API summary generated (2.0s)
+[2026-08-31T12:27:26.138Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Plan registry scan: found 0 uncommitted slug(s) on main: []
+[2026-08-31T12:27:26.138Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Plan association: detected 0 slug(s) from transcripts: []
+[2026-08-31T12:27:26.138Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Note registry scan: found 0 uncommitted note(s) on main: []
+[2026-08-31T12:27:26.138Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Note association: detected 0 note(s): []
+[2026-08-31T12:27:26.138Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Reference association: detected 0 ref(s) for branch main
+[2026-08-31T12:27:26.143Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Summary built for cfa68a20: recap=no, topics=0, plans=absent, notes=absent, references=absent
+[2026-08-31T12:27:26.310Z] ERROR [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Failed to process queue entry type=commit ref=cfa68a20: SqliteStorage: cannot write memories for unregistered https://github.com/mritunjay226/student-innovation-project
+[2026-08-31T12:27:26.311Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] Processed 3 queue entries
+[2026-08-31T12:27:26.317Z] INFO  [QueueWorker] [trace=e26d265ac3fb312c8f75e8878d983044] === Queue worker finished ===
+[2026-08-31T12:27:26.500Z] INFO  [PlanService] detectPlans found 0 plans (0 in registry)
+[2026-08-31T12:27:26.500Z] INFO  [NoteService] detectNotes found 0 notes (0 in registry)
+[2026-08-31T12:27:26.500Z] INFO  [references] detectReferences(*) found 0 (0 in registry)
+[2026-08-31T12:27:26.501Z] INFO  [SkillProjection] projectActiveSkills: 0 active (0 in registry)
+[2026-08-31T12:27:29.484Z] INFO  [StatsWriter] pruned 66 projected events older than 2026-08-17
+[2026-08-31T12:27:53.737Z] INFO  [PrePushHook] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] pre-push hook: remote=origin budget=3000ms
+[2026-08-31T12:27:53.744Z] INFO  [RepoProfile] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] manual-disable read → false (by=manuallyDisabled, pid=8108, cwd=C:\Users\mk\Documents\hackathon_research, profile=C:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-31T12:27:53.832Z] INFO  [PushPendingStore] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] Enqueued 4 new push-pending entries (branch=main)
+[2026-08-31T12:27:53.835Z] INFO  [PrePushHook] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] pre-push: recorded 4 commit(s) across 1 pushed ref(s)
+[2026-08-31T12:27:53.910Z] INFO  [PrePushHook] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] pre-push: worker spawned (pushId=5c1c4ac3e1c149b5c4bbea87196e7773) — watching for 2818ms
+[2026-08-31T12:27:54.579Z] INFO  [RepoProfile] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] manual-disable read → false (by=manuallyDisabled, pid=8672, cwd=C:\Users\mk\Documents\hackathon_research, profile=C:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-08-31T12:27:54.586Z] INFO  [PushExecutor] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] processPushPending(pre-push): 6 pending entr(ies) (filtered to 4 hash(es))
+[2026-08-31T12:27:54.659Z] INFO  [PushExecutor] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] processPushPending(pre-push): claimed 4/4 candidate(s)
+[2026-08-31T12:27:54.776Z] INFO  [StorageFactory] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] StorageFactory.create: route=legacy-fenced, projectPath=C:\Users\mk\Documents\hackathon_research
+[2026-08-31T12:27:55.461Z] INFO  [PushExecutor] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] processPushPending(pre-push): triage — withMemory=0 noMemory=4 mergedChildren=0
+[2026-08-31T12:27:55.461Z] INFO  [PrePushWorker] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] PrePushWorker(pre-push): drain done — pushed=0 failed=0 noMemory=4 (no candidates with memory)
+[2026-08-31T12:27:55.474Z] INFO  [PushExecutor] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] processPushPending(pre-push): 6 pending entr(ies)
+[2026-08-31T12:27:55.600Z] INFO  [PrePushHook] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] pre-push: worker finished — 4 outcome(s) (no candidates with memory)
+[2026-08-31T12:27:57.334Z] INFO  [PushExecutor] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] processPushPending(pre-push): claimed 2/2 candidate(s)
+[2026-08-31T12:27:57.537Z] INFO  [PushExecutor] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] processPushPending(pre-push): triage — withMemory=0 noMemory=2 mergedChildren=0
+[2026-08-31T12:27:57.537Z] INFO  [PrePushWorker] [trace=5c1c4ac3e1c149b5c4bbea87196e7773] PrePushWorker(pre-push): confirmed tail pass — pushed=0 failed=0 (no candidates with memory)
+[2026-08-31T12:32:51.400Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-08-31T18:05:10.938Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-08-31T19:04:41.134Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-08-31T19:04:42.728Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-08-31T20:04:41.150Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-08-31T20:04:42.850Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-08-31T21:04:41.215Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-08-31T21:04:42.660Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-08-31T22:04:41.323Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-08-31T22:04:42.749Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-08-31T23:04:41.791Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-08-31T23:04:43.860Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-09-01T08:29:15.333Z] INFO  [activate] Activating JolliMemory extension {"workspaceRoot":"c:\\Users\\mk\\Documents\\hackathon_research","extensionPath":"c:\\Users\\mk\\.antigravity-ide\\extensions\\jolli.jollimemory-vscode-0.99.16-universal"}
+[2026-09-01T08:29:18.282Z] INFO  [initialLoad] Loading all panels
+[2026-09-01T08:29:56.588Z] INFO  [RepoProfile] manual-disable read → false (by=manuallyDisabled, pid=13908, cwd=c:\Users\mk\Documents\hackathon_research, profile=c:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-09-01T08:29:56.739Z] INFO  [PlanService] detectPlans found 0 plans (0 in registry)
+[2026-09-01T08:29:56.739Z] INFO  [NoteService] detectNotes found 0 notes (0 in registry)
+[2026-09-01T08:29:56.739Z] INFO  [references] detectReferences(*) found 0 (0 in registry)
+[2026-09-01T08:29:56.740Z] INFO  [SkillProjection] projectActiveSkills: 0 active (0 in registry)
+[2026-09-01T08:30:06.291Z] INFO  [Sync:VsCodeBootstrap] Memory Bank sync engine built (auto-sync off — manual only)
+[2026-09-01T08:30:09.749Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-09-01T08:30:13.341Z] INFO  [Installer] Checking Jolli Memory status
+[2026-09-01T08:30:13.341Z] INFO  [Installer] Checking Jolli Memory status
+[2026-09-01T08:30:15.813Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-09-01T08:30:16.636Z] WARN  [activate] kbInitPromise watchdog fired after 60s — releasing sync gate; check initializeKB() for hangs
+[2026-09-01T08:30:18.530Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-09-01T08:30:23.112Z] INFO  [deactivate] Jolli Memory extension deactivating
+[2026-09-02T13:16:40.049Z] INFO  [activate] Activating JolliMemory extension {"workspaceRoot":"c:\\Users\\mk\\Documents\\hackathon_research","extensionPath":"c:\\Users\\mk\\.antigravity-ide\\extensions\\jolli.jollimemory-vscode-0.99.17-universal"}
+[2026-09-02T13:16:43.583Z] INFO  [initialLoad] Loading all panels
+[2026-09-02T13:16:44.584Z] INFO  [RepoProfile] manual-disable read → false (by=manuallyDisabled, pid=3036, cwd=c:\Users\mk\Documents\hackathon_research, profile=c:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-09-02T13:16:44.733Z] INFO  [PlanService] detectPlans found 0 plans (0 in registry)
+[2026-09-02T13:16:44.733Z] INFO  [NoteService] detectNotes found 0 notes (0 in registry)
+[2026-09-02T13:16:44.733Z] INFO  [references] detectReferences(*) found 0 (0 in registry)
+[2026-09-02T13:16:44.733Z] INFO  [SkillProjection] projectActiveSkills: 0 active (0 in registry)
+[2026-09-02T13:17:06.663Z] INFO  [Sync:VsCodeBootstrap] Memory Bank sync engine built (auto-sync off — manual only)
+[2026-09-02T13:17:08.885Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-09-02T13:17:10.251Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-09-02T13:17:11.178Z] INFO  [Installer] Checking Jolli Memory status
+[2026-09-02T13:17:11.178Z] INFO  [Installer] Checking Jolli Memory status
+[2026-09-02T13:17:15.760Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-09-02T13:17:35.565Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-09-02T13:17:43.664Z] WARN  [activate] kbInitPromise watchdog fired after 60s — releasing sync gate; check initializeKB() for hangs
+[2026-09-02T13:17:43.678Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=0, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-09-02T13:17:45.228Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=0, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-09-02T13:17:45.265Z] INFO  [Installer] Checking Jolli Memory status
+[2026-09-02T13:17:50.329Z] INFO  [initialLoad] All panels loaded — updating status bar
+[2026-09-02T13:17:50.329Z] INFO  [Installer] Checking Jolli Memory status
+[2026-09-02T13:18:03.003Z] INFO  [SchemaV5Migration] Found 0 summary files to inspect
+[2026-09-02T13:18:03.191Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=0, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-09-02T13:18:03.217Z] INFO  [SchemaV5Migration] Reading 0 summaries...
+[2026-09-02T13:18:03.217Z] INFO  [SchemaV5Migration] Read 0 summaries in 0 ms
+[2026-09-02T13:18:17.690Z] INFO  [FolderStorage] Wrote 1 files, deleted 0 (Schema v5 migration: no pre-v5 data found)
+[2026-09-02T13:18:17.715Z] INFO  [SchemaV5Migration] Schema v5 migration complete: 0 migrated, 0 skipped, fresh=true, recovery=false (took 14498 ms)
+[2026-09-02T13:18:17.779Z] INFO  [Installer] Checking Jolli Memory status
+[2026-09-02T13:18:17.989Z] INFO  [activate] Schema v5 migration: alreadyDone=false fresh=true migrated=0 skipped=0
+[2026-09-02T13:18:22.132Z] INFO  [SlowQuery] 201ms all [ro] params=1 rows=0 :: SELECT 'topics/processed.json' AS v FROM topic_processed_sources WHERE repo_id = ? LIMIT 1
+[2026-09-02T13:18:25.803Z] INFO  [RepoProfile] [trace=5354aa1a69c437167ffe7bc649ce998a] manual-disable read → false (by=manuallyDisabled, pid=13292, cwd=c:\Users\mk\Documents\hackathon_research, profile=c:\Users\mk\Documents\hackathon_research\.jolli\jollimemory\profile.json, raw: userDisabled=undefined manuallyDisabled=false fence=2026-08-27T20:19:02.747Z)
+[2026-09-02T13:18:25.805Z] INFO  [PrePushWorker] [trace=5354aa1a69c437167ffe7bc649ce998a] PrePushWorker(vscode-activation): spawned compensation drain starting
+[2026-09-02T13:18:25.811Z] INFO  [PushExecutor] [trace=5354aa1a69c437167ffe7bc649ce998a] processPushPending(activation): 6 pending entr(ies)
+[2026-09-02T13:18:31.687Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}
+[2026-09-02T13:18:34.301Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=0, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-09-02T13:18:35.990Z] INFO  [StorageFactory] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-09-02T13:18:38.215Z] INFO  [Installer] Status: enabled=true, claude=true, git=true, geminiHook=true, hermesHook=false, worktreeHooks=true, sessions=0, summaries=0, codex=true/true, gemini=true/true, enabledWorktrees=1, opencode=true/true, cursor=true/true, copilot=false/true, copilotChat=true, cline=false/true
+[2026-09-02T13:18:51.095Z] INFO  [PushExecutor] [trace=5354aa1a69c437167ffe7bc649ce998a] processPushPending(activation): claimed 6/6 candidate(s)
+[2026-09-02T13:18:57.205Z] INFO  [StorageFactory] [trace=5354aa1a69c437167ffe7bc649ce998a] StorageFactory.create: route=legacy-fenced, projectPath=c:\Users\mk\Documents\hackathon_research
+[2026-09-02T13:19:13.194Z] INFO  [PushExecutor] [trace=5354aa1a69c437167ffe7bc649ce998a] processPushPending(activation): triage — withMemory=0 noMemory=6 mergedChildren=0
+[2026-09-02T13:19:13.195Z] INFO  [PrePushWorker] [trace=5354aa1a69c437167ffe7bc649ce998a] PrePushWorker(vscode-activation): drain done — attempted=0 pushed=0 failed=0 (no candidates with memory)
+[2026-09-02T13:19:13.276Z] INFO  [bridge] Merged mode activated {"branch":"main","creationPoint":"4b8bf4a1","author":"mritunjay226"}

@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "LEARN//AI — AI-Powered Learning & Diagnostics",
+  title: "Axiora — AI-Powered Learning & Diagnostics",
   description:
     "Master topics, discover learning gaps, and personalize your study journey with AI-powered diagnostics.",
 };

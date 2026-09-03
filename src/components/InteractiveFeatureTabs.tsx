@@ -28,7 +28,7 @@ export function InteractiveFeatureTabs({ onExplore }: { onExplore: () => void })
           <span>The 3 Pillars of Deep Intuition</span>
         </div>
         <h2 className="text-3xl sm:text-4xl font-black text-[#18181B] tracking-tight">
-          How LearnAI fixes learning bottlenecks.
+          How Axiora fixes learning bottlenecks.
         </h2>
         <p className="text-sm sm:text-base text-[#52525B] font-medium mt-2">
           Traditional apps quiz for memorization. We pinpoint exact prerequisite fractures and fix them Socratically.

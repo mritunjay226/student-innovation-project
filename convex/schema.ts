@@ -8,7 +8,13 @@ export default defineSchema({
     role: v.union(v.literal("student"), v.literal("teacher")),
     grade: v.optional(v.string()), // e.g. "Class 12"
     avatar: v.optional(v.string()),
-  }),
+    clerkId: v.optional(v.string()),
+    email: v.optional(v.string()),
+    tokenIdentifier: v.optional(v.string()),
+  })
+    .index("by_clerk_id", ["clerkId"])
+    .index("by_token", ["tokenIdentifier"])
+    .index("by_email", ["email"]),
 
   // Concepts in the knowledge graph
   concepts: defineTable({
@@ -57,6 +63,8 @@ export default defineSchema({
     correct: v.boolean(),
     timeTaken: v.number(), // seconds
     confidence: v.number(), // 1-5 self-rated
+    reasoning: v.optional(v.string()), // Student's stated reasoning/thought process
+    aiReasoningFeedback: v.optional(v.string()), // AI diagnostic feedback on their logic
   })
     .index("by_student", ["studentId"])
     .index("by_student_concept", ["studentId", "conceptId"]),
@@ -172,5 +180,7 @@ export default defineSchema({
     lastReviewed: v.optional(v.number()),
     reviewCount: v.number(),
     correctStreak: v.number(),
+    lastReasoning: v.optional(v.string()), // What the student was thinking when reviewing
+    lastThoughtAnalysis: v.optional(v.string()), // AI feedback on student reasoning
   }).index("by_deck", ["deckId"]),
 });

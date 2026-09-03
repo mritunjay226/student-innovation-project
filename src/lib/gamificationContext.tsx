@@ -21,7 +21,8 @@ interface GamificationState {
 
 const GamificationContext = createContext<GamificationState | null>(null);
 
-const STORAGE_KEY = "learnai_gamification_state_v1";
+const STORAGE_KEY = "axiora_gamification_state_v1";
+const LEGACY_STORAGE_KEY = "learnai_gamification_state_v1";
 
 export function GamificationProvider({ children }: { children: ReactNode }) {
   const [xp, setXp] = useState<number>(680); // Default active student demo XP
@@ -61,7 +62,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
   // Load from localStorage on mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (typeof parsed.xp === "number") setXp(parsed.xp);

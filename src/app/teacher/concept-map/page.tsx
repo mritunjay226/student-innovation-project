@@ -13,7 +13,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useMemo, useCallback, useState } from "react";
-import { CheckCircle, AlertTriangle, GitBranch, Sparkles, ShieldCheck, Trash2, Layers, GraduationCap, BookOpen } from "lucide-react";
+import { CheckCircle2, AlertTriangle, GitBranch, Sparkles, ShieldCheck, Trash2, Layers, GraduationCap, BookOpen } from "lucide-react";
 
 const SUBJECTS = ["All Subjects", "Mathematics", "Physics", "Chemistry"] as const;
 const GRADES = ["All Grades", "Class 10", "Class 11", "Class 12"] as const;
@@ -34,30 +34,23 @@ export default function ConceptMapPage() {
   const { nodes, edges } = useMemo(() => {
     if (!conceptMap) return { nodes: [], edges: [] };
 
-    const getMasteryClass = (difficulty: number) => {
-      if (difficulty <= 2) return "mastery-high";
-      if (difficulty <= 3) return "mastery-mid";
-      return "mastery-low";
-    };
-
     const nodes: Node[] = conceptMap.concepts.map((c, idx) => {
-      // Dynamic grid/column layout
       const col = idx % 3;
       const row = Math.floor(idx / 3);
-      const x = 120 + col * 260;
-      const y = 50 + row * 160;
+      const x = 100 + col * 270;
+      const y = 40 + row * 160;
 
       return {
         id: c._id,
         position: { x, y },
         data: {
           label: (
-            <div className={`concept-node ${getMasteryClass(c.difficulty)}`}>
-              <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 mb-1 inline-block">
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-[#E2E6F0] min-w-[210px] text-left hover:border-[#2F65F6] transition-colors">
+              <span className="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-[#F4F6FB] text-[#7E8494] border border-[#E2E6F0] mb-1 inline-block">
                 {c.grade} • {c.subject}
               </span>
-              <div className="font-extrabold text-xs text-slate-900 mb-1">{c.title}</div>
-              <div className="text-[10px] text-slate-500 font-semibold">
+              <div className="font-extrabold text-xs text-[#18181B] mb-1">{c.title}</div>
+              <div className="text-[10px] text-[#8C93A4] font-medium">
                 Difficulty: {"⭐".repeat(c.difficulty)}
               </div>
             </div>
@@ -74,22 +67,22 @@ export default function ConceptMapPage() {
       target: e.toConceptId,
       animated: !e.teacherVerified,
       style: {
-        stroke: e.teacherVerified ? "#7c3aed" : "#f59e0b",
+        stroke: e.teacherVerified ? "#2F65F6" : "#f59e0b",
         strokeWidth: 2.5,
       },
       markerEnd: {
         type: MarkerType.ArrowClosed,
-        color: e.teacherVerified ? "#7c3aed" : "#f59e0b",
+        color: e.teacherVerified ? "#2F65F6" : "#f59e0b",
       },
       label: e.teacherVerified ? "✓ Verified" : "⚡ AI Proposed",
       labelStyle: {
-        fill: e.teacherVerified ? "#7c3aed" : "#f59e0b",
+        fill: e.teacherVerified ? "#2F65F6" : "#f59e0b",
         fontSize: 10,
         fontWeight: 800,
       },
       labelBgStyle: {
         fill: "#ffffff",
-        stroke: e.teacherVerified ? "#e9d5ff" : "#fde68a",
+        stroke: e.teacherVerified ? "#D1E2FB" : "#fde68a",
       },
     }));
 
@@ -122,10 +115,10 @@ export default function ConceptMapPage() {
 
   if (!conceptMap) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-center">
-          <div className="w-10 h-10 rounded-full mx-auto mb-3 animate-spin border-3 border-[#18181B] border-t-transparent" />
-          <p className="text-sm text-[#71717A] font-bold">Rendering curriculum dependency graph...</p>
+          <div className="w-8 h-8 rounded-full mx-auto mb-3 animate-spin border-2 border-[#2F65F6] border-t-transparent" />
+          <p className="text-xs font-bold text-[#8C93A4]">Rendering curriculum dependency graph…</p>
         </div>
       </div>
     );
@@ -134,78 +127,60 @@ export default function ConceptMapPage() {
   const selectedEdgeData = conceptMap.edges.find((e) => e._id === selectedEdge);
 
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="mb-6 animate-fade-in-up">
-        <div className="pill-chip chip-butter mb-2 text-xs font-bold py-1 px-3">
+    <div className="max-w-6xl mx-auto space-y-6 pb-16 text-[#1C1E23] font-sans antialiased">
+      {/* ── 1. Header Bar ── */}
+      <div className="bg-white rounded-[28px] p-6 sm:p-7 shadow-xs border border-[#E6EAF2]">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EBF3FE] text-[#2F65F6] text-xs font-bold mb-2">
           <GitBranch className="w-3.5 h-3.5" />
-          <span>Interactive Knowledge Graph</span>
+          <span>Interactive Prerequisite Map</span>
         </div>
-        <h1 className="text-3xl font-black tracking-tight text-[#18181B] mb-1">
-          Editable Prerequisite Map
+        <h1 className="text-2xl sm:text-3xl font-black text-[#18181B] tracking-tight m-0">
+          Editable Knowledge Graph & Curriculum Topology
         </h1>
-        <p className="text-sm text-[#71717A] font-medium">
-          Teachers retain full oversight: approve, reject, or edit AI-suggested concept dependencies across subjects
+        <p className="text-xs sm:text-sm text-[#7E8494] font-medium mt-1 mb-0">
+          Teachers retain full pedagogical oversight: approve, prune, or edit AI-suggested prerequisite dependencies.
         </p>
       </div>
 
-      {/* Subject & Standard Filters */}
-      <div className="card-pastel card-white p-3.5 rounded-2xl mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 animate-fade-in-up delay-1 border border-[#EBE5DB]">
+      {/* ── 2. Filters & Legend ── */}
+      <div className="bg-white rounded-2xl p-4 border border-[#E6EAF2] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         {/* Subject Pills */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-xs font-bold text-[#71717A] mr-1 flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs font-bold text-[#7E8494] mr-1 flex items-center gap-1">
             <Layers className="w-3.5 h-3.5" /> Subject:
           </span>
           {SUBJECTS.map((subj) => (
             <button
               key={subj}
               onClick={() => setSelectedSubject(subj)}
-              className={`pill-chip text-xs py-1 px-3 font-semibold ${
-                selectedSubject === subj ? "chip-dark font-bold" : "chip-white"
+              className={`text-xs font-bold px-3 py-1 rounded-full transition-all cursor-pointer ${
+                selectedSubject === subj
+                  ? "bg-[#2F65F6] text-white shadow-sm shadow-[#2F65F6]/25"
+                  : "bg-[#F4F6FB] text-[#555C6E] hover:text-[#181A20] border border-[#E2E6F0]"
               }`}
             >
-              <BookOpen className="w-3 h-3" /> {subj}
+              {subj}
             </button>
           ))}
         </div>
 
-        {/* Standard Pills */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-bold text-slate-400 mr-1 flex items-center gap-1">
-            <GraduationCap className="w-3.5 h-3.5" /> Standard:
-          </span>
-          {GRADES.map((grd) => (
-            <button
-              key={grd}
-              onClick={() => setSelectedGrade(grd)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                selectedGrade === grd
-                  ? "bg-slate-900 text-white shadow-sm"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-              }`}
-            >
-              {grd}
-            </button>
-          ))}
+        {/* Legend */}
+        <div className="flex items-center gap-4 text-xs font-bold text-[#555C6E]">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#2F65F6]" />
+            <span>Verified</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+            <span>AI Proposed</span>
+          </div>
         </div>
       </div>
 
-      {/* Legend Badges */}
-      <div className="flex flex-wrap gap-4 mb-4 animate-fade-in-up delay-1">
-        <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-          <span className="w-3 h-3 rounded-full bg-purple-600 shadow-sm" />
-          <span>Teacher Verified Dependency</span>
-        </div>
-        <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-          <span className="w-3 h-3 rounded-full bg-amber-500 animate-pulse" />
-          <span>AI Proposed (Click edge to approve / remove)</span>
-        </div>
-      </div>
-
-      {/* React Flow Container */}
+      {/* ── 3. React Flow Canvas ── */}
       <div
-        className="glass-card rounded-3xl animate-fade-in-up delay-2 overflow-hidden shadow-lg relative bg-white"
-        style={{ height: "620px" }}
+        className="bg-white rounded-[28px] overflow-hidden shadow-xs border border-[#E6EAF2] relative"
+        style={{ height: "600px" }}
       >
         <ReactFlow
           nodes={nodes}
@@ -213,46 +188,44 @@ export default function ConceptMapPage() {
           onEdgeClick={onEdgeClick}
           fitView
           attributionPosition="bottom-left"
-          style={{ background: "#f8f9fe" }}
+          style={{ background: "#F8FAFD" }}
         >
-          <Background color="rgba(112, 71, 235, 0.08)" gap={28} />
+          <Background color="rgba(47, 101, 246, 0.08)" gap={28} />
           <Controls
             style={{
               background: "#ffffff",
-              border: "1px solid #e2e8f0",
+              border: "1px solid #E2E6F0",
               borderRadius: 12,
-              color: "#0f172a",
+              color: "#18181B",
             }}
           />
           <MiniMap
             style={{
               background: "#ffffff",
-              border: "1px solid #e2e8f0",
+              border: "1px solid #E2E6F0",
               borderRadius: 12,
             }}
-            maskColor="rgba(248, 249, 254, 0.7)"
+            maskColor="rgba(248, 250, 253, 0.7)"
           />
         </ReactFlow>
       </div>
 
-      {/* Interactive Selected Edge Approval Modal */}
+      {/* ── 4. Selected Edge Verification Modal ── */}
       {selectedEdgeData && (
-        <div
-          className="glass-card p-5 rounded-3xl mt-4 animate-fade-in-up flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-purple-50/70 border-purple-200"
-        >
+        <div className="bg-white rounded-[24px] p-5 shadow-sm border border-[#D1E2FB] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <ShieldCheck className="w-4 h-4 text-purple-600" />
-              <h4 className="font-extrabold text-sm text-slate-900">
+              <ShieldCheck className="w-4 h-4 text-[#2F65F6]" />
+              <h4 className="font-extrabold text-sm text-[#18181B] m-0">
                 Prerequisite Dependency Link
               </h4>
             </div>
-            <p className="text-xs text-slate-600 font-semibold">
-              <strong className="text-purple-700">
+            <p className="text-xs text-[#555C6E] font-medium m-0">
+              <strong className="text-[#2F65F6]">
                 {conceptMap.concepts.find((c) => c._id === selectedEdgeData.fromConceptId)?.title}
               </strong>
               {" ➔ "}
-              <strong className="text-slate-900">
+              <strong className="text-[#18181B]">
                 {conceptMap.concepts.find((c) => c._id === selectedEdgeData.toConceptId)?.title}
               </strong>
               {" • "}
@@ -263,17 +236,17 @@ export default function ConceptMapPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => handleVerify(selectedEdge!)}
-              className="btn-pill-primary text-xs py-2 px-4"
+              className="bg-[#2F65F6] hover:bg-[#2554D4] text-white text-xs font-bold py-2 px-4 rounded-full shadow-xs flex items-center gap-1.5 cursor-pointer transition-all"
             >
-              <CheckCircle className="w-3.5 h-3.5" />
-              {selectedEdgeData.teacherVerified ? "Revoke Verification" : "Approve Prerequisite Edge"}
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>{selectedEdgeData.teacherVerified ? "Revoke Verification" : "Approve Dependency"}</span>
             </button>
             <button
               onClick={() => handleDelete(selectedEdge!)}
-              className="btn-pill-secondary text-xs py-2 px-3 hover:border-rose-300 hover:text-rose-600"
+              className="bg-[#F4F6FB] hover:bg-rose-50 hover:text-rose-600 text-[#555C6E] text-xs font-bold py-2 px-3 rounded-full border border-[#E2E6F0] flex items-center gap-1.5 cursor-pointer transition-all"
             >
               <Trash2 className="w-3.5 h-3.5" />
-              Remove
+              <span>Remove</span>
             </button>
           </div>
         </div>

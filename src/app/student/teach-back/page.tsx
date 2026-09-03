@@ -574,75 +574,56 @@ export default function TeachBackPage() {
   // ══════════════════════════════════════════════════════════════
   if (!selectedConcept) {
     return (
-      <div className="max-w-5xl mx-auto pb-8">
+      <div className="max-w-6xl mx-auto pb-14 text-[#1C1E23] font-sans antialiased">
         {/* Top Header Banner */}
-        <div className="mb-6 animate-fade-in-up">
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
-            <div className="pill-chip chip-butter text-xs font-semibold py-1 px-3">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Socratic Classroom Pod • Peer Learning</span>
+        <div className="bg-white rounded-[28px] p-6 sm:p-7 shadow-xs border border-[#E6EAF2] mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFE4D6] text-[#FF642F] text-xs font-bold mb-2">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>AI Study Pod • Teach to Remember</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black text-[#18181B] tracking-tight m-0">
+                Teach Your AI Classmates
+              </h1>
+              <p className="text-xs sm:text-sm text-[#7E8494] font-medium mt-1 mb-0">
+                Remember 90% of what you learn by explaining topics to 4 AI friends: Toby, Maya, Leo, and Sam.
+              </p>
             </div>
-            <div className="flex items-center gap-2 pill-chip chip-lavender text-xs font-semibold py-1 px-3">
-              <Award className="w-3.5 h-3.5 text-[#7C3AED]" />
-              <span>Level 4</span>
-              <span className="opacity-40">•</span>
-              <span>{tutorXp} XP</span>
+
+            <div className="flex items-center gap-2 bg-[#F4F6FB] border border-[#E2E6F0] py-1.5 px-4 rounded-full text-xs font-bold text-[#181A20] shadow-2xs">
+              <Award className="w-4 h-4 text-[#FF642F]" />
+              <span>Level 4 Tutor</span>
+              <span className="text-[#8C93A4]">•</span>
+              <span className="text-[#FF642F]">{tutorXp} XP</span>
             </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#18181B] tracking-tight mb-1">
-            Teach the <span className="text-[#8B5CF6]">Classroom Study Pod</span>
-          </h1>
-          <p className="text-sm text-[#52525B] max-w-2xl font-medium leading-relaxed">
-            Reinforce your understanding using the Feynman technique. Explain concepts to classmates{" "}
-            <strong>Toby</strong> (visual), <strong>Maya</strong> (rigor),{" "}
-            <strong>Leo</strong> (application), and <strong>Sam</strong> (direct facts).
-          </p>
-        </div>
 
-        {/* Search & Filter Bar */}
-        <div className="mb-6 space-y-3 animate-fade-in-up delay-1">
-          <div className="pill-search bg-white shadow-xs py-2 px-3.5">
-            <Search className="w-4 h-4 text-[#71717A] shrink-0" />
-            <input
-              type="text"
-              placeholder="Search concepts across mathematics, physics, chemistry..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full text-xs font-semibold text-[#18181B] bg-transparent outline-none placeholder:text-[#71717A]"
-            />
-          </div>
+          {/* Search & Filter Bar */}
+          <div className="pt-5 mt-5 border-t border-[#F2F4F8] flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="relative w-full sm:w-80">
+              <Search className="w-4 h-4 text-[#8C93A4] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Search concepts to teach…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-[#F4F6FB] hover:bg-[#EAEFF8] focus:bg-white text-xs font-bold text-[#181A20] placeholder-[#8C93A4] pl-9 pr-4 py-2.5 rounded-full outline-none transition-all border border-[#E2E6F0] focus:border-[#FF642F]"
+              />
+            </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-            {/* Subject Filters */}
-            <div className="flex flex-wrap items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
               {SUBJECTS.map((s) => (
                 <button
                   key={s}
                   onClick={() => setSelectedSubject(s)}
-                  className={`pill-chip text-xs font-semibold py-1 px-3 cursor-pointer ${
+                  className={`text-xs font-bold px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${
                     selectedSubject === s
-                      ? "chip-dark text-white"
-                      : "chip-white hover:border-[#18181B]"
+                      ? "bg-[#FF642F] text-white shadow-sm shadow-[#FF642F]/25"
+                      : "bg-[#F4F6FB] text-[#555C6E] hover:text-[#181A20] border border-[#E2E6F0]"
                   }`}
                 >
                   {s}
-                </button>
-              ))}
-            </div>
-
-            {/* Grade Filters */}
-            <div className="flex items-center gap-1.5">
-              {GRADES.map((g) => (
-                <button
-                  key={g}
-                  onClick={() => setSelectedGrade(g)}
-                  className={`pill-chip text-[11px] font-semibold py-0.5 px-2.5 cursor-pointer ${
-                    selectedGrade === g
-                      ? "chip-lavender font-bold"
-                      : "chip-white text-[#71717A]"
-                  }`}
-                >
-                  {g}
                 </button>
               ))}
             </div>
@@ -650,37 +631,39 @@ export default function TeachBackPage() {
         </div>
 
         {/* Concept Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 animate-fade-in-up delay-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredConcepts.map((concept, idx) => {
             return (
               <div
                 key={concept._id}
                 onClick={() => handleStartSession(concept._id)}
-                className="card-pastel card-white p-4 flex flex-col justify-between group cursor-pointer hover:border-[#18181B] transition-all"
+                className="bg-white rounded-[26px] p-5 shadow-xs border border-[#E6EAF2] flex flex-col justify-between group cursor-pointer hover:border-[#FF642F] hover:shadow-md transition-all relative overflow-hidden"
               >
                 <div>
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <div className="w-8 h-8 rounded-full bg-[#FAF8F5] border border-[#EBE5DB] flex items-center justify-center text-[#18181B] shrink-0">
-                      {getChapterIllustration(concept.subject, idx, "w-4 h-4")}
-                    </div>
-                    <span className="pill-chip chip-white text-[10px] font-bold py-0.5 px-2">
-                      {concept.subject}
+                  <div className="flex items-start justify-between gap-2 mb-2.5">
+                    <span className="text-[10px] font-bold text-[#7E8494] bg-[#F4F6FB] border border-[#E2E6F0] py-0.5 px-2.5 rounded-full">
+                      {concept.subject} • {concept.grade || "Class 11"}
                     </span>
+                    <div className="w-7 h-7 rounded-full bg-[#EBF3FE] text-[#FF642F] flex items-center justify-center text-xs font-bold shrink-0">
+                      {getChapterIllustration(concept.subject, idx, "w-3.5 h-3.5")}
+                    </div>
                   </div>
-                  <h3 className="font-black text-sm text-[#18181B] group-hover:text-[#8B5CF6] transition-colors leading-tight mb-1">
+
+                  <h3 className="font-extrabold text-base text-[#18181B] group-hover:text-[#FF642F] transition-colors leading-snug mb-1.5">
                     {concept.title}
                   </h3>
-                  <p className="text-xs text-[#52525B] line-clamp-2 leading-relaxed mb-3">
+                  <p className="text-xs text-[#7E8494] font-medium line-clamp-2 leading-relaxed mb-4">
                     {concept.description}
                   </p>
                 </div>
 
-                <div className="pt-2 border-t border-[#EBE5DB] flex items-center justify-between text-xs">
-                  <span className="text-[11px] font-semibold text-[#71717A]">
-                    {concept.grade || "Class 11"}
+                <div className="pt-3.5 border-t border-[#F2F4F8] flex items-center justify-between text-xs">
+                  <span className="text-[11px] font-bold text-[#8C93A4]">
+                    Level {concept.difficulty}
                   </span>
-                  <span className="font-bold text-[#18181B] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform text-[11px]">
-                    Start Teaching <ArrowRight className="w-3 h-3" />
+                  <span className="text-xs font-bold text-[#FF642F] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                    <span>Teach Pod</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
               </div>
